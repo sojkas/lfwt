@@ -8,20 +8,21 @@ import Simulation from "./components/Simulation";
 
 function App() {
   const [menuItem, setMenuItem] = useState<number>(0);
-  
-  
-  const selectedItemHandler = (selectedItem:number) => {
+
+  const selectedItemHandler = (selectedItem: number) => {
     setMenuItem(selectedItem);
-  }
+  };
 
   return (
-    <React.Fragment>
-      <Navbar selectedItem={selectedItemHandler}/>
-      {menuItem===0 && <Resources />}
-      {menuItem===1 && <CustomerTypes/>}
-      {menuItem===2 && <CustomerDistribution/>}
-      {menuItem===3 && <Simulation/>}
-    </React.Fragment>
+    <div className="app">
+      <Navbar selectedItem={selectedItemHandler} active={menuItem} />
+      <div className="section">
+        {menuItem === 0 && <Resources />}
+        {menuItem === 1 && <CustomerTypes />}
+        {menuItem === 2 && <CustomerDistribution />}
+        {menuItem === 3 && <Simulation />}
+      </div>
+    </div>
   );
 }
 
