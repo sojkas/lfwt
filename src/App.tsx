@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import CustomerDistribution from "./components/CustomerDistribution";
+import CustomerTypes from "./components/CustomerTypes";
+import Navbar from "./components/Navbar";
+import Resources from "./components/Resources";
+import Simulation from "./components/Simulation";
 
 function App() {
+  const [menuItem, setMenuItem] = useState<number>(0);
+  
+  
+  const selectedItemHandler = (selectedItem:number) => {
+    setMenuItem(selectedItem);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <Navbar selectedItem={selectedItemHandler}/>
+      {menuItem===0 && <Resources />}
+      {menuItem===1 && <CustomerTypes/>}
+      {menuItem===2 && <CustomerDistribution/>}
+      {menuItem===3 && <Simulation/>}
+    </React.Fragment>
   );
 }
 
