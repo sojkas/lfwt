@@ -92,7 +92,7 @@ const Gmap: React.FC = () => {
   return (
     <div style={{ display: "flex", height: "100%", marginTop: "25px" }}>
       <Wrapper
-        apiKey={"AIzaSyCG40B51aRq1AVilnXAA6RZv0JOB7Wdbwk"}
+        apiKey={"yourApikey"}
         render={render}
       >
         <Map
