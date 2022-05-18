@@ -50,7 +50,7 @@ const Nimbees = () => {
           <Grid container direction="row" spacing={2}>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
-              <IconButton aria-label="add">
+              <IconButton aria-label="add" size="large">
                 <Add />
               </IconButton>
             </Grid>

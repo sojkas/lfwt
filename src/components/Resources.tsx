@@ -75,9 +75,9 @@ const Resources = () => {
         <Grid className="box" item xs={4}>
           <h4>Drivers & Workshifts</h4>
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={6}><Shift shiftName="Morning shift" /></Grid>
-            <Grid item xs={6}><Shift shiftName="Evening shift" /></Grid>
-            <Grid item xs={6}><Shift shiftName="Night shift" /></Grid>
+            <Grid item xs={6}><Shift shiftName="Morning shift" shiftFrom="10 am" shiftTo="2 pm" drivers={5}/></Grid>
+            <Grid item xs={6}><Shift shiftName="Evening shift" shiftFrom="8 am" shiftTo="12 am" drivers={8}/></Grid>
+            <Grid item xs={6}><Shift shiftName="Night shift" shiftFrom="6 am" shiftTo="10 pm" drivers={12} /></Grid>
           </Grid>
         </Grid>
       </Grid>
