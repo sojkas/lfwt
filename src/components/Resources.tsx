@@ -4,9 +4,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import Icon from "@mui/material/Icon";
 import { useState } from "react";
 import Gmap from "./Gmap";
+import DepotSet from "./DepotSet";
+import Nimbees from "./Nimbees";
+import Transporters from "./Transporters";
+import Shift from "./Shift";
 
 const Resources = () => {
   const [depotSlots, setDepotSlots] = useState<number>(4);
@@ -34,7 +37,6 @@ const Resources = () => {
                     id="city"
                     label="City"
                     variant="outlined"
-                    size="small"
                     defaultValue="Praha"
                   />
                 </Grid>
@@ -57,57 +59,7 @@ const Resources = () => {
               </Grid>
             </Grid>
             <Grid item xs={6}>
-              <Grid container direction="column" spacing={2}>
-                <Grid item xs={6}>
-                  <Grid container direction="row" spacing={1}>
-                    <Grid item xs={8}>
-                      <TextField
-                        id="depot"
-                        label="Depot set"
-                        variant="outlined"
-                        size="small"
-                        defaultValue="depot A"
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Icon fontSize="small">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M20 12H4"
-                          />
-                        </svg>
-                      </Icon>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={6}>
-                  <Icon fontSize="small">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                  </Icon>
-                </Grid>
-              </Grid>
+              <DepotSet />
             </Grid>
           </Grid>
 
@@ -115,9 +67,18 @@ const Resources = () => {
         </Grid>
         <Grid className="box" item xs={4}>
           <h4>Batteries & Transporters</h4>
+          <Grid container direction="column" spacing={2}>
+           <Grid item xs={6}><Nimbees /></Grid>
+            <Grid item xs={6}><Transporters /></Grid>
+          </Grid>
         </Grid>
         <Grid className="box" item xs={4}>
           <h4>Drivers & Workshifts</h4>
+          <Grid container direction="column" spacing={2}>
+            <Grid item xs={6}><Shift shiftName="Morning shift" /></Grid>
+            <Grid item xs={6}><Shift shiftName="Evening shift" /></Grid>
+            <Grid item xs={6}><Shift shiftName="Night shift" /></Grid>
+          </Grid>
         </Grid>
       </Grid>
     </div>
