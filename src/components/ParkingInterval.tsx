@@ -23,7 +23,7 @@ const ParkingInterval: React.FC<{
         />
       </Grid>
       <Grid item xs={1}>
-        <Icon fontSize="large">
+        <Icon fontSize="small">
           <Remove />
         </Icon>
       </Grid>
@@ -36,6 +36,7 @@ const ParkingInterval: React.FC<{
           label="Percent"
           variant="outlined"
           defaultValue={props.parkingPercentage}
+          size="small"
         />
       </Grid>
     </React.Fragment>

@@ -15,10 +15,11 @@ const DepotSet = () => {
                 label="Depot set"
                 variant="outlined"
                 defaultValue="depot A"
+                size="small"
               />
             </Grid>
             <Grid item xs={4}>
-              <IconButton aria-label="remove" size="large">
+              <IconButton aria-label="remove" size="small">
                 <Remove />
               </IconButton>
               {/* <Button size="large" variant="contained" onClick={removeDepotHandler}>
@@ -43,7 +44,7 @@ const DepotSet = () => {
           </Grid>
         </Grid>
         <Grid item xs={6}>
-          <IconButton aria-label="add" size="large">
+          <IconButton aria-label="add" size="small">
             <Add />
           </IconButton>
           {/* <Icon fontSize="small">

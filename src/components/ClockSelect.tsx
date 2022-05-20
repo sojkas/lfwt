@@ -20,6 +20,7 @@ const ClockSelect: React.FC<{label: string, clockValue: string}> = (props) => {
               value={selectedClock}
               label={props.label}
               onChange={setClockHandler}
+              size="small"
             >
               <MenuItem value={"0 am"}>0 am</MenuItem>
               <MenuItem value={"1 am"}>1 am</MenuItem>

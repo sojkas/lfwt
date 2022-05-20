@@ -18,7 +18,7 @@ const Shift: React.FC<{ shiftName: string, shiftFrom: string, shiftTo: string, d
             <ClockSelect label={shiftNameFrom} clockValue={props.shiftFrom} />
         </Grid>
         <Grid item xs={1}>
-          <Icon fontSize="large">
+          <Icon fontSize="small">
             <Remove />
           </Icon>
         </Grid>
@@ -31,6 +31,7 @@ const Shift: React.FC<{ shiftName: string, shiftFrom: string, shiftTo: string, d
             label="Drivers"
             variant="outlined"
             defaultValue={props.drivers}
+            size="small"
           />
         </Grid>
       </Grid>

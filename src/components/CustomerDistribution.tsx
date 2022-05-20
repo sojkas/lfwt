@@ -19,6 +19,7 @@ const CustomerDistribution = () => {
                 label="Symbolicky nazev"
                 variant="outlined"
                 defaultValue="Vnitrni mesto"
+                size="small"
               />
             </Grid>
             <Grid item xs={1}>
@@ -27,6 +28,7 @@ const CustomerDistribution = () => {
                 label="Radius"
                 variant="outlined"
                 defaultValue="5 km"
+                size="small"
               />
             </Grid>
             <Grid item xs={1}>

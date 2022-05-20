@@ -28,6 +28,7 @@ const Nimbees = () => {
                   value={nimbee}
                   label="Nimbees"
                   onChange={nimbeeHandler}
+                  size="small"
                 >
                   <MenuItem value={"v 1"}>v 1</MenuItem>
                   <MenuItem value={"v 2"}>v 2</MenuItem>
@@ -42,6 +43,7 @@ const Nimbees = () => {
                 variant="outlined"
                 defaultValue="18"
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                size="small"
               />
             </Grid>
           </Grid>
@@ -50,7 +52,7 @@ const Nimbees = () => {
           <Grid container direction="row" spacing={2}>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
-              <IconButton aria-label="add" size="large">
+              <IconButton aria-label="add" size="small">
                 <Add />
               </IconButton>
             </Grid>

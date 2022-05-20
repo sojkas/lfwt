@@ -38,6 +38,7 @@ const Resources = () => {
                     label="City"
                     variant="outlined"
                     defaultValue="Praha"
+                    size="small"
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -49,6 +50,7 @@ const Resources = () => {
                       value={depotSlots.toString()}
                       label="Slots per Depot"
                       onChange={depotSlotsHandle}
+                      size="small"
                     >
                       <MenuItem value={4}>4</MenuItem>
                       <MenuItem value={8}>8</MenuItem>

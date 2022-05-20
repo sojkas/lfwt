@@ -33,6 +33,7 @@ const DistributionUnit = () => {
                   id="distribution-select"
                   value={distribution}
                   onChange={distributionHandler}
+                  size="small"
                 >
                   <MenuItem value={"Manager"}>Manager</MenuItem>
                   <MenuItem value={"Distribution 1"}>Distribution 2</MenuItem>
@@ -46,6 +47,7 @@ const DistributionUnit = () => {
                 variant="outlined"
                 defaultValue="100"
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                size="small"
               />
             </Grid>
             <Grid item xs={3}>
@@ -59,8 +61,8 @@ const DistributionUnit = () => {
               </Stack>
             </Grid>
             <Grid item xs={3}>
-              <IconButton aria-label="add" size="large">
-                <Add />
+              <IconButton aria-label="add" size="small">
+                <Remove />
               </IconButton>
             </Grid>
           </Grid>
@@ -69,8 +71,8 @@ const DistributionUnit = () => {
           <Grid container direction="row" spacing={2}>
             <Grid item xs={9}></Grid>
             <Grid item xs={3}>
-              <IconButton aria-label="add" size="large">
-                <Remove />
+              <IconButton aria-label="add" size="small">
+                <Add />
               </IconButton>
             </Grid>
           </Grid>

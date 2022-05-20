@@ -28,6 +28,7 @@ const Transporters = () => {
                   value={transporter}
                   label="Transporters"
                   onChange={transporterHandler}
+                  size="small"
                 >
                   <MenuItem value={"1 unit"}>1 unit</MenuItem>
                   <MenuItem value={"2 units"}>2 units</MenuItem>
@@ -43,6 +44,7 @@ const Transporters = () => {
                 variant="outlined"
                 defaultValue="10"
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                size="small"
               />
             </Grid>
           </Grid>
@@ -51,7 +53,7 @@ const Transporters = () => {
           <Grid container direction="row" spacing={2}>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
-              <IconButton aria-label="add" size="large">
+              <IconButton aria-label="add" size="small">
                 <Add />
               </IconButton>
             </Grid>
