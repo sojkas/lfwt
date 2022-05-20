@@ -1,4 +1,4 @@
-import { Grid, TextField, IconButton, Button } from "@mui/material";
+import { Grid, TextField, IconButton, Button, Typography } from "@mui/material";
 import React from "react";
 import ParkingInterval from "./ParkingInterval";
 import { Add } from "@mui/icons-material";
@@ -76,7 +76,7 @@ const CustomerTypes = () => {
             <Grid item xs={1}>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={2}>
-                  <label>Same day orders</label>
+                  <Typography>Same day orders</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <SingleSlider

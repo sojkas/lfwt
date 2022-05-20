@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import { useState } from "react";
+import React, { useState } from "react";
 import Gmap from "./Gmap";
 import DepotSet from "./DepotSet";
 import Nimbees from "./Nimbees";
@@ -19,7 +19,7 @@ const Resources = () => {
   };
 
   return (
-    <div className="resources">
+    <React.Fragment {...({className: "resources"})}>
       <Grid
         className="grid"
         container
@@ -81,7 +81,7 @@ const Resources = () => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
+    </React.Fragment>
   );
 };
 
