@@ -2,8 +2,9 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import { IconButton, TextField } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
+import Settings from "../models/settings";
 
-const DepotSet = () => {
+const DepotSet: React.FC<{ settings: Settings }> = (props) => {
   return (
     <React.Fragment>
       <Grid container direction="column" spacing={2}>
@@ -14,7 +15,7 @@ const DepotSet = () => {
                 id="depot"
                 label="Depot set"
                 variant="outlined"
-                defaultValue="depot A"
+                defaultValue={props.settings.depotsDepotSetName}
                 size="small"
               />
             </Grid>

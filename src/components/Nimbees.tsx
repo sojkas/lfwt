@@ -6,9 +6,10 @@ import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import { TextField, IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import Settings from "../models/settings";
 
-const Nimbees = () => {
-  const [nimbee, setNimbee] = useState<string>("v 1");
+const Nimbees: React.FC<{settings: Settings}> = (props) => {
+  const [nimbee, setNimbee] = useState<string>(props.settings.nimbeesName);
   const nimbeeHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
     setNimbee(event.target.value);
@@ -41,7 +42,7 @@ const Nimbees = () => {
                 id="nimbee-capacity"
                 label="Capacity"
                 variant="outlined"
-                defaultValue="18"
+                defaultValue={props.settings.nimbeesCapacity}
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 size="small"
               />

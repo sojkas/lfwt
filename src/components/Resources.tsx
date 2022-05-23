@@ -10,16 +10,19 @@ import DepotSet from "./DepotSet";
 import Nimbees from "./Nimbees";
 import Transporters from "./Transporters";
 import Shift from "./Shift";
+import Settings from "../models/settings";
 
-const Resources = () => {
-  const [depotSlots, setDepotSlots] = useState<number>(4);
+const Resources: React.FC<{ settings: Settings }> = (props) => {
+  const [depotSlots, setDepotSlots] = useState<number>(
+    props.settings.depotsSlotNumber
+  );
   const depotSlotsHandle = (event: SelectChangeEvent) => {
     event.preventDefault();
     setDepotSlots(parseInt(event.target.value));
   };
 
   return (
-    <React.Fragment {...({className: "resources"})}>
+    <React.Fragment {...{ className: "resources" }}>
       <Grid
         className="grid"
         container
@@ -37,7 +40,7 @@ const Resources = () => {
                     id="city"
                     label="City"
                     variant="outlined"
-                    defaultValue="Praha"
+                    defaultValue={props.settings.depotsCityValue}
                     size="small"
                   />
                 </Grid>
@@ -61,25 +64,44 @@ const Resources = () => {
               </Grid>
             </Grid>
             <Grid item xs={6}>
-              <DepotSet />
+              <DepotSet settings={props.settings} />
             </Grid>
           </Grid>
-
+          <div className="space-20"></div>
           <Gmap />
         </Grid>
         <Grid className="box" item xs={4}>
           <h4>Batteries & Transporters</h4>
           <Grid container direction="column" spacing={2}>
-           <Grid item xs={6}><Nimbees /></Grid>
-            <Grid item xs={6}><Transporters /></Grid>
+            <Grid item xs={6}>
+              <Nimbees settings={props.settings} />
+            </Grid>
+            <Grid item xs={6}>
+              <Transporters settings={props.settings} />
+            </Grid>
           </Grid>
         </Grid>
         <Grid className="box" item xs={4}>
           <h4>Drivers & Workshifts</h4>
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={6}><Shift shiftName="Morning shift" shiftFrom="10 am" shiftTo="2 pm" drivers={5}/></Grid>
-            <Grid item xs={6}><Shift shiftName="Evening shift" shiftFrom="8 am" shiftTo="12 am" drivers={8}/></Grid>
-            <Grid item xs={6}><Shift shiftName="Night shift" shiftFrom="6 am" shiftTo="10 pm" drivers={12} /></Grid>
+            <Grid item xs={6}>
+              <Shift
+                shiftName={props.settings.shiftName[0]}
+                shiftParams={props.settings.shiftMorningParams}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Shift
+                shiftName={props.settings.shiftName[1]}
+                shiftParams={props.settings.shiftEveningParams}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Shift
+                shiftName={props.settings.shiftName[2]}
+                shiftParams={props.settings.shiftNightParams}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

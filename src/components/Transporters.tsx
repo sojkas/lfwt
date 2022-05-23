@@ -6,12 +6,14 @@ import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import { TextField, IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import Settings from "../models/settings";
 
-const Transporters = () => {
-  const [transporter, setTransporter] = useState<string>("2 units");
+const Transporters: React.FC<{settings: Settings}> = (props) => {
+
+  const [transporter, setTransporter] = useState<number>(props.settings.transporterCount);
   const transporterHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
-    setTransporter(event.target.value);
+    setTransporter(parseInt(event.target.value, 10));
   };
 
   return (
@@ -25,15 +27,15 @@ const Transporters = () => {
                 <Select
                   labelId="transporter-label"
                   id="transporter-select"
-                  value={transporter}
+                  value={transporter.toString()}
                   label="Transporters"
                   onChange={transporterHandler}
                   size="small"
                 >
-                  <MenuItem value={"1 unit"}>1 unit</MenuItem>
-                  <MenuItem value={"2 units"}>2 units</MenuItem>
-                  <MenuItem value={"3 units"}>3 units</MenuItem>
-                  <MenuItem value={"4 units"}>4 units</MenuItem>
+                  <MenuItem value={1}>1 unit</MenuItem>
+                  <MenuItem value={2}>2 units</MenuItem>
+                  <MenuItem value={3}>3 units</MenuItem>
+                  <MenuItem value={4}>4 units</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -42,7 +44,7 @@ const Transporters = () => {
                 id="transporter-capacity"
                 label="Capacity"
                 variant="outlined"
-                defaultValue="10"
+                defaultValue={props.settings.transporterCapacity}
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 size="small"
               />

@@ -90,7 +90,7 @@ const Gmap: React.FC = () => {
   ); */
 
   return (
-    <div style={{ display: "flex", height: "100%", marginTop: "25px" }}>
+    <div className="gmap">
       <Wrapper
         apiKey={"yourApiKey"}
         render={render}
@@ -100,7 +100,7 @@ const Gmap: React.FC = () => {
           onClick={onClick}
           onIdle={onIdle}
           zoom={zoom}
-          style={{ flexGrow: "1", height: "40vh" }}
+          style={{ flexGrow: "1", height: "100%" }}
         >
           {clicks.map((latLng, i) => (
             <Marker key={i} position={latLng} />
