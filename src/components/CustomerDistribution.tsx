@@ -1,10 +1,19 @@
 import { Grid, TextField, Button } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Gmap from "./Gmap";
 import DistributionUnit from "./DistributionUnit";
-import Settings from "../models/settings";
+import Settings, {DistributionUnitClass} from "../models/settings";
 
 const CustomerDistribution: React.FC<{ settings: Settings }> = (props) => {
+  const[allDistributions, setAllDistributions] = useState<Settings["distributions"]>(props.settings.distributions);
+
+  const addDistributionHandler = () => {
+    const newDistribution = new DistributionUnitClass("Manager", 100, false);
+    setAllDistributions((prevDistributions)=>{
+      return prevDistributions.concat(newDistribution);
+    })
+  };
+
   return (
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
@@ -37,12 +46,13 @@ const CustomerDistribution: React.FC<{ settings: Settings }> = (props) => {
               />
             </Grid>
             <Grid item xs={1}>
-              {props.settings.distributions.map((distribution) => (
+              {allDistributions.map((distribution) => (
                 <DistributionUnit
                   key={Math.floor(Math.random() * 101)}
                   distributor={distribution.distributor}
                   distributionValue={distribution.distributionValue}
                   isChecked={distribution.isChecked}
+                  onAddDistribution={addDistributionHandler}
                 />
               ))}
             </Grid>

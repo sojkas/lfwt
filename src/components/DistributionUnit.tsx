@@ -13,7 +13,7 @@ import {
 import { Add, Remove } from "@mui/icons-material";
 import React, { useState } from "react";
 
-const DistributionUnit: React.FC<{ distributor: string, distributionValue: number, isChecked: boolean }> = (props) => {
+const DistributionUnit: React.FC<{ distributor: string, distributionValue: number, isChecked: boolean, onAddDistribution: () => void }> = (props) => {
   const [distribution, setDistribution] = useState<string>(props.distributor);
   const [isChecked, setIsChecked] = useState<boolean>(props.isChecked);
 
@@ -23,6 +23,9 @@ const DistributionUnit: React.FC<{ distributor: string, distributionValue: numbe
   };
   const isCheckedHandler = () => {
     setIsChecked(!isChecked);
+  }
+  const addDistributinHandler = () => {
+    props.onAddDistribution();
   }
 
   return (
@@ -76,7 +79,7 @@ const DistributionUnit: React.FC<{ distributor: string, distributionValue: numbe
           <Grid container direction="row" spacing={2}>
             <Grid item xs={9}></Grid>
             <Grid item xs={3}>
-              <IconButton aria-label="add" size="small">
+              <IconButton aria-label="add" size="small" onClick={addDistributinHandler}>
                 <Add />
               </IconButton>
             </Grid>

@@ -1,12 +1,21 @@
 import { Grid, TextField, IconButton, Button } from "@mui/material";
-import React from "react";
-import ParkingInterval from "./ParkingInterval";
+import React, { useState } from "react";
 import { Add } from "@mui/icons-material";
 import RangeSlider from "./RangeSlider";
 import SingleSlider from "./SingleSlider";
-import Settings from "../models/settings";
+import { Settings, ParkingInterval } from "../models/settings";
+import ParkingIntervalItem from "./ParkingIntervalItem";
 
 const CustomerTypes: React.FC<{ settings: Settings }> = (props) => {
+  const [allParkingIntervals, setAllParkingIntervals] = useState<
+    Settings["parking"]
+  >(props.settings.parking);
+  const addParkingHandler = () => {
+    const newParkingInterval = new ParkingInterval("12 am", "12 am", 0);
+    setAllParkingIntervals((prevIntervals) => {
+      return prevIntervals.concat(newParkingInterval);
+    });
+  };
   return (
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
@@ -92,9 +101,9 @@ const CustomerTypes: React.FC<{ settings: Settings }> = (props) => {
               </Grid>
             </Grid>
             <Grid item xs={4} container direction="row" spacing={2}>
-              {props.settings.parking.map((parkingOne) => (
-                <ParkingInterval
-                  key={parkingOne.from + parkingOne.to + parkingOne.percent}
+              {allParkingIntervals.map((parkingOne) => (
+                <ParkingIntervalItem
+                  key={parkingOne.id}
                   parkingFrom={parkingOne.from}
                   parkingTo={parkingOne.to}
                   parkingPercentage={parkingOne.percent.toString() + " %"}
@@ -105,7 +114,11 @@ const CustomerTypes: React.FC<{ settings: Settings }> = (props) => {
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={6}></Grid>
                 <Grid item xs={6}>
-                  <IconButton aria-label="add" size="large">
+                  <IconButton
+                    aria-label="add"
+                    size="large"
+                    onClick={addParkingHandler}
+                  >
                     <Add />
                   </IconButton>
                 </Grid>

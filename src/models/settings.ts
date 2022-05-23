@@ -38,7 +38,7 @@ class Settings {
   // radius [radius: number, unit: string]
   radius: [number, string];
   // pole distributionUnits
-  distributions : DistributionUnitClass[];
+  distributions: DistributionUnitClass[];
 
   constructor() {
     this.depotsCityValue = "Prague";
@@ -58,28 +58,28 @@ class Settings {
     this.subscriberRatio = [0, 100, 60, "%"];
     this.sameDayOrders = [0, 40, 20, "%"];
     this.parking = [
-      { from: "10 am", to: "2 pm", percent: 33 },
-      { from: "8 am", to: "3 pm", percent: 45 },
-      { from: "8 pm", to: "10 pm", percent: 12 },
-      { from: "6 pm", to: "8 pm", percent: 10 },
+        new ParkingInterval("10 am", "2 pm", 33),
+        new ParkingInterval("8 am", "3 pm", 45),
+        new ParkingInterval("8 pm", "10 pm", 12),
+        new ParkingInterval("6 pm", "8 pm", 10)
     ];
     this.symbolicName = "Vnitrni mesto";
     this.radius = [5, "km"];
-    this.distributions = [
-        {distributor: "Manager", distributionValue: 100, isChecked: true},
-        {distributor: "Distribution 3", distributionValue: 50, isChecked: false},
-        {distributor: "Distribution 2", distributionValue: 65, isChecked: true},
-        {distributor: "Manager", distributionValue: 15, isChecked: false}
-    ]
-
+    this.distributions = [new DistributionUnitClass("Manager", 100, true),
+    new DistributionUnitClass("Distribution 3", 50, false),
+    new DistributionUnitClass("Distribution 2", 35, true),
+    new DistributionUnitClass("Manager", 75, false)
+];
   }
 }
 
 class ParkingInterval {
+  id: string;
   from: string;
   to: string;
   percent: number;
   constructor(fromValue: string, toValue: string, percentValue: number) {
+    this.id = new Date().toISOString();
     this.from = fromValue;
     this.to = toValue;
     this.percent = percentValue;
@@ -87,14 +87,21 @@ class ParkingInterval {
 }
 
 class DistributionUnitClass {
-    distributor: string;
-    distributionValue: number;
-    isChecked: boolean;
-    constructor(distributor: string, distributionValue: number, isChecked: boolean) {
-        this.distributor = distributor;
-        this.distributionValue = distributionValue;
-        this.isChecked = isChecked;
-    }
+  id: string;
+  distributor: string;
+  distributionValue: number;
+  isChecked: boolean;
+  constructor(
+    distributor: string,
+    distributionValue: number,
+    isChecked: boolean
+  ) {
+    this.id = new Date().toISOString();
+    this.distributor = distributor;
+    this.distributionValue = distributionValue;
+    this.isChecked = isChecked;
+  }
 }
-
 export default Settings;
+export {Settings, ParkingInterval, DistributionUnitClass};
+

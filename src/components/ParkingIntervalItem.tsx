@@ -3,7 +3,7 @@ import { Grid, Icon, TextField } from "@mui/material";
 import ClockSelect from "./ClockSelect";
 import { Remove } from "@mui/icons-material";
 
-const ParkingInterval: React.FC<{
+const ParkingIntervalItem: React.FC<{
   parkingFrom: string;
   parkingTo: string;
   parkingPercentage: string;
@@ -43,4 +43,4 @@ const ParkingInterval: React.FC<{
   );
 };
 
-export default ParkingInterval;
+export default ParkingIntervalItem;
