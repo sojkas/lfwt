@@ -15,11 +15,15 @@ import React, { useState } from "react";
 
 const DistributionUnit: React.FC<{ distributor: string, distributionValue: number, isChecked: boolean }> = (props) => {
   const [distribution, setDistribution] = useState<string>(props.distributor);
+  const [isChecked, setIsChecked] = useState<boolean>(props.isChecked);
 
   const distributionHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
     setDistribution(event.target.value);
   };
+  const isCheckedHandler = () => {
+    setIsChecked(!isChecked);
+  }
 
   return (
     <React.Fragment>
@@ -54,8 +58,9 @@ const DistributionUnit: React.FC<{ distributor: string, distributionValue: numbe
               <Stack direction="row" spacing={1}>
                 <Typography>Random</Typography>
                 <Switch
-                  checked={props.isChecked}
+                  checked={isChecked}
                   inputProps={{ "aria-label": "ant design" }}
+                  onChange={isCheckedHandler}
                 />
                 <Typography>Cluster</Typography>
               </Stack>
