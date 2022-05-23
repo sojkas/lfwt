@@ -13,8 +13,8 @@ import {
 import { Add, Remove } from "@mui/icons-material";
 import React, { useState } from "react";
 
-const DistributionUnit = () => {
-  const [distribution, setDistribution] = useState<string>("Manager");
+const DistributionUnit: React.FC<{ distributor: string, distributionValue: number, isChecked: boolean }> = (props) => {
+  const [distribution, setDistribution] = useState<string>(props.distributor);
 
   const distributionHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
@@ -23,7 +23,7 @@ const DistributionUnit = () => {
 
   return (
     <React.Fragment>
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="column" spacing={1}>
         <Grid item xs={6}>
           <Grid container direction="row" spacing={2}>
             <Grid item xs={3}>
@@ -36,8 +36,8 @@ const DistributionUnit = () => {
                   size="small"
                 >
                   <MenuItem value={"Manager"}>Manager</MenuItem>
-                  <MenuItem value={"Distribution 1"}>Distribution 2</MenuItem>
-                  <MenuItem value={"Distribution 2"}>Distribution 3</MenuItem>
+                  <MenuItem value={"Distribution 2"}>Distribution 2</MenuItem>
+                  <MenuItem value={"Distribution 3"}>Distribution 3</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -45,7 +45,7 @@ const DistributionUnit = () => {
               <TextField
                 id="distribution-value-name"
                 variant="outlined"
-                defaultValue="100"
+                defaultValue={props.distributionValue}
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 size="small"
               />
@@ -54,7 +54,7 @@ const DistributionUnit = () => {
               <Stack direction="row" spacing={1}>
                 <Typography>Random</Typography>
                 <Switch
-                  defaultChecked
+                  checked={props.isChecked}
                   inputProps={{ "aria-label": "ant design" }}
                 />
                 <Typography>Cluster</Typography>

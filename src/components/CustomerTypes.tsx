@@ -4,8 +4,9 @@ import ParkingInterval from "./ParkingInterval";
 import { Add } from "@mui/icons-material";
 import RangeSlider from "./RangeSlider";
 import SingleSlider from "./SingleSlider";
+import Settings from "../models/settings";
 
-const CustomerTypes = () => {
+const CustomerTypes: React.FC<{ settings: Settings }> = (props) => {
   return (
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
@@ -20,23 +21,23 @@ const CustomerTypes = () => {
                 id="segment-name"
                 label="Segment name"
                 variant="outlined"
-                defaultValue="Outskirts car adicts"
+                defaultValue={props.settings.segmentName}
                 size="small"
               />
             </Grid>
             <Grid item xs={1}>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={2}>
-                  <label>Charges per mounth</label>
+                  <label>Charges per month</label>
                 </Grid>
                 <Grid item xs={6}>
                   <RangeSlider
-                    label="Charges per mounth"
-                    minValue={1}
-                    maxValue={30}
-                    minSetValue={8}
-                    maxSetValue={17}
-                    sliderUnit="charges"
+                    label="Charges per month"
+                    minValue={props.settings.chargesPerMonth[0]}
+                    maxValue={props.settings.chargesPerMonth[1]}
+                    minSetValue={props.settings.chargesPerMonth[2]}
+                    maxSetValue={props.settings.chargesPerMonth[3]}
+                    sliderUnit={props.settings.chargesPerMonth[4]}
                   />
                 </Grid>
               </Grid>
@@ -49,10 +50,10 @@ const CustomerTypes = () => {
                 <Grid item xs={6}>
                   <RangeSlider
                     label="kWh per charge"
-                    minValue={5}
-                    maxValue={40}
-                    minSetValue={17}
-                    maxSetValue={26}
+                    minValue={props.settings.kWhPerMonth[0]}
+                    maxValue={props.settings.kWhPerMonth[1]}
+                    minSetValue={props.settings.kWhPerMonth[2]}
+                    maxSetValue={props.settings.kWhPerMonth[3]}
                     sliderUnit="kWh"
                   />
                 </Grid>
@@ -66,10 +67,10 @@ const CustomerTypes = () => {
                 <Grid item xs={6}>
                   <SingleSlider
                     label="Subscriber ratio"
-                    minValue={0}
-                    maxValue={100}
-                    setValue={60}
-                    sliderUnit="%"
+                    minValue={props.settings.subscriberRatio[0]}
+                    maxValue={props.settings.subscriberRatio[1]}
+                    setValue={props.settings.subscriberRatio[2]}
+                    sliderUnit={props.settings.subscriberRatio[3]}
                   />
                 </Grid>
               </Grid>
@@ -82,35 +83,23 @@ const CustomerTypes = () => {
                 <Grid item xs={6}>
                   <SingleSlider
                     label="Same day orders"
-                    minValue={0}
-                    maxValue={40}
-                    setValue={20}
-                    sliderUnit="%"
+                    minValue={props.settings.sameDayOrders[0]}
+                    maxValue={props.settings.sameDayOrders[1]}
+                    setValue={props.settings.sameDayOrders[2]}
+                    sliderUnit={props.settings.sameDayOrders[3]}
                   />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={4} container direction="row" spacing={2}>
-              <ParkingInterval
-                parkingFrom="10 am"
-                parkingTo="2 pm"
-                parkingPercentage="35%"
-              />
-              <ParkingInterval
-                parkingFrom="8 am"
-                parkingTo="3 pm"
-                parkingPercentage="45%"
-              />
-              <ParkingInterval
-                parkingFrom="8 pm"
-                parkingTo="10 pm"
-                parkingPercentage="10%"
-              />
-              <ParkingInterval
-                parkingFrom="6 am"
-                parkingTo="8 am"
-                parkingPercentage="10%"
-              />
+              {props.settings.parking.map((parkingOne) => (
+                <ParkingInterval
+                  key={parkingOne.from + parkingOne.to + parkingOne.percent}
+                  parkingFrom={parkingOne.from}
+                  parkingTo={parkingOne.to}
+                  parkingPercentage={parkingOne.percent.toString() + " %"}
+                />
+              ))}
             </Grid>
             <Grid item xs={1}>
               <Grid container direction="row" spacing={2}>
@@ -123,7 +112,7 @@ const CustomerTypes = () => {
               </Grid>
             </Grid>
             <Grid item xs={1}>
-                <Button variant="outlined">Save</Button>
+              <Button variant="outlined">Save</Button>
             </Grid>
           </Grid>
         </Grid>

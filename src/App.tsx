@@ -20,8 +20,8 @@ function App() {
       <Navbar selectedItem={selectedItemHandler} active={menuItem} />
       <div className="section">
         {menuItem === 0 && <Resources settings={settings} />}
-        {menuItem === 1 && <CustomerTypes />}
-        {menuItem === 2 && <CustomerDistribution />}
+        {menuItem === 1 && <CustomerTypes settings={settings} />}
+        {menuItem === 2 && <CustomerDistribution settings={settings}/>}
         {menuItem === 3 && <Simulation />}
       </div>
     </div>

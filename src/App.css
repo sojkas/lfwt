@@ -63,8 +63,6 @@ h4 {
   flex-grow: 1;
 }
 
-.section {
-}
 
 .gmap {
   display: flex;
@@ -73,4 +71,9 @@ h4 {
 
 .space-20 {
   height: 20px;
+}
+
+.parking-interval {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
