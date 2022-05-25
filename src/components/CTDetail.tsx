@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, TextField, IconButton, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import RangeSlider from "./RangeSlider";
@@ -9,8 +9,8 @@ import { CustomerDetail, ParkingInterval } from "../models/settings";
 const CTDetail: React.FC<{
   customerId: string;
   customerDetail: CustomerDetail;
-  updatedCustomerDetail: (updatedDetail: CustomerDetail) => void;
-  updateCustomerName: (updatedName: string) => void;
+  updatedCustomerDetail: (customerId:string, updatedDetail: CustomerDetail) => void;
+  updateCustomerName: (customerId:string, updatedName: string) => void;
 }> = (props) => {
   const [allParkingIntervals, setAllParkingIntervals] = useState<
     CustomerDetail["parking"]
@@ -79,9 +79,12 @@ const CTDetail: React.FC<{
     setAllParkingIntervals(allParkingIntervals);
   };
 
+  useEffect(()=>{
+    props.updateCustomerName(props.customerId, segmentName);
+  },[segmentName]);
+
   const saveHandler = () => {
     props.customerDetail.segmentName = segmentName;
-    props.updateCustomerName(segmentName);
     props.customerDetail.parking = allParkingIntervals;
     props.customerDetail.chargesPerMonth = [
       props.customerDetail.chargesPerMonth[0],
@@ -109,7 +112,7 @@ const CTDetail: React.FC<{
       sameDayOrders,
       props.customerDetail.sameDayOrders[3],
     ];
-    return props.updatedCustomerDetail(props.customerDetail);
+    return props.updatedCustomerDetail(props.customerId, props.customerDetail);
   };
 
   return (

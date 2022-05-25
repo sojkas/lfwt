@@ -1,4 +1,5 @@
 class Settings {
+  customerId: number;
   /* RESOURCES */
   /* Depots Default Variables */
   depotsCityValue: string;
@@ -43,6 +44,7 @@ class Settings {
   distributions: DistributionUnitClass[];
 
   constructor() {
+    this.customerId =2;
     this.depotsCityValue = "Prague";
     this.depotsDepotSetName = "depot A";
     this.depotsSlotNumber = 4;
@@ -54,7 +56,7 @@ class Settings {
     this.shiftMorningParams = ["10 am", "2 pm", 5];
     this.shiftEveningParams = ["8 am", "12 am", 8];
     this.shiftNightParams = ["6 am", "10 pm", 12];
-    this.customers = [new Customer("Tomas Marny"), new Customer("Jan Novak")];
+    this.customers = [new Customer(1 , "Tomas Marny")];
     this.customerDetails = [new CustomerDetail(this.customers[0].id,
        "Outskirts car adicts", 
        [1, 30, 8, 17, "charges"],
@@ -66,17 +68,6 @@ class Settings {
         new ParkingInterval(this.customers[0].id, "8 am", "3 pm", 45)
       ]
        )]
-    /* this.segmentName = "Outskirts car adicts";
-    this.chargesPerMonth = [1, 30, 8, 17, "charges"];
-    this.kWhPerMonth = [5, 40, 17, 26, "kWh"];
-    this.subscriberRatio = [0, 100, 60, "%"];
-    this.sameDayOrders = [0, 40, 20, "%"];
-    this.parking = [
-      new ParkingInterval("10 am", "2 pm", 33),
-      new ParkingInterval("8 am", "3 pm", 45),
-      new ParkingInterval("8 pm", "10 pm", 12),
-      new ParkingInterval("6 pm", "8 pm", 10),
-    ];*/
     this.symbolicName = "Vnitrni mesto";
     this.radius = [5, "km"];
     this.distributions = [
@@ -123,8 +114,8 @@ class DistributionUnitClass {
 class Customer {
   id: string;
   name: string;
-  constructor(name: string) {
-    this.id = Math.random().toString();
+  constructor(id: number, name: string) {
+    this.id = id.toString();
     this.name = name;
   }
 }
@@ -162,4 +153,4 @@ class CustomerDetail {
   }
 }
 export default Settings;
-export { Settings, ParkingInterval, DistributionUnitClass, CustomerDetail };
+export { Settings, ParkingInterval, DistributionUnitClass, CustomerDetail, Customer };
