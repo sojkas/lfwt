@@ -8,8 +8,12 @@ import Simulation from "./components/Simulation";
 import Settings from "./models/settings";
 
 function App() {
-  const settings = new Settings();
+  const [settings, setSettings] = useState<Settings>(new Settings());
   const [menuItem, setMenuItem] = useState<number>(0);
+
+  const updateSettingsHandler = () => {
+    setSettings(settings);
+  }
 
   const selectedItemHandler = (selectedItem: number) => {
     setMenuItem(selectedItem);
@@ -20,7 +24,7 @@ function App() {
       <Navbar selectedItem={selectedItemHandler} active={menuItem} />
       <div className="section">
         {menuItem === 0 && <Resources settings={settings} />}
-        {menuItem === 1 && <CustomerTypes settings={settings} />}
+        {menuItem === 1 && <CustomerTypes settings={settings} updatedSettings={updateSettingsHandler}/>}
         {menuItem === 2 && <CustomerDistribution settings={settings}/>}
         {menuItem === 3 && <Simulation />}
       </div>

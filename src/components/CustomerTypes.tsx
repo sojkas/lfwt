@@ -1,133 +1,40 @@
-import { Grid, TextField, IconButton, Button } from "@mui/material";
+import { Grid, ButtonGroup } from "@mui/material";
 import React, { useState } from "react";
-import { Add } from "@mui/icons-material";
-import RangeSlider from "./RangeSlider";
-import SingleSlider from "./SingleSlider";
-import { Settings, ParkingInterval } from "../models/settings";
-import ParkingIntervalItem from "./ParkingIntervalItem";
+import { Settings, CustomerDetail } from "../models/settings";
+import CTDetail from "./CTDetail";
+import CustomerComponent from "./CustomerComponent";
 
-const CustomerTypes: React.FC<{ settings: Settings }> = (props) => {
-  const [allParkingIntervals, setAllParkingIntervals] = useState<
-    Settings["parking"]
-  >(props.settings.parking);
-  const addParkingHandler = () => {
-    const newParkingInterval = new ParkingInterval("12 am", "12 am", 0);
-    setAllParkingIntervals((prevIntervals) => {
-      return prevIntervals.concat(newParkingInterval);
-    });
+const CustomerTypes: React.FC<{
+  settings: Settings;
+  updatedSettings: (updatedSettingsValues: Settings) => void;
+}> = (props) => {
+  const [selectedCustomer, setSelectedCustomer] = useState<number> (0);
+  const [selectedCustomerId, setSelectedCustomerID] = useState<string>(props.settings.customers[selectedCustomer].id);
+  const [activeCustomerName, setActiveCustomerName] = useState<string>(props.settings.customers[0].name);
+
+  const selectedCustomerDetail: CustomerDetail = props.settings.customerDetails[selectedCustomer];
+
+  const updateDetail = (updatedDetail: CustomerDetail) => {
+    props.settings.customerDetails[selectedCustomer] = updatedDetail;
+    return props.updatedSettings(props.settings);
   };
+  const updateCustomerNameHandler = (newName: string) => {
+    props.settings.customers[selectedCustomer].name = newName;
+  }
+
+
   return (
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
         <Grid className="box" item xs={4}>
-          List of items
+          <ButtonGroup orientation="vertical" variant="text">
+            {props.settings.customers.map((customer) => (
+              <CustomerComponent key={customer.id} name={customer.name} />
+            ))}
+          </ButtonGroup>
         </Grid>
         <Grid className="box" item xs={8}>
-          <h4>Add / Edit Customer segment</h4>
-          <Grid container direction="column" spacing={1}>
-            <Grid item xs={1}>
-              <TextField
-                id="segment-name"
-                label="Segment name"
-                variant="outlined"
-                defaultValue={props.settings.segmentName}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={1}>
-              <Grid container direction="row" spacing={2}>
-                <Grid item xs={2}>
-                  <label>Charges per month</label>
-                </Grid>
-                <Grid item xs={6}>
-                  <RangeSlider
-                    label="Charges per month"
-                    minValue={props.settings.chargesPerMonth[0]}
-                    maxValue={props.settings.chargesPerMonth[1]}
-                    minSetValue={props.settings.chargesPerMonth[2]}
-                    maxSetValue={props.settings.chargesPerMonth[3]}
-                    sliderUnit={props.settings.chargesPerMonth[4]}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={1}>
-              <Grid container direction="row" spacing={2}>
-                <Grid item xs={2}>
-                  <label>kWh per charge</label>
-                </Grid>
-                <Grid item xs={6}>
-                  <RangeSlider
-                    label="kWh per charge"
-                    minValue={props.settings.kWhPerMonth[0]}
-                    maxValue={props.settings.kWhPerMonth[1]}
-                    minSetValue={props.settings.kWhPerMonth[2]}
-                    maxSetValue={props.settings.kWhPerMonth[3]}
-                    sliderUnit="kWh"
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={1}>
-              <Grid container direction="row" spacing={2}>
-                <Grid item xs={2}>
-                  <label>Subscriber ratio</label>
-                </Grid>
-                <Grid item xs={6}>
-                  <SingleSlider
-                    label="Subscriber ratio"
-                    minValue={props.settings.subscriberRatio[0]}
-                    maxValue={props.settings.subscriberRatio[1]}
-                    setValue={props.settings.subscriberRatio[2]}
-                    sliderUnit={props.settings.subscriberRatio[3]}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={1}>
-              <Grid container direction="row" spacing={2}>
-                <Grid item xs={2}>
-                  <label>Same day orders</label>
-                </Grid>
-                <Grid item xs={6}>
-                  <SingleSlider
-                    label="Same day orders"
-                    minValue={props.settings.sameDayOrders[0]}
-                    maxValue={props.settings.sameDayOrders[1]}
-                    setValue={props.settings.sameDayOrders[2]}
-                    sliderUnit={props.settings.sameDayOrders[3]}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={4} container direction="row" spacing={2}>
-              {allParkingIntervals.map((parkingOne) => (
-                <ParkingIntervalItem
-                  key={parkingOne.id}
-                  parkingFrom={parkingOne.from}
-                  parkingTo={parkingOne.to}
-                  parkingPercentage={parkingOne.percent.toString() + " %"}
-                />
-              ))}
-            </Grid>
-            <Grid item xs={1}>
-              <Grid container direction="row" spacing={2}>
-                <Grid item xs={6}></Grid>
-                <Grid item xs={6}>
-                  <IconButton
-                    aria-label="add"
-                    size="large"
-                    onClick={addParkingHandler}
-                  >
-                    <Add />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={1}>
-              <Button variant="outlined">Save</Button>
-            </Grid>
-          </Grid>
+          <CTDetail customerId={selectedCustomerId} customerDetail={selectedCustomerDetail} updatedCustomerDetail={updateDetail} updateCustomerName={updateCustomerNameHandler}/>
         </Grid>
       </Grid>
     </React.Fragment>

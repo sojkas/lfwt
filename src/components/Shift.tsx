@@ -11,11 +11,13 @@ const Shift: React.FC<{ shiftName:string, shiftParams: [string, string, number] 
   const shiftNameFrom: string = props.shiftName + " from";
   const shiftNameTo: string = props.shiftName + " to";
 
+  const changedClockValueHandler = () => {}
+
   return (
     <React.Fragment>
       <Grid container direction="row" spacing={2}>
         <Grid item xs={4}>
-            <ClockSelect label={shiftNameFrom} clockValue={props.shiftParams[0]} />
+            <ClockSelect label={shiftNameFrom} clockValue={props.shiftParams[0]} changedClockValue={changedClockValueHandler}/>
         </Grid>
         <Grid item xs={1}>
           <Icon fontSize="small">
@@ -23,7 +25,7 @@ const Shift: React.FC<{ shiftName:string, shiftParams: [string, string, number] 
           </Icon>
         </Grid>
         <Grid item xs={4}>
-            <ClockSelect label={shiftNameTo} clockValue={props.shiftParams[1]} />
+            <ClockSelect label={shiftNameTo} clockValue={props.shiftParams[1]} changedClockValue={changedClockValueHandler}/>
         </Grid>
         <Grid item xs={3}>
           <TextField

@@ -7,6 +7,7 @@ const SingleSlider: React.FC<{
   maxValue: number;
   setValue: number;
   sliderUnit: string;
+  singleSliderChange: (value: number) => void;
 }> = (props) => {
   const [value, setValue] = React.useState<number>(props.setValue);
   const valuetext = (value: number) => {
@@ -15,6 +16,7 @@ const SingleSlider: React.FC<{
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number);
+    props.singleSliderChange(value);
   };
 
   const marks = [
@@ -30,20 +32,20 @@ const SingleSlider: React.FC<{
         props.sliderUnit,
     }, */
     {
-        value: props.maxValue,
-        label: props.maxValue.toString() + " " + props.sliderUnit,
+      value: props.maxValue,
+      label: props.maxValue.toString() + " " + props.sliderUnit,
     },
     {
-        value: value,
-        label: value.toString() + " " + props.sliderUnit,
-    }
+      value: props.setValue,
+      label: props.setValue.toString() + " " + props.sliderUnit,
+    },
   ];
 
   return (
     <React.Fragment>
       <Slider
         getAriaLabel={() => props.label}
-        value={value}
+        value={props.setValue}
         onChange={handleChange}
         valueLabelDisplay="auto"
         getAriaValueText={valuetext}

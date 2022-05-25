@@ -22,7 +22,7 @@ const Resources: React.FC<{ settings: Settings }> = (props) => {
   };
 
   return (
-    <React.Fragment {...{ className: "resources" }}>
+    <React.Fragment>
       <Grid
         className="grid"
         container

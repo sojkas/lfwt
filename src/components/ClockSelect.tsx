@@ -2,12 +2,13 @@ import React, { useState } from "react";
 
 import { Select, InputLabel,  FormControl, MenuItem, SelectChangeEvent} from "@mui/material";
 
-const ClockSelect: React.FC<{label: string, clockValue: string}> = (props) => {
+const ClockSelect: React.FC<{label: string, clockValue: string, changedClockValue: (value: string) => void}> = (props) => {
     const clockId = props.label + "-select";
     const [selectedClock, setSelectedClock]=useState<string>(props.clockValue);
     const setClockHandler = (event: SelectChangeEvent) => {
         event.preventDefault();
         setSelectedClock(event.target.value);
+        return props.changedClockValue(event.target.value);
     }
 
     return (
