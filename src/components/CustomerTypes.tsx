@@ -25,7 +25,8 @@ const CustomerTypes: React.FC<{
     props.settings.customers[0].id
   );
 
-  const [selectedCustomerDetail, setSelectedCustomerDetail] = useState<CustomerDetail>(props.settings.customerDetails[0]);
+  const [selectedCustomerDetail, setSelectedCustomerDetail] =
+    useState<CustomerDetail>(props.settings.customerDetails[0]);
 
   const [customerDetails, setCustomerDetails] = useState<CustomerDetail[]>(
     props.settings.customerDetails
@@ -33,7 +34,7 @@ const CustomerTypes: React.FC<{
 
   const activeCustomerIdHandler = (customerDetailId: string) => {
     setSelectedCustomerId(customerDetailId);
-  }
+  };
 
   const createCustomerDetail = (cdID: number) => {
     const newCustomerDetail = new CustomerDetail(
@@ -72,22 +73,26 @@ const CustomerTypes: React.FC<{
     props.settings.customerId = customerId;
     props.settings.customerDetails = customerDetails;
     props.updatedSettings(props.settings);
-  }, [customers, props.settings, newNameCustomer, customerDetails, customerId]);
+  }, [customers, newNameCustomer, customerDetails, customerId]);
 
   useEffect(() => {
     for (let detail of customerDetails) {
-      if (detail.id === selectedCustomerId) return (
-        setSelectedCustomerDetail(customerDetails[customerDetails.indexOf(detail)])
-      );
+      if (detail.id === selectedCustomerId)
+        return setSelectedCustomerDetail(
+          customerDetails[customerDetails.indexOf(detail)]
+        );
     }
   }, [selectedCustomerId]);
 
-
   const updateDetail = (id: string, updatedDetail: CustomerDetail) => {
     for (let detail of customerDetails) {
-      if (detail.id === id) return (props.settings.customerDetails.splice(customerDetails.indexOf(detail),1,updatedDetail));
+      if (detail.id === id)
+        return props.settings.customerDetails.splice(
+          customerDetails.indexOf(detail),
+          1,
+          updatedDetail
+        );
     }
-    
   };
   const updateCustomerNameHandler = (id: string, newName: string) => {
     setNewNameCustomer(newName);
@@ -111,15 +116,13 @@ const CustomerTypes: React.FC<{
             <Grid item xs={5}>
               <ButtonGroup orientation="vertical" variant="contained">
                 {customers.map((customer) => (
-                  <div key={customer.id}>
-                    <CustomerComponent
-                      customerId={customer.id}
-                      name={customer.name}
-                      removeCustomer={removeCustomerHandler}
-                      activeCustomerId={activeCustomerIdHandler}
-                    />
-                    <p>Customer ID = {customer.id}</p>
-                  </div>
+                  <CustomerComponent
+                    key={customer.id}
+                    customerId={customer.id}
+                    name={customer.name}
+                    removeCustomer={removeCustomerHandler}
+                    activeCustomerId={activeCustomerIdHandler}
+                  />
                 ))}
               </ButtonGroup>
             </Grid>

@@ -1,25 +1,48 @@
-import Grid from "@mui/material/Grid";
-import { TextField } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import React, { useState } from "react";
+import { Fab, TextField, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import Gmap from "./Gmap";
-import DepotSet from "./DepotSet";
+import DepotSetUnit from "./DepotSetUnit";
 import Nimbees from "./Nimbees";
 import Transporters from "./Transporters";
 import Shift from "./Shift";
-import Settings from "../models/settings";
+import Settings, { DepotUnit } from "../models/settings";
+import { Add } from "@mui/icons-material";
 
-const Resources: React.FC<{ settings: Settings }> = (props) => {
-  const [depotSlots, setDepotSlots] = useState<number>(
-    props.settings.depotsSlotNumber
+const Resources: React.FC<{ settings: Settings, updatedSettings: (updatedSettings: Settings)=> void }> = (props) => {
+  const [depotSlotUnits, setDepotSlotUnits] = useState<DepotUnit[]>(
+    props.settings.depotUnits
   );
-  const depotSlotsHandle = (event: SelectChangeEvent) => {
+
+  const [cityName, setCityName] = useState<string>(props.settings.depotCity.cityName);
+
+  const addDepotUnitHandler = () => {
+    const newDepot: DepotUnit = new DepotUnit(props.settings.depotCity.cityId, "New Depot", 8);
+    setDepotSlotUnits(depotSlotUnits.concat(newDepot));
+  }
+
+  const removeDepotUnitHandler = (id: string) => {
+    const newDepotUnitsList = depotSlotUnits.filter((depotSlotUnit)=> depotSlotUnit.id !== id);
+    setDepotSlotUnits(newDepotUnitsList);
+  }
+
+  const updateDepotUnitHandler = (dpUnit: DepotUnit) => {
+    for (let depotUnit of depotSlotUnits){
+    return props.settings.depotUnits.splice(depotSlotUnits.indexOf(depotUnit), 1, dpUnit);
+    }
+  }
+
+  const cityNameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    setDepotSlots(parseInt(event.target.value));
-  };
+    setCityName(event.target.value);
+  }
+
+  useEffect(()=>{
+    props.settings.depotCity.cityName = cityName;
+    props.settings.depotUnits = depotSlotUnits;
+    props.updatedSettings(props.settings);
+  },[depotSlotUnits, cityName, props]);
+
+
 
   return (
     <React.Fragment>
@@ -32,39 +55,26 @@ const Resources: React.FC<{ settings: Settings }> = (props) => {
       >
         <Grid className="box" item xs={4}>
           <h4>Depots configuration</h4>
-          <Grid container direction="row" spacing={1}>
-            <Grid item xs={6}>
-              <Grid container direction="column" spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    id="city"
-                    label="City"
-                    variant="outlined"
-                    defaultValue={props.settings.depotsCityValue}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel id="slot-depot-label">Depot slots</InputLabel>
-                    <Select
-                      labelId="slot-depot-label"
-                      id="slot-depot-select"
-                      value={depotSlots.toString()}
-                      label="Slots per Depot"
-                      onChange={depotSlotsHandle}
-                      size="small"
-                    >
-                      <MenuItem value={4}>4</MenuItem>
-                      <MenuItem value={8}>8</MenuItem>
-                      <MenuItem value={12}>12</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
+          <Grid container direction="column" spacing={2}>
+            <Grid item xs={1}>
+              <TextField
+                id="city"
+                label="City"
+                variant="outlined"
+                value={props.settings.depotCity.cityName}
+                size="small"
+                onChange={cityNameChangeHandler}
+              />
             </Grid>
-            <Grid item xs={6}>
-              <DepotSet settings={props.settings} />
+            <Grid item rowSpacing={2}>
+              {depotSlotUnits.map((depotUnit) => (
+                <DepotSetUnit key={depotUnit.id} depotUnit={depotUnit} removeDepotUnit={removeDepotUnitHandler} updateDepotUnit={updateDepotUnitHandler}/>
+              ))}
+            </Grid>
+            <Grid item xs={1}>
+              <Fab aria-label="add" onClick={addDepotUnitHandler}>
+                <Add />
+              </Fab>
             </Grid>
           </Grid>
           <div className="space-20"></div>

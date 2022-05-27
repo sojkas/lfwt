@@ -11,8 +11,8 @@ function App() {
   const [settings, setSettings] = useState<Settings>(new Settings());
   const [menuItem, setMenuItem] = useState<number>(0);
 
-  const updateSettingsHandler = () => {
-    setSettings(settings);
+  const updateSettingsHandler = (updatedSettings : Settings) => {
+    setSettings(updatedSettings);
   }
 
   const selectedItemHandler = (selectedItem: number) => {
@@ -23,7 +23,7 @@ function App() {
     <div className="app">
       <Navbar selectedItem={selectedItemHandler} active={menuItem} />
       <div className="section">
-        {menuItem === 0 && <Resources settings={settings} />}
+        {menuItem === 0 && <Resources settings={settings}  updatedSettings={updateSettingsHandler}/>}
         {menuItem === 1 && <CustomerTypes settings={settings} updatedSettings={updateSettingsHandler}/>}
         {menuItem === 2 && <CustomerDistribution settings={settings}/>}
         {menuItem === 3 && <Simulation />}

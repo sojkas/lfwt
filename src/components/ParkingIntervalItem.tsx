@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Grid, Icon, TextField } from "@mui/material";
+import { Grid, IconButton, TextField } from "@mui/material";
 import ClockSelect from "./ClockSelect";
-import { Remove } from "@mui/icons-material";
+import { RemoveCircleOutline } from "@mui/icons-material";
 import { ParkingInterval } from "../models/settings";
 
 const ParkingIntervalItem: React.FC<{
   parkingIntervalItemValues: ParkingInterval;
   updatedParkingInterval: (updatedIntervalValues: ParkingInterval) => void;
+  removeParkingInterval: (parkingIntervalId: string) => void;
 }> = (props) => {
   const labelClockParkingFrom: string = "From";
   const labelClockParkingTo: string = "To";
@@ -14,39 +15,39 @@ const ParkingIntervalItem: React.FC<{
   const [parkingItervalValues, setParkingIntervalValues] =
     useState<ParkingInterval>(props.parkingIntervalItemValues);
 
-    const changedClockFromValueHandler = (newValue: string) => {
-      parkingItervalValues.from = newValue;
-      return setParkingIntervalValues(parkingItervalValues);
-    }
+  const changedClockFromValueHandler = (newValue: string) => {
+    parkingItervalValues.from = newValue;
+    return setParkingIntervalValues(parkingItervalValues);
+  };
 
-    const changedClockToValueHandler = (newValue: string) => {
-      parkingItervalValues.to = newValue;
-      return setParkingIntervalValues(parkingItervalValues);
-    }
+  const changedClockToValueHandler = (newValue: string) => {
+    parkingItervalValues.to = newValue;
+    return setParkingIntervalValues(parkingItervalValues);
+  };
 
-    const changePercentageHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-      parkingItervalValues.percent = +event.target.value;
-      return setParkingIntervalValues(parkingItervalValues);
-    }
+  const changePercentageHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    parkingItervalValues.percent = +event.target.value;
+    return setParkingIntervalValues(parkingItervalValues);
+  };
+  const removeParkingIntervalHandler = () => {
+    return props.removeParkingInterval(parkingItervalValues.id);
+  };
 
   return (
     <React.Fragment>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <label>Parking interval: </label>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <ClockSelect
           label={labelClockParkingFrom}
           clockValue={parkingItervalValues.from}
           changedClockValue={changedClockFromValueHandler}
         />
       </Grid>
-      <Grid item xs={1}>
-        <Icon fontSize="small">
-          <Remove />
-        </Icon>
-      </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <ClockSelect
           label={labelClockParkingTo}
           clockValue={parkingItervalValues.to}
@@ -62,6 +63,11 @@ const ParkingIntervalItem: React.FC<{
           size="small"
           onChange={changePercentageHandler}
         />
+      </Grid>
+      <Grid item xs={4}>
+        <IconButton onClick={removeParkingIntervalHandler}>
+          <RemoveCircleOutline />
+        </IconButton>
       </Grid>
     </React.Fragment>
   );

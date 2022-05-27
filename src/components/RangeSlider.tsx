@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Slider } from "@mui/material";
 
 const RangeSlider: React.FC<{
@@ -48,6 +48,10 @@ const RangeSlider: React.FC<{
       label: value[1].toString() + " " + props.sliderUnit,
     },
   ];
+
+  useEffect(()=>{
+    setValue([props.minSetValue,props.maxSetValue])
+  },[props.minSetValue, props.maxSetValue]);
 
   return (
     <React.Fragment>

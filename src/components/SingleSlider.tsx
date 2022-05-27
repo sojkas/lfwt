@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Slider } from "@mui/material";
 
 const SingleSlider: React.FC<{
@@ -9,7 +9,11 @@ const SingleSlider: React.FC<{
   sliderUnit: string;
   singleSliderChange: (value: number) => void;
 }> = (props) => {
+
   const [value, setValue] = React.useState<number>(props.setValue);
+  useEffect(()=>{
+    setValue(props.setValue);
+  },[props.setValue]);
   const valuetext = (value: number) => {
     return value.toString() + " " + props.sliderUnit.toString();
   };
@@ -45,7 +49,7 @@ const SingleSlider: React.FC<{
     <React.Fragment>
       <Slider
         getAriaLabel={() => props.label}
-        value={props.setValue}
+        value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
         getAriaValueText={valuetext}

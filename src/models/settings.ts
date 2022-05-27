@@ -1,10 +1,8 @@
 class Settings {
   customerId: number;
   /* RESOURCES */
-  /* Depots Default Variables */
-  depotsCityValue: string;
-  depotsDepotSetName: string;
-  depotsSlotNumber: number;
+  depotCity: DepotCity;
+  depotUnits: DepotUnit[];
 
   /* Nimbees */
   nimbeesName: string;
@@ -44,10 +42,9 @@ class Settings {
   distributions: DistributionUnitClass[];
 
   constructor() {
-    this.customerId =2;
-    this.depotsCityValue = "Prague";
-    this.depotsDepotSetName = "depot A";
-    this.depotsSlotNumber = 4;
+    this.customerId = 2;
+    this.depotCity = new DepotCity("Prague");
+    this.depotUnits = [new DepotUnit(this.depotCity.cityId, "depot A", 4)];
     this.nimbeesName = "v 1";
     this.nimbeesCapacity = 18;
     this.transporterCount = 2;
@@ -56,18 +53,21 @@ class Settings {
     this.shiftMorningParams = ["10 am", "2 pm", 5];
     this.shiftEveningParams = ["8 am", "12 am", 8];
     this.shiftNightParams = ["6 am", "10 pm", 12];
-    this.customers = [new Customer(1 , "Tomas Marny")];
-    this.customerDetails = [new CustomerDetail(this.customers[0].id,
-       "Outskirts car adicts", 
-       [1, 30, 8, 17, "charges"],
-       [5, 40, 17, 26, "kWh"],
-       [0, 100, 60, "%"],
-       [0, 40, 20, "%"],
-       [
-        new ParkingInterval(this.customers[0].id, "10 am", "2 pm", 33),
-        new ParkingInterval(this.customers[0].id, "8 am", "3 pm", 45)
-      ]
-       )]
+    this.customers = [new Customer(1, "Tomas Marny")];
+    this.customerDetails = [
+      new CustomerDetail(
+        this.customers[0].id,
+        "Outskirts car adicts",
+        [1, 30, 8, 17, "charges"],
+        [5, 40, 17, 26, "kWh"],
+        [0, 100, 60, "%"],
+        [0, 40, 20, "%"],
+        [
+          new ParkingInterval(this.customers[0].id, "10 am", "2 pm", 33),
+          new ParkingInterval(this.customers[0].id, "8 am", "3 pm", 45),
+        ]
+      ),
+    ];
     this.symbolicName = "Vnitrni mesto";
     this.radius = [5, "km"];
     this.distributions = [
@@ -85,7 +85,12 @@ class ParkingInterval {
   from: string;
   to: string;
   percent: number;
-  constructor(customerId :string, fromValue: string, toValue: string, percentValue: number) {
+  constructor(
+    customerId: string,
+    fromValue: string,
+    toValue: string,
+    percentValue: number
+  ) {
     this.id = Math.random().toString();
     this.customerID = customerId;
     this.from = fromValue;
@@ -149,8 +154,42 @@ class CustomerDetail {
     this.kWhPerMonth = kWhPerMonth;
     this.subscriberRatio = subscriberRatio;
     this.sameDayOrders = sameDayOrders;
-    this.parking = parking;    
+    this.parking = parking;
+  }
+}
+
+class DepotCity {
+  cityId: string;
+  cityName: string;
+
+  constructor(cityName: string) {
+    this.cityId = Date.now().toString();
+    this.cityName = cityName;
+  }
+}
+
+class DepotUnit {
+  id: string;
+  cityId: string;
+  /* Depots Default Variables */
+
+  depotName: string;
+  depotSlotNumber: number;
+
+  constructor(cityId: string, depotName: string, depotSlotNumber: number) {
+    this.id = Date.now().toString();
+    this.cityId = cityId;
+    this.depotName = depotName;
+    this.depotSlotNumber = depotSlotNumber;
   }
 }
 export default Settings;
-export { Settings, ParkingInterval, DistributionUnitClass, CustomerDetail, Customer };
+export {
+  Settings,
+  ParkingInterval,
+  DistributionUnitClass,
+  CustomerDetail,
+  Customer,
+  DepotCity,
+  DepotUnit,
+};
