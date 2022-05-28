@@ -29,11 +29,9 @@ class Settings {
   parking: ParkingInterval[];*/
 
   /* CUSTOMER DISTRIBUTION */
-  symbolicName: string;
-  // radius [radius: number, unit: string]
-  radius: [number, string];
+  cityRadius: CityRadius;
   // pole distributionUnits
-  distributions: DistributionUnitClass[];
+  distributions: DistributionItem[];
 
   constructor() {
     this.customerId = 2;
@@ -44,8 +42,8 @@ class Settings {
     this.shifts = [
       new Shift("Morning shift", "10 am", "2 pm", 5),
       new Shift("Evening shift", "8 am", "12 am", 8),
-      new Shift("Night shift", "6 am", "10 pm", 12)
-    ]
+      new Shift("Night shift", "6 am", "10 pm", 12),
+    ];
     this.customers = [new Customer(1, "Tomas Marny")];
     this.customerDetails = [
       new CustomerDetail(
@@ -61,13 +59,10 @@ class Settings {
         ]
       ),
     ];
-    this.symbolicName = "Vnitrni mesto";
-    this.radius = [5, "km"];
+    this.cityRadius = new CityRadius("Vnitrni mesto", 0, 10, 5, "km");
     this.distributions = [
-      new DistributionUnitClass("Manager", 100, true),
-      new DistributionUnitClass("Distribution 3", 50, false),
-      new DistributionUnitClass("Distribution 2", 35, true),
-      new DistributionUnitClass("Manager", 75, false),
+      new DistributionItem(this.cityRadius.cityId, "Manager", 100, true),
+      /* new DistributionItem(this.cityRadius.cityId, "Distribution 3", 50, false), */
     ];
   }
 }
@@ -84,7 +79,7 @@ class ParkingInterval {
     toValue: string,
     percentValue: number
   ) {
-    this.id = Math.random().toString();
+    this.id = "PI" + Date.now().toString();
     this.customerID = customerId;
     this.from = fromValue;
     this.to = toValue;
@@ -92,17 +87,20 @@ class ParkingInterval {
   }
 }
 
-class DistributionUnitClass {
+class DistributionItem {
   id: string;
+  mapId: string;
   distributor: string;
   distributionValue: number;
   isChecked: boolean;
   constructor(
+    mapId: string,
     distributor: string,
     distributionValue: number,
     isChecked: boolean
   ) {
-    this.id = Date.now().toString();
+    this.id = "DI" + Date.now().toString();
+    this.mapId = mapId;
     this.distributor = distributor;
     this.distributionValue = distributionValue;
     this.isChecked = isChecked;
@@ -156,7 +154,7 @@ class DepotCity {
   cityName: string;
 
   constructor(cityName: string) {
-    this.cityId = Date.now().toString();
+    this.cityId = "DC" + Date.now().toString();
     this.cityName = cityName;
   }
 }
@@ -170,7 +168,7 @@ class DepotUnit {
   depotSlotNumber: number;
 
   constructor(cityId: string, depotName: string, depotSlotNumber: number) {
-    this.id = Date.now().toString();
+    this.id = "DU" + Date.now().toString();
     this.cityId = cityId;
     this.depotName = depotName;
     this.depotSlotNumber = depotSlotNumber;
@@ -184,7 +182,7 @@ class Nimbee {
   nimbeePieces: number;
 
   constructor(name: string, capacity: number, pieces: number) {
-    this.id = Date.now().toString();
+    this.id = "N" + Date.now().toString();
     this.nimbeeName = name;
     this.nimbeeCapacity = capacity;
     this.nimbeePieces = pieces;
@@ -197,7 +195,7 @@ class Transporter {
   transporterPieces: number;
 
   constructor(slots: number, capacity: number, pieces: number) {
-    this.id = Date.now().toString();
+    this.id = "T" + Date.now().toString();
     this.transporterSlots = slots;
     this.transporterCapacity = capacity;
     this.transporterPieces = pieces;
@@ -212,18 +210,39 @@ class Shift {
   drivers: number;
 
   constructor(name: string, from: string, to: string, drivers: number) {
-    this.id = Date.now().toString();
+    this.id = "S" + Date.now().toString() + Math.random().toString();
     this.shiftName = name;
     this.from = from;
     this.to = to;
     this.drivers = drivers;
   }
 }
+class CityRadius {
+  id: string;
+  name: string;
+  cityId: string;
+  label: string;
+  minValue: number;
+  maxValue: number;
+  setValue: number;
+  unit: string;
+
+  constructor(name: string, min: number, max: number, set: number, unit: string) {
+    this.id = "CR" + Date.now().toString();
+    this.name = name;
+    this.cityId = name;
+    this.label = "Radius";
+    this.minValue = min;
+    this.maxValue = max;
+    this.setValue = set;
+    this.unit=unit;
+  }
+}
 export default Settings;
 export {
   Settings,
   ParkingInterval,
-  DistributionUnitClass,
+  DistributionItem,
   CustomerDetail,
   Customer,
   DepotCity,
@@ -231,4 +250,5 @@ export {
   Nimbee,
   Transporter,
   Shift,
+  CityRadius,
 };

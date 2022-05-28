@@ -4,7 +4,7 @@ import Gmap from "./Gmap";
 import DepotSetUnit from "./DepotSetUnit";
 import TransportersItem from "./TransportersItem";
 import Settings, { DepotUnit, Nimbee, Shift, Transporter } from "../models/settings";
-import { Add, FilterTiltShiftSharp } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import NimbeeItem from "./NimbeeItem";
 import ShiftItem from "./ShiftItem";
 
@@ -20,7 +20,7 @@ const Resources: React.FC<{
   const [transporters, setTransporters] = useState<Transporter[]>(
     props.settings.transporters
   );
-  const [shifts, setShifts] = useState<Shift[]>(props.settings.shifts);
+  const shifts: Shift[] = props.settings.shifts;
 
   const [cityName, setCityName] = useState<string>(
     props.settings.depotCity.cityName
@@ -168,7 +168,7 @@ const Resources: React.FC<{
           <Gmap />
         </Grid>
         <Grid className="box" item xs={4}>
-          <h4>Batteries & Transporters {nimbees.length}</h4>
+          <h4>Batteries & Transporters</h4>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={6}>
               <Grid container direction="column" spacing={2}>
@@ -233,7 +233,7 @@ const Resources: React.FC<{
           <Grid container direction="column" spacing={2}>
             <Grid item xs={6}>
               {shifts.map((shift)=>(
-                <ShiftItem shift={shift} updateShift={updateShiftHandler} />
+                <ShiftItem key={shift.id} shift={shift} updateShift={updateShiftHandler} />
               ))}
             </Grid>
           </Grid>

@@ -10,80 +10,93 @@ import {
   Switch,
   IconButton,
 } from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
-import React, { useState } from "react";
+import { RemoveCircleOutline } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { DistributionItem } from "../models/settings";
 
-const DistributionUnit: React.FC<{ distributor: string, distributionValue: number, isChecked: boolean, onAddDistribution: () => void }> = (props) => {
-  const [distribution, setDistribution] = useState<string>(props.distributor);
-  const [isChecked, setIsChecked] = useState<boolean>(props.isChecked);
+const DistributionUnit: React.FC<{
+  distribution: DistributionItem;
+  updateDistribution: (id: string, distribution: DistributionItem) => void;
+  removeDistribution: (id: string) => void;
+}> = (props) => {
+  const [distribution, setDistribution] = useState<DistributionItem>(
+    props.distribution
+  );
 
-  const distributionHandler = (event: SelectChangeEvent) => {
+  const distributorChangeHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
-    setDistribution(event.target.value);
+    setDistribution((prevDistr) => ({
+      ...prevDistr,
+      distributor: event.target.value,
+    }));
+  };
+  const distributionValueHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault();
+    setDistribution((prevDistr) => ({
+      ...prevDistr,
+      distributionValue: parseInt(event.target.value),
+    }));
   };
   const isCheckedHandler = () => {
-    setIsChecked(!isChecked);
+    setDistribution((prevDistr) => ({
+      ...prevDistr,
+      isChecked: !distribution.isChecked,
+    }));
+  };
+
+  const removeDistributonHandler = () => {
+    props.removeDistribution(props.distribution.id);
   }
-  const addDistributinHandler = () => {
-    props.onAddDistribution();
-  }
+
+  useEffect(()=>{
+    props.updateDistribution(props.distribution.id, distribution);
+  },[distribution, props])
 
   return (
     <React.Fragment>
-      <Grid container direction="column" spacing={1}>
-        <Grid item xs={6}>
-          <Grid container direction="row" spacing={2}>
-            <Grid item xs={3}>
-              <FormControl fullWidth>
-                <Select
-                  labelId="distribution-label"
-                  id="distribution-select"
-                  value={distribution}
-                  onChange={distributionHandler}
-                  size="small"
-                >
-                  <MenuItem value={"Manager"}>Manager</MenuItem>
-                  <MenuItem value={"Distribution 2"}>Distribution 2</MenuItem>
-                  <MenuItem value={"Distribution 3"}>Distribution 3</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                id="distribution-value-name"
-                variant="outlined"
-                defaultValue={props.distributionValue}
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Stack direction="row" spacing={1}>
-                <Typography>Random</Typography>
-                <Switch
-                  checked={isChecked}
-                  inputProps={{ "aria-label": "ant design" }}
-                  onChange={isCheckedHandler}
-                />
-                <Typography>Cluster</Typography>
-              </Stack>
-            </Grid>
-            <Grid item xs={3}>
-              <IconButton aria-label="add" size="small">
-                <Remove />
-              </IconButton>
-            </Grid>
-          </Grid>
+      <Grid container direction="row" spacing={2} className="item-space">
+        <Grid item xs={3}>
+          <FormControl fullWidth>
+            <Select
+              labelId="distribution-label"
+              id="distribution-select"
+              value={distribution.distributor}
+              onChange={distributorChangeHandler}
+              size="small"
+            >
+              <MenuItem value={"Manager"}>Manager</MenuItem>
+              <MenuItem value={"Distribution 2"}>Distribution 2</MenuItem>
+              <MenuItem value={"Distribution 3"}>Distribution 3</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
-        <Grid item xs={6}>
-          <Grid container direction="row" spacing={2}>
-            <Grid item xs={9}></Grid>
-            <Grid item xs={3}>
-              <IconButton aria-label="add" size="small" onClick={addDistributinHandler}>
-                <Add />
-              </IconButton>
-            </Grid>
-          </Grid>
+        <Grid item xs={3}>
+          <TextField
+            id="distribution-value-name"
+            variant="outlined"
+            value={distribution.distributionValue}
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            size="small"
+            onChange={distributionValueHandler}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Stack direction="row" spacing={1}>
+            <Typography>Random</Typography>
+            <Switch
+              checked={distribution.isChecked}
+              inputProps={{ "aria-label": "ant design" }}
+              onChange={isCheckedHandler}
+            />
+            <Typography>Cluster</Typography>
+          </Stack>
+        </Grid>
+        <Grid item xs={3}>
+          <IconButton aria-label="add" size="small" onClick={removeDistributonHandler}>
+            <RemoveCircleOutline />
+          </IconButton>
         </Grid>
       </Grid>
     </React.Fragment>

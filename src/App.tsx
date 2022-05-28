@@ -25,7 +25,7 @@ function App() {
       <div className="section">
         {menuItem === 0 && <Resources settings={settings}  updatedSettings={updateSettingsHandler}/>}
         {menuItem === 1 && <CustomerTypes settings={settings} updatedSettings={updateSettingsHandler}/>}
-        {menuItem === 2 && <CustomerDistribution settings={settings}/>}
+        {menuItem === 2 && <CustomerDistribution settings={settings} updatedSettings={updateSettingsHandler}/>}
         {menuItem === 3 && <Simulation />}
       </div>
     </div>

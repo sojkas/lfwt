@@ -1,18 +1,80 @@
-import { Grid, TextField, Button } from "@mui/material";
-import React, { useState } from "react";
+import { Grid, TextField, Button, Fab } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
 import Gmap from "./Gmap";
 import DistributionUnit from "./DistributionUnit";
-import Settings, {DistributionUnitClass} from "../models/settings";
+import Settings, { CityRadius, DistributionItem } from "../models/settings";
+import SingleSlider from "./SingleSlider";
 
-const CustomerDistribution: React.FC<{ settings: Settings }> = (props) => {
-  const[allDistributions, setAllDistributions] = useState<Settings["distributions"]>(props.settings.distributions);
+const CustomerDistribution: React.FC<{
+  settings: Settings;
+  updatedSettings: (updatedSettingsValues: Settings) => void;
+}> = (props) => {
+  const [allDistributions, setAllDistributions] = useState<DistributionItem[]>(
+    props.settings.distributions
+  );
+
+  const [cityRadius, setCityRadius] = useState<CityRadius>(
+    props.settings.cityRadius
+  );
 
   const addDistributionHandler = () => {
-    const newDistribution = new DistributionUnitClass("Manager", 100, false);
-    setAllDistributions((prevDistributions)=>{
+    const newDistribution = new DistributionItem(
+      cityRadius.cityId,
+      "Manager",
+      100,
+      false
+    );
+    setAllDistributions((prevDistributions) => {
       return prevDistributions.concat(newDistribution);
-    })
+    });
   };
+
+  const updateDistributionHandler = (id: string, distri: DistributionItem) => {
+    for (let distribution of allDistributions) {
+      if (distribution.id === id) {
+        return props.settings.distributions.splice(
+          allDistributions.indexOf(distribution),
+          1,
+          distri
+        );
+      }
+    }
+  };
+
+  const sliderChangeHandler = (newValue: number) => {
+    console.log("to be updated " + JSON.stringify(newValue));
+    console.log("all nimbs " + JSON.stringify(cityRadius));
+    setCityRadius((prevRad) => ({ ...prevRad, setValue: newValue }));
+  };
+
+  const cityNameChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault();
+    setCityRadius((prevCityRad) => ({
+      ...prevCityRad,
+      name: event.target.value,
+    }));
+  };
+
+  const saveDistributionsHandler = () => {
+    props.settings.distributions = allDistributions;
+    props.settings.cityRadius = cityRadius;
+    props.updatedSettings(props.settings);
+  };
+
+  const removeDistributionHandler = (id: string) => {
+    const newDistributionArray = allDistributions.filter(
+      (distribution) => distribution.id !== id
+    );
+    setAllDistributions(newDistributionArray);
+  };
+
+  useEffect(()=>{
+    props.settings.distributions=allDistributions;
+    props.settings.cityRadius=cityRadius;
+  },[allDistributions, cityRadius, props])
 
   return (
     <React.Fragment>
@@ -28,36 +90,60 @@ const CustomerDistribution: React.FC<{ settings: Settings }> = (props) => {
                 id="symbolic-name"
                 label="Symbolicky nazev"
                 variant="outlined"
-                defaultValue={props.settings.symbolicName}
+                value={cityRadius.name}
                 size="small"
+                onChange={cityNameChangeHandler}
               />
             </Grid>
             <Grid item xs={1}>
-              <TextField
-                id="radius"
-                label="Radius"
-                variant="outlined"
-                defaultValue={
-                  props.settings.radius[0].toString() +
-                  " " +
-                  props.settings.radius[1]
-                }
-                size="small"
-              />
+              <Grid container direction="row" spacing={2}>
+                <Grid item xs={2}>
+                  {cityRadius.label}
+                </Grid>
+                <Grid item xs={8}>
+                  <SingleSlider
+                    label={cityRadius.label}
+                    minValue={cityRadius.minValue}
+                    maxValue={cityRadius.maxValue}
+                    setValue={cityRadius.setValue}
+                    sliderUnit={cityRadius.unit}
+                    singleSliderChange={sliderChangeHandler}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={1}>
               {allDistributions.map((distribution) => (
                 <DistributionUnit
-                  key={Math.floor(Math.random() * 101)}
-                  distributor={distribution.distributor}
-                  distributionValue={distribution.distributionValue}
-                  isChecked={distribution.isChecked}
-                  onAddDistribution={addDistributionHandler}
+                  key={distribution.id}
+                  distribution={distribution}
+                  updateDistribution={updateDistributionHandler}
+                  removeDistribution={removeDistributionHandler}
                 />
               ))}
             </Grid>
+            <Grid item xs={6}>
+              <Grid container direction="row" spacing={2}>
+                <Grid item xs={9}></Grid>
+                <Grid item xs={3}>
+                  <Fab
+                    aria-label="add"
+                    size="small"
+                    onClick={addDistributionHandler}
+                  >
+                    <Add />
+                  </Fab>
+                </Grid>
+              </Grid>
+            </Grid>
             <Grid item xs={1}>
-              <Button variant="outlined">Save</Button>
+              <Button
+                variant="outlined"
+                className="item-space"
+                onClick={saveDistributionsHandler}
+              >
+                Save
+              </Button>
             </Grid>
           </Grid>
         </Grid>

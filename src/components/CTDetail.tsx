@@ -271,7 +271,7 @@ const CTDetail: React.FC<{
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Button variant="outlined" onClick={saveHandler}>
+          <Button variant="outlined" onClick={saveHandler} className="item-space">
             Save
           </Button>
         </Grid>
