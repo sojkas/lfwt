@@ -97,10 +97,10 @@ const CustomerDistribution: React.FC<{
             </Grid>
             <Grid item xs={1}>
               <Grid container direction="row" spacing={2}>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   {cityRadius.label}
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={5}>
                   <SingleSlider
                     label={cityRadius.label}
                     minValue={cityRadius.minValue}
