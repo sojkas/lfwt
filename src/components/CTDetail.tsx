@@ -262,7 +262,7 @@ const CTDetail: React.FC<{
               <Fab
                 disabled={allParkingValue > 100}
                 aria-label="add"
-                size="large"
+                size="small"
                 onClick={addParkingHandler}
               >
                 <Add />

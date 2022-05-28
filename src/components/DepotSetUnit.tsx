@@ -15,7 +15,7 @@ import { DepotUnit } from "../models/settings";
 const DepotSetUnit: React.FC<{
   depotUnit: DepotUnit;
   removeDepotUnit: (id: string) => void;
-  updateDepotUnit: (depotUnit: DepotUnit) => void;
+  updateDepotUnit: (id: string, depotUnit: DepotUnit) => void;
 }> = (props) => {
   const [depotUnit, setDepotUnit] = useState<DepotUnit>(props.depotUnit);
 
@@ -38,29 +38,29 @@ const DepotSetUnit: React.FC<{
   };
 
   useEffect (()=>{
-    props.updateDepotUnit(depotUnit);
+    props.updateDepotUnit(props.depotUnit.id, depotUnit);
   }, [depotUnit]);
 
   return (
     <React.Fragment>
       <Grid container direction="row" spacing={2} className="item-space">
-        <Grid item xs={3}>
+        <Grid item xs={5}>
           <TextField
             id="depot"
             label="Depot set"
             variant="outlined"
-            value={props.depotUnit.depotName}
+            value={depotUnit.depotName}
             size="small"
             onChange={depotNameChangeHandler}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={5}>
           <FormControl fullWidth>
             <InputLabel id="slot-depot-label">Depot slots</InputLabel>
             <Select
               labelId="slot-depot-label"
               id="slot-depot-select"
-              value={props.depotUnit.depotSlotNumber.toString()}
+              value={depotUnit.depotSlotNumber.toString()}
               label="Slots per Depot"
               onChange={depotSlotsHandler}
               size="small"
@@ -71,7 +71,7 @@ const DepotSetUnit: React.FC<{
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <IconButton aria-label="remove" onClick={removeDepotUnitHandler}>
             <RemoveCircleOutline />
           </IconButton>

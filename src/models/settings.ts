@@ -5,19 +5,13 @@ class Settings {
   depotUnits: DepotUnit[];
 
   /* Nimbees */
-  nimbeesName: string;
-  nimbeesCapacity: number;
+  nimbees: Nimbee[];
 
   /* Transporters */
-  transporterCount: number;
-  transporterCapacity: number;
+  transporters: Transporter[];
 
   /* Shifts */
-  shiftName: string[];
-  //shift params [from, to, drivers]
-  shiftMorningParams: [string, string, number];
-  shiftEveningParams: [string, string, number];
-  shiftNightParams: [string, string, number];
+  shifts: Shift[];
 
   /* CUSTOMER TYPES */
   customers: Customer[];
@@ -45,14 +39,13 @@ class Settings {
     this.customerId = 2;
     this.depotCity = new DepotCity("Prague");
     this.depotUnits = [new DepotUnit(this.depotCity.cityId, "depot A", 4)];
-    this.nimbeesName = "v 1";
-    this.nimbeesCapacity = 18;
-    this.transporterCount = 2;
-    this.transporterCapacity = 10;
-    this.shiftName = ["Morning shift", "Evening shift", "Night shift"];
-    this.shiftMorningParams = ["10 am", "2 pm", 5];
-    this.shiftEveningParams = ["8 am", "12 am", 8];
-    this.shiftNightParams = ["6 am", "10 pm", 12];
+    this.nimbees = [new Nimbee("v 1", 18, 4)];
+    this.transporters = [new Transporter(2, 10, 5)];
+    this.shifts = [
+      new Shift("Morning shift", "10 am", "2 pm", 5),
+      new Shift("Evening shift", "8 am", "12 am", 8),
+      new Shift("Night shift", "6 am", "10 pm", 12)
+    ]
     this.customers = [new Customer(1, "Tomas Marny")];
     this.customerDetails = [
       new CustomerDetail(
@@ -109,7 +102,7 @@ class DistributionUnitClass {
     distributionValue: number,
     isChecked: boolean
   ) {
-    this.id = Math.random().toString();
+    this.id = Date.now().toString();
     this.distributor = distributor;
     this.distributionValue = distributionValue;
     this.isChecked = isChecked;
@@ -183,6 +176,49 @@ class DepotUnit {
     this.depotSlotNumber = depotSlotNumber;
   }
 }
+
+class Nimbee {
+  id: string;
+  nimbeeName: string;
+  nimbeeCapacity: number;
+  nimbeePieces: number;
+
+  constructor(name: string, capacity: number, pieces: number) {
+    this.id = Date.now().toString();
+    this.nimbeeName = name;
+    this.nimbeeCapacity = capacity;
+    this.nimbeePieces = pieces;
+  }
+}
+class Transporter {
+  id: string;
+  transporterSlots: number;
+  transporterCapacity: number;
+  transporterPieces: number;
+
+  constructor(slots: number, capacity: number, pieces: number) {
+    this.id = Date.now().toString();
+    this.transporterSlots = slots;
+    this.transporterCapacity = capacity;
+    this.transporterPieces = pieces;
+  }
+}
+
+class Shift {
+  id: string;
+  shiftName: string;
+  from: string;
+  to: string;
+  drivers: number;
+
+  constructor(name: string, from: string, to: string, drivers: number) {
+    this.id = Date.now().toString();
+    this.shiftName = name;
+    this.from = from;
+    this.to = to;
+    this.drivers = drivers;
+  }
+}
 export default Settings;
 export {
   Settings,
@@ -192,4 +228,7 @@ export {
   Customer,
   DepotCity,
   DepotUnit,
+  Nimbee,
+  Transporter,
+  Shift,
 };

@@ -109,7 +109,7 @@ const CustomerTypes: React.FC<{
         <Grid className="box" item xs={4}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={1}>
-              <Fab aria-label="Add" onClick={addCustomerHandler}>
+              <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
                 <AddIcon />
               </Fab>
             </Grid>
