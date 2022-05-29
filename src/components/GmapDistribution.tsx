@@ -19,7 +19,15 @@ import { isLatLngLiteral } from "@googlemaps/typescript-guards";
  * limitations under the License.
  */
 
-const Gmap: React.FC = () => {
+var map: google.maps.Map;
+
+const GmapDistribution: React.FC<{
+  radius: number;
+  readyToSetMarker: boolean;
+  readyToRemoveMarker: boolean;
+  setReadyInCd: (value: boolean) => void;
+  setRemoved: () => void;
+}> = (props) => {
   const [clicks, setClicks] = React.useState<google.maps.LatLng[]>([]);
   const [zoom, setZoom] = React.useState(13); // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
@@ -27,13 +35,43 @@ const Gmap: React.FC = () => {
     lng: 14.43713063332945,
   });
 
+  const [readyToSetMarker, setReadyToSetMarker] = React.useState<boolean>(
+    props.readyToSetMarker
+  );
+
   const render = (status: Status) => {
     return <h1>{status}</h1>;
   };
 
+  const drawCircleToPosition = (
+    centerValue: google.maps.LatLng,
+    radius: number
+  ) => {
+    const cityCircle = new google.maps.Circle({
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35,
+      map,
+      center: { lat: centerValue.lat(), lng: centerValue.lng() },
+      radius: radius * 1000,
+    });
+    cityCircle.setMap(map);
+    console.log(centerValue.lat() + "+" + centerValue.lng());
+  };
+
   const onClick = (e: google.maps.MapMouseEvent) => {
-    // avoid directly mutating state
-    setClicks([...clicks, e.latLng!]);
+    if (readyToSetMarker) {
+      if (clicks.length !== 0) {
+        return;
+      }
+      // avoid directly mutating state
+      setClicks([...clicks, e.latLng!]);
+      setReadyToSetMarker(false);
+      props.setReadyInCd(false);
+      drawCircleToPosition(e.latLng!, props.radius);
+    }
   };
 
   const onIdle = (m: google.maps.Map) => {
@@ -41,6 +79,14 @@ const Gmap: React.FC = () => {
     setZoom(m.getZoom()!);
     setCenter(m.getCenter()!.toJSON());
   };
+
+  React.useEffect(() => {
+    setReadyToSetMarker(props.readyToSetMarker);
+    if (props.readyToRemoveMarker) {
+      setClicks([]);
+      props.setRemoved();
+    }
+  }, [props]);
 
   /* const form = (
     <div
@@ -92,7 +138,7 @@ const Gmap: React.FC = () => {
   return (
     <div className="gmap">
       <Wrapper
-        apiKey={"AIzaSyD6ZBzRdf0-tyi1CRCbmiKDAxeJUOM3Zs4"}
+        apiKey={"yourApiKey"}
         render={render}
       >
         <Map
@@ -107,10 +153,10 @@ const Gmap: React.FC = () => {
           ))}
         </Map>
       </Wrapper>
-      
     </div>
   );
 };
+
 interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string };
   onClick?: (e: google.maps.MapMouseEvent) => void;
@@ -231,4 +277,4 @@ function useDeepCompareEffectForMaps(
   React.useEffect(callback, dependencies.map(useDeepCompareMemoize));
 }
 
-export default Gmap;
+export default GmapDistribution;
