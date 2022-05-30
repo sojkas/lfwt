@@ -1,15 +1,21 @@
 import { Fab, TextField, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Gmap from "./Gmap";
 import DepotSetUnit from "./DepotSetUnit";
 import TransportersItem from "./TransportersItem";
-import Settings, { DepotUnit, Nimbee, Shift, Transporter } from "../models/settings";
+import Settings, {
+  DepotUnit,
+  Nimbee,
+  Shift,
+  Transporter,
+} from "../models/settings";
 import { Add } from "@mui/icons-material";
 import NimbeeItem from "./NimbeeItem";
 import ShiftItem from "./ShiftItem";
+import Gmap from "./Gmap";
 
 const Resources: React.FC<{
   settings: Settings;
+  gmscriptLoaded: boolean;
   updatedSettings: (updatedSettings: Settings) => void;
 }> = (props) => {
   const [depotSlotUnits, setDepotSlotUnits] = useState<DepotUnit[]>(
@@ -85,7 +91,11 @@ const Resources: React.FC<{
     console.log("all nimbs " +JSON.stringify(nimbees)); */
     for (let transporter of transporters) {
       if (transporter.id === id) {
-        return props.settings.transporters.splice(transporters.indexOf(transporter), 1, transp);
+        return props.settings.transporters.splice(
+          transporters.indexOf(transporter),
+          1,
+          transp
+        );
       }
     }
   };
@@ -96,17 +106,23 @@ const Resources: React.FC<{
   };
 
   const removeTransporterHandler = (id: string) => {
-    const newTransportersList = transporters.filter((transporter) => transporter.id !== id);
+    const newTransportersList = transporters.filter(
+      (transporter) => transporter.id !== id
+    );
     setTransporters(newTransportersList);
   };
 
   const updateShiftHandler = (id: string, shiftItem: Shift) => {
     for (let shift of shifts) {
       if (shift.id === id) {
-        return props.settings.shifts.splice(shifts.indexOf(shift), 1, shiftItem);
+        return props.settings.shifts.splice(
+          shifts.indexOf(shift),
+          1,
+          shiftItem
+        );
       }
     }
-  }
+  };
 
   useEffect(() => {
     props.settings.depotCity.cityName = cityName;
@@ -165,7 +181,9 @@ const Resources: React.FC<{
             </Grid>
           </Grid>
           <div className="space-20"></div>
-          <Gmap />
+          {props.gmscriptLoaded && (
+            <Gmap circleAvailable={false} />
+          )}
         </Grid>
         <Grid className="box" item xs={4}>
           <h4>Batteries & Transporters</h4>
@@ -232,8 +250,12 @@ const Resources: React.FC<{
           <h4>Drivers & Workshifts</h4>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={6}>
-              {shifts.map((shift)=>(
-                <ShiftItem key={shift.id} shift={shift} updateShift={updateShiftHandler} />
+              {shifts.map((shift) => (
+                <ShiftItem
+                  key={shift.id}
+                  shift={shift}
+                  updateShift={updateShiftHandler}
+                />
               ))}
             </Grid>
           </Grid>

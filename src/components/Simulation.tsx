@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import GmapTest from "./Gmap";
 
 const Simulation = () => {
 
+    
+
     return (<React.Fragment>
-        <p>Tady bude Simulace</p>
+        tady bude simulace 
     </React.Fragment>);   
 };
 

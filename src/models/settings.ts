@@ -34,7 +34,7 @@ class Settings {
   distributions: DistributionItem[];
 
   constructor() {
-    this.customerId = 2;
+    this.customerId = 3;
     this.depotCity = new DepotCity("Prague");
     this.depotUnits = [new DepotUnit(this.depotCity.cityId, "depot A", 4)];
     this.nimbees = [new Nimbee("v 1", 18, 4)];
@@ -44,7 +44,7 @@ class Settings {
       new Shift("Evening shift", "8 am", "12 am", 8),
       new Shift("Night shift", "6 am", "10 pm", 12),
     ];
-    this.customers = [new Customer(1, "Tomas Marny")];
+    this.customers = [new Customer(1, "Outskirts car adicts"), new Customer(2, "Rohlik")];
     this.customerDetails = [
       new CustomerDetail(
         this.customers[0].id,
@@ -54,15 +54,27 @@ class Settings {
         [0, 100, 60, "%"],
         [0, 40, 20, "%"],
         [
-          new ParkingInterval(this.customers[0].id, "10 am", "2 pm", 33),
+          new ParkingInterval(this.customers[0].id, "10 am", "2 pm", 55),
           new ParkingInterval(this.customers[0].id, "8 am", "3 pm", 45),
+        ]
+      ),
+      new CustomerDetail(
+        this.customers[1].id,
+        "Rohlik",
+        [1, 30, 6, 13, "charges"],
+        [5, 40, 12, 30, "kWh"],
+        [0, 100, 45, "%"],
+        [0, 55, 27, "%"],
+        [
+          new ParkingInterval(this.customers[1].id, "8 am", "2 pm", 55),
+          new ParkingInterval(this.customers[1].id, "12 am", "4 pm", 45),
         ]
       ),
     ];
     this.cityRadius = new CityRadius("Vnitrni mesto", 0, 10, 5, "km");
     this.distributions = [
-      new DistributionItem(this.cityRadius.cityId, "Manager", 100, true),
-      /* new DistributionItem(this.cityRadius.cityId, "Distribution 3", 50, false), */
+      new DistributionItem(this.cityRadius.cityId, this.customers[0].name, 50, true),
+      new DistributionItem(this.cityRadius.cityId, this.customers[1].name, 25, false),
     ];
   }
 }
@@ -79,7 +91,7 @@ class ParkingInterval {
     toValue: string,
     percentValue: number
   ) {
-    this.id = "PI" + Date.now().toString();
+    this.id = "PI" + Date.now().toString() + Math.random().toString();
     this.customerID = customerId;
     this.from = fromValue;
     this.to = toValue;

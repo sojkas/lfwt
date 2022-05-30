@@ -1,13 +1,14 @@
 import { Grid, TextField, Button, Fab } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
-import GmapDistribution from "./GmapDistribution";
+import Gmap from "./Gmap";
 import DistributionUnit from "./DistributionUnit";
 import Settings, { CityRadius, DistributionItem } from "../models/settings";
 import SingleSlider from "./SingleSlider";
 
 const CustomerDistribution: React.FC<{
   settings: Settings;
+  gmscriptLoaded: boolean;
   updatedSettings: (updatedSettingsValues: Settings) => void;
 }> = (props) => {
   const [allDistributions, setAllDistributions] = useState<DistributionItem[]>(
@@ -46,8 +47,6 @@ const CustomerDistribution: React.FC<{
   };
 
   const sliderChangeHandler = (newValue: number) => {
-    console.log("to be updated " + JSON.stringify(newValue));
-    console.log("all nimbs " + JSON.stringify(cityRadius));
     setCityRadius((prevRad) => ({ ...prevRad, setValue: newValue }));
   };
 
@@ -99,13 +98,9 @@ const CustomerDistribution: React.FC<{
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
         <Grid className="box" item xs={6}>
-          <GmapDistribution
-            radius={cityRadius.setValue}
-            readyToSetMarker={isReadyToSetMarker}
-            readyToRemoveMarker={removeMarker}
-            setReadyInCd={setRdyInCd}
-            setRemoved={setRemoved}
-          />
+          {props.gmscriptLoaded &&
+          <Gmap circleAvailable={true} />
+          }
         </Grid>
         <Grid className="box" item xs={6}>
           <h4>Parametry oblasti</h4>
@@ -121,16 +116,6 @@ const CustomerDistribution: React.FC<{
                     size="small"
                     onChange={cityNameChangeHandler}
                   />
-                </Grid>
-                <Grid item xs={2}>
-                  <Button variant="outlined" onClick={setMarkerHandler}>
-                    Set marker
-                  </Button>
-                </Grid>
-                <Grid item xs={3}>
-                  <Button variant="outlined" onClick={removeMarkerHandler}>
-                    Remove marker
-                  </Button>
                 </Grid>
               </Grid>
             </Grid>
@@ -158,6 +143,7 @@ const CustomerDistribution: React.FC<{
                   distribution={distribution}
                   updateDistribution={updateDistributionHandler}
                   removeDistribution={removeDistributionHandler}
+                  allCustomers={props.settings.customers}
                 />
               ))}
             </Grid>

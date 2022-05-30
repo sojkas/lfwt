@@ -12,10 +12,11 @@ import {
 } from "@mui/material";
 import { RemoveCircleOutline } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
-import { DistributionItem } from "../models/settings";
+import { Customer, DistributionItem } from "../models/settings";
 
 const DistributionUnit: React.FC<{
   distribution: DistributionItem;
+  allCustomers: Customer[];
   updateDistribution: (id: string, distribution: DistributionItem) => void;
   removeDistribution: (id: string) => void;
 }> = (props) => {
@@ -66,9 +67,11 @@ const DistributionUnit: React.FC<{
               onChange={distributorChangeHandler}
               size="small"
             >
-              <MenuItem value={"Manager"}>Manager</MenuItem>
-              <MenuItem value={"Distribution 2"}>Distribution 2</MenuItem>
-              <MenuItem value={"Distribution 3"}>Distribution 3</MenuItem>
+              {props.allCustomers.map(
+                (customer) =>(
+                  <MenuItem key={customer.id} value={customer.name}>{customer.name}</MenuItem>
+                )
+              )}
             </Select>
           </FormControl>
         </Grid>
