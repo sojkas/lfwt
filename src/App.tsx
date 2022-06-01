@@ -35,7 +35,7 @@ function App() {
         {menuItem === 0 && <Resources settings={settings}  updatedSettings={updateSettingsHandler} gmscriptLoaded={scriptLoaded}/>}
         {menuItem === 1 && <CustomerTypes settings={settings} updatedSettings={updateSettingsHandler}/>}
         {menuItem === 2 && <CustomerDistribution settings={settings} updatedSettings={updateSettingsHandler} gmscriptLoaded={scriptLoaded}/>}
-        {menuItem === 3 && <Simulation />}
+        {menuItem === 3 && <Simulation settings={settings}/>}
       </div>
     </div>
   );

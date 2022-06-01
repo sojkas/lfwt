@@ -3,7 +3,11 @@ import { Add } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import Gmap from "./Gmap";
 import DistributionUnit from "./DistributionUnit";
-import Settings, { CityRadius, DistributionItem } from "../models/settings";
+import Settings, {
+  CityRadius,
+  DistributionItem,
+  MapMarker,
+} from "../models/settings";
 import SingleSlider from "./SingleSlider";
 
 const CustomerDistribution: React.FC<{
@@ -14,18 +18,40 @@ const CustomerDistribution: React.FC<{
   const [allDistributions, setAllDistributions] = useState<DistributionItem[]>(
     props.settings.distributions
   );
+  const [selectedDistributionMarker, setSelectedDistributionMarker] =
+    useState<MapMarker>();
+
+  const [selectedMarkerDistributions, setSelectedMarkerDistributions] =
+    useState<DistributionItem[]>();
+
+  const getSelectedMarkerDistribution = () => {
+    for (let i = 0; i < allDistributions.length; i++) {
+      if (allDistributions[i].mapId === selectedDistributionMarker?.id) {
+        setSelectedMarkerDistributions(selectedMarkerDistributions?.concat(allDistributions[i]));
+      }      
+    }
+  };
+
+  const selectedMarkerHandler = (mapMarker: MapMarker) => {
+    setSelectedDistributionMarker(mapMarker);
+  }
+
+  useEffect(getSelectedMarkerDistribution, [selectedDistributionMarker]);
+
+  const [distributionMarkers, setAllDistributionMarkers] = useState<
+    MapMarker[]
+  >(props.settings.distributionMarkers);
 
   const [cityRadius, setCityRadius] = useState<CityRadius>(
     props.settings.cityRadius
   );
 
   const [isReadyToSetMarker, setIsReadyToSetMarker] = useState<boolean>(false);
-  const [removeMarker, setRemoveMarker] = useState<boolean>(false);
 
   const addDistributionHandler = () => {
     const newDistribution = new DistributionItem(
       cityRadius.cityId,
-      "Manager",
+      props.settings.customers[0].name,
       100,
       false
     );
@@ -77,17 +103,15 @@ const CustomerDistribution: React.FC<{
     setIsReadyToSetMarker(true);
   };
 
-  const setRdyInCd = (value: boolean) => {
-    setIsReadyToSetMarker(value);
+  const isMarkerInPlace = (value: boolean) => {
+    setIsReadyToSetMarker(!value);
   };
 
   const removeMarkerHandler = () => {
-    setRemoveMarker(true);
+    
   };
 
-  const setRemoved = () => {
-    setRemoveMarker(false);
-  };
+ 
 
   useEffect(() => {
     props.settings.distributions = allDistributions;
@@ -98,9 +122,16 @@ const CustomerDistribution: React.FC<{
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
         <Grid className="box" item xs={6}>
-          {props.gmscriptLoaded &&
-          <Gmap circleAvailable={true} />
-          }
+          {props.gmscriptLoaded && (
+            <Gmap
+              settings = {props.settings}
+              isReadyToSetMarker={isReadyToSetMarker}
+              isMarkerInPlace={isMarkerInPlace}
+              circleAvailable={true}
+              allMarkers={distributionMarkers}
+              selectedMarker={selectedMarkerHandler}
+            />
+          )}
         </Grid>
         <Grid className="box" item xs={6}>
           <h4>Parametry oblasti</h4>
@@ -116,6 +147,16 @@ const CustomerDistribution: React.FC<{
                     size="small"
                     onChange={cityNameChangeHandler}
                   />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant="outlined" onClick={setMarkerHandler}>
+                    Set marker
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button variant="outlined" onClick={removeMarkerHandler}>
+                    Remove marker
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>

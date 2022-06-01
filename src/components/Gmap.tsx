@@ -1,20 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
-
-interface IMarker {
-  name: string;
-  latitude: number;
-  longitude: number;
-}
+import Settings, { MapMarker } from "../models/settings";
 
 type GoogleMapLatLng = google.maps.LatLng;
 type GoogleMap = google.maps.Map;
 type GoogleMarker = google.maps.Marker;
 
-const Gmap: React.FC<{ circleAvailable: boolean }> = (props) => {
+const Gmap: React.FC<{
+  settings: Settings;
+  circleAvailable: boolean;
+  isReadyToSetMarker: boolean;
+  allMarkers: MapMarker[];
+  isMarkerInPlace: (value: boolean)=>void;
+  selectedMarker: (mapMarker: MapMarker)=>void;
+}> = (props) => {
+
   const mapRef = useRef<HTMLDivElement>(null);
+  const [mapMarkerId, setMapMarkerId] = useState<string>(props.settings.distributionMarkerId.toString());
   const [map, setMap] = useState<GoogleMap>();
-  const [marker, setMarker] = useState<IMarker>();
+  const [marker, setMarker] = useState<MapMarker>();
   const [circleAvailable, setCircleAvailable] = useState<boolean>();
+  const [isReadyToSetMarker, setIsReadyToSetMarker] = useState<boolean>(props.isReadyToSetMarker);
 
   const startMap = (): void => {
     if (!map) {
@@ -53,6 +58,7 @@ const Gmap: React.FC<{ circleAvailable: boolean }> = (props) => {
         map,
         "click",
         function (event: google.maps.MapMouseEvent) {
+          setMapMarkerId((parseInt(mapMarkerId)+1).toString());
           coordinatesToNamePlace(event.latLng!);
         }
       );
@@ -62,11 +68,15 @@ const Gmap: React.FC<{ circleAvailable: boolean }> = (props) => {
   useEffect(initEventListener, [map]);
 
   const coordinatesToNamePlace = (coordinate: GoogleMapLatLng) => {
+    /* console.log(isReadyToSetMarker);
+    if (!isReadyToSetMarker) return; */
     setMarker({
-      name: "Marker",
+      id: mapMarkerId,
       latitude: coordinate.lat(),
       longitude: coordinate.lng(),
     });
+    setIsReadyToSetMarker(false);
+    props.isMarkerInPlace(true);
   };
 
   useEffect(() => {
@@ -78,7 +88,7 @@ const Gmap: React.FC<{ circleAvailable: boolean }> = (props) => {
     }
   }, [marker]);
 
-  const addMarker = (location: GoogleMapLatLng): void => {
+  const addMarker = (location: GoogleMapLatLng): void => {    
     const marker: GoogleMarker = new google.maps.Marker({
       position: location,
       map: map,
@@ -86,7 +96,6 @@ const Gmap: React.FC<{ circleAvailable: boolean }> = (props) => {
   };
 
   const addCircle = (location: GoogleMapLatLng): void => {
-    setCircleAvailable(true);
     const circle: google.maps.Circle = new google.maps.Circle({
       strokeColor: "#34342C",
       strokeOpacity: 0.8,

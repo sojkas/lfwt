@@ -4,6 +4,7 @@ import DepotSetUnit from "./DepotSetUnit";
 import TransportersItem from "./TransportersItem";
 import Settings, {
   DepotUnit,
+  MapMarker,
   Nimbee,
   Shift,
   Transporter,
@@ -31,6 +32,13 @@ const Resources: React.FC<{
   const [cityName, setCityName] = useState<string>(
     props.settings.depotCity.cityName
   );
+
+  const [isReadyToSetMarker, setIsReadyToSetMarker] = useState<boolean>(true);
+
+  const isMarkerInPlace = (value: boolean) => {};
+
+  const [depotMarkers, setDepotMarkers] = useState<MapMarker[]>([]);
+  const selectedMarkerHandler = (mapMarker: MapMarker) => {};
 
   const addDepotUnitHandler = () => {
     const newDepot: DepotUnit = new DepotUnit(
@@ -182,7 +190,14 @@ const Resources: React.FC<{
           </Grid>
           <div className="space-20"></div>
           {props.gmscriptLoaded && (
-            <Gmap circleAvailable={false} />
+            <Gmap
+              settings={props.settings}
+              isReadyToSetMarker={isReadyToSetMarker}
+              isMarkerInPlace={isMarkerInPlace}
+              circleAvailable={false}
+              allMarkers={depotMarkers}
+              selectedMarker={selectedMarkerHandler}
+            />
           )}
         </Grid>
         <Grid className="box" item xs={4}>

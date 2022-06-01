@@ -1,5 +1,9 @@
 class Settings {
+  /* GENERAL */
   customerId: number;
+  distributionMarkerId: number;
+  depotMarkerId: number;
+  
   /* RESOURCES */
   depotCity: DepotCity;
   depotUnits: DepotUnit[];
@@ -32,9 +36,12 @@ class Settings {
   cityRadius: CityRadius;
   // pole distributionUnits
   distributions: DistributionItem[];
+  distributionMarkers: MapMarker[];
 
   constructor() {
     this.customerId = 3;
+    this.distributionMarkerId=2;
+    this.depotMarkerId = 2;
     this.depotCity = new DepotCity("Prague");
     this.depotUnits = [new DepotUnit(this.depotCity.cityId, "depot A", 4)];
     this.nimbees = [new Nimbee("v 1", 18, 4)];
@@ -72,9 +79,10 @@ class Settings {
       ),
     ];
     this.cityRadius = new CityRadius("Vnitrni mesto", 0, 10, 5, "km");
+    this.distributionMarkers = [new MapMarker(this.distributionMarkerId.toString(), 50.06983, 14.43713)]
     this.distributions = [
-      new DistributionItem(this.cityRadius.cityId, this.customers[0].name, 50, true),
-      new DistributionItem(this.cityRadius.cityId, this.customers[1].name, 25, false),
+      new DistributionItem(this.distributionMarkerId.toString(), this.customers[0].name, 50, true),
+      new DistributionItem(this.distributionMarkerId.toString(), this.customers[1].name, 25, false),
     ];
   }
 }
@@ -101,7 +109,7 @@ class ParkingInterval {
 
 class DistributionItem {
   id: string;
-  mapId: string;
+  mapId: string; //distributionMarkerId 
   distributor: string;
   distributionValue: number;
   isChecked: boolean;
@@ -111,7 +119,7 @@ class DistributionItem {
     distributionValue: number,
     isChecked: boolean
   ) {
-    this.id = "DI" + Date.now().toString();
+    this.id = "DI" + Date.now().toString() + Math.random().toString();
     this.mapId = mapId;
     this.distributor = distributor;
     this.distributionValue = distributionValue;
@@ -250,6 +258,17 @@ class CityRadius {
     this.unit=unit;
   }
 }
+class MapMarker {
+  id: string;
+  latitude: number;
+  longitude: number;
+
+  constructor(id: string, lat: number, lng: number) {
+    this.id = id;
+    this.latitude = lat;
+    this.longitude = lng;
+  }
+}
 export default Settings;
 export {
   Settings,
@@ -263,4 +282,5 @@ export {
   Transporter,
   Shift,
   CityRadius,
+  MapMarker,
 };
