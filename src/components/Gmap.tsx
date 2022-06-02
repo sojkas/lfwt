@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Settings, { MapMarker } from "../models/settings";
+import Settings, { DistributionArea, MapMarker } from "../models/settings";
 
 type GoogleMapLatLng = google.maps.LatLng;
 type GoogleMap = google.maps.Map;
@@ -8,18 +8,14 @@ type GoogleMarker = google.maps.Marker;
 const Gmap: React.FC<{
   settings: Settings;
   circleAvailable: boolean;
-  isReadyToSetMarker: boolean;
   allMarkers: MapMarker[];
-  isMarkerInPlace: (value: boolean)=>void;
-  selectedMarker: (mapMarker: MapMarker)=>void;
 }> = (props) => {
 
   const mapRef = useRef<HTMLDivElement>(null);
-  const [mapMarkerId, setMapMarkerId] = useState<string>(props.settings.distributionMarkerId.toString());
   const [map, setMap] = useState<GoogleMap>();
   const [marker, setMarker] = useState<MapMarker>();
+  const [allMarker, setAllMarker] = useState<MapMarker[]>(props.allMarkers);
   const [circleAvailable, setCircleAvailable] = useState<boolean>();
-  const [isReadyToSetMarker, setIsReadyToSetMarker] = useState<boolean>(props.isReadyToSetMarker);
 
   const startMap = (): void => {
     if (!map) {
@@ -50,7 +46,16 @@ const Gmap: React.FC<{
         })
       );
     }
+    
   };
+
+  const drawMarkers = () => {
+    if (allMarker.length>0 && map) {
+      console.log("kreslime markery");
+      loadSavedMarkers();
+    }
+  }
+  useEffect(drawMarkers,[map, props.allMarkers]);
 
   const initEventListener = (): void => {
     if (map) {
@@ -58,7 +63,6 @@ const Gmap: React.FC<{
         map,
         "click",
         function (event: google.maps.MapMouseEvent) {
-          setMapMarkerId((parseInt(mapMarkerId)+1).toString());
           coordinatesToNamePlace(event.latLng!);
         }
       );
@@ -71,32 +75,44 @@ const Gmap: React.FC<{
     /* console.log(isReadyToSetMarker);
     if (!isReadyToSetMarker) return; */
     setMarker({
-      id: mapMarkerId,
+      id: "MM"+Date.now()+Math.random().toString(),
       latitude: coordinate.lat(),
       longitude: coordinate.lng(),
       radius: 1
     });
-    setIsReadyToSetMarker(false);
-    props.isMarkerInPlace(true);
   };
 
-  useEffect(() => {
+  useEffect(() => {    
     if (marker) {
-      addMarker(new google.maps.LatLng(marker.latitude, marker.longitude));
+      addMarker(marker);
       if (circleAvailable) {
-        addCircle(new google.maps.LatLng(marker.latitude, marker.longitude));
+        addCircle(marker);
       }
     }
   }, [marker]);
 
-  const addMarker = (location: GoogleMapLatLng): void => {    
-    const marker: GoogleMarker = new google.maps.Marker({
-      position: location,
+  const loadSavedMarkers = () => {
+    for (let singleMarker of allMarker) {
+      addMarker(singleMarker);
+      if (circleAvailable) {
+        addCircle(singleMarker);
+      }
+    }
+  }
+
+
+  const addMarker = (mapMarker: MapMarker): void => {    
+    const googleMarker: GoogleMarker = new google.maps.Marker({
+      position: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       map: map,
+    });
+
+    googleMarker.addListener("click", ()=>{
+      console.log("toz jsi klikl na areu s id " + mapMarker.id + " ktery ma radius " + mapMarker.radius);
     });
   };
 
-  const addCircle = (location: GoogleMapLatLng): void => {
+  const addCircle = (mapMarker: MapMarker): void => {
     const circle: google.maps.Circle = new google.maps.Circle({
       strokeColor: "#34342C",
       strokeOpacity: 0.8,
@@ -104,8 +120,8 @@ const Gmap: React.FC<{
       fillColor: "#B0AF5E",
       fillOpacity: 0.35,
       map,
-      center: location,
-      radius: 1 * 1000,
+      center: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
+      radius: mapMarker.radius * 1000,
     });
   };
 

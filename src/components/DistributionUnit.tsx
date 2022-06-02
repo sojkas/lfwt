@@ -48,12 +48,12 @@ const DistributionUnit: React.FC<{
   };
 
   const removeDistributonHandler = () => {
-    props.removeDistribution(props.distribution.id);
+    props.removeDistribution(distribution.id);
   }
 
   useEffect(()=>{
-    props.updateDistribution(props.distribution.id, distribution);
-  },[distribution, props])
+    props.updateDistribution(distribution.id, distribution);
+  },[distribution])
 
   return (
     <React.Fragment>

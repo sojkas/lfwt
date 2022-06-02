@@ -38,6 +38,7 @@ const Resources: React.FC<{
   const isMarkerInPlace = (value: boolean) => {};
 
   const [depotMarkers, setDepotMarkers] = useState<MapMarker[]>([]);
+  const [depotMarkerId, setDepotMarkerId] = useState<number>(props.settings.depotMarkerId);
   const selectedMarkerHandler = (mapMarker: MapMarker) => {};
 
   const addDepotUnitHandler = () => {
@@ -189,7 +190,7 @@ const Resources: React.FC<{
             </Grid>
           </Grid>
           <div className="space-20"></div>
-          {props.gmscriptLoaded && (
+          {/* {props.gmscriptLoaded && (
             <Gmap
               settings={props.settings}
               isReadyToSetMarker={isReadyToSetMarker}
@@ -197,8 +198,9 @@ const Resources: React.FC<{
               circleAvailable={false}
               allMarkers={depotMarkers}
               selectedMarker={selectedMarkerHandler}
+              markerId={depotMarkerId}
             />
-          )}
+          )} */}
         </Grid>
         <Grid className="box" item xs={4}>
           <h4>Batteries & Transporters</h4>

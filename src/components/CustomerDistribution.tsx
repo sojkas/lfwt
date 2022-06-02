@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Gmap from "./Gmap";
 import DistributionUnit from "./DistributionUnit";
 import Settings, {
-  CityRadius,
+  DistributionArea,
   DistributionItem,
   MapMarker,
 } from "../models/settings";
@@ -15,88 +15,113 @@ const CustomerDistribution: React.FC<{
   gmscriptLoaded: boolean;
   updatedSettings: (updatedSettingsValues: Settings) => void;
 }> = (props) => {
-  const [allDistributions, setAllDistributions] = useState<DistributionItem[]>(
-    props.settings.distributions
-  );
+  const [allDistributionAreas, setAllDistributionAreas] = useState<
+    DistributionArea[]
+  >(props.settings.distributionAreas);
   const [selectedDistributionMarker, setSelectedDistributionMarker] =
     useState<MapMarker>();
 
-  const [selectedMarkerDistributions, setSelectedMarkerDistributions] =
-    useState<DistributionItem[]>();
-
-  const getSelectedMarkerDistribution = () => {
-    for (let i = 0; i < allDistributions.length; i++) {
-      if (allDistributions[i].mapId === selectedDistributionMarker?.id) {
-        setSelectedMarkerDistributions(selectedMarkerDistributions?.concat(allDistributions[i]));
-      }      
-    }
-  };
-
-  const selectedMarkerHandler = (mapMarker: MapMarker) => {
-    setSelectedDistributionMarker(mapMarker);
-  }
-
-  useEffect(getSelectedMarkerDistribution, [selectedDistributionMarker]);
-
-  const [distributionMarkers, setAllDistributionMarkers] = useState<
-    MapMarker[]
-  >(props.settings.distributionMarkers);
-
-  const [cityRadius, setCityRadius] = useState<CityRadius>(
-    props.settings.cityRadius
+  const [selectedArea, setSelectedArea] = useState<DistributionArea>(
+    props.settings.distributionAreas[1]
   );
+  const [allSelectedDistributions, setAllSelectedDistributions] = useState<
+    DistributionItem[]
+  >(selectedArea.distributions);
+
+  /* const getSelectedMarkerDistribution = () => {};
+
+  useEffect(getSelectedMarkerDistribution, [selectedDistributionMarker]); */
+
+  const [distributionMarkers, setDistributionMarkers] = useState<
+    MapMarker[]
+  >([]);
+
+  const initDistributionMarkers = () => {
+    if (distributionMarkers?.length === 0) {
+      for (let i = 0; i < allDistributionAreas.length; i++) {
+        distributionMarkers.push(allDistributionAreas[i].marker);
+        setDistributionMarkers(distributionMarkers);
+      }
+    }    
+    console.log("all distributions le " + allSelectedDistributions);
+  };
+  
+  useEffect(initDistributionMarkers,[allDistributionAreas]);
+  
 
   const [isReadyToSetMarker, setIsReadyToSetMarker] = useState<boolean>(false);
 
   const addDistributionHandler = () => {
+    console.log("distributions"+allSelectedDistributions.length);
     const newDistribution = new DistributionItem(
-      cityRadius.cityId,
+      selectedArea.id,
       props.settings.customers[0].name,
-      100,
+      10,
       false
     );
-    setAllDistributions((prevDistributions) => {
-      return prevDistributions.concat(newDistribution);
-    });
+    allSelectedDistributions.push(newDistribution);
+    setAllSelectedDistributions(allSelectedDistributions);
+    console.log("distributions after "+allSelectedDistributions.length);
   };
 
   const updateDistributionHandler = (id: string, distri: DistributionItem) => {
-    for (let distribution of allDistributions) {
+    for (let distribution of allSelectedDistributions) {
       if (distribution.id === id) {
-        return props.settings.distributions.splice(
-          allDistributions.indexOf(distribution),
-          1,
-          distri
+        return setAllSelectedDistributions(
+          allSelectedDistributions.splice(
+            allSelectedDistributions.indexOf(distribution),
+            1,
+            distri
+          )
         );
       }
     }
   };
 
   const sliderChangeHandler = (newValue: number) => {
-    setCityRadius((prevRad) => ({ ...prevRad, setValue: newValue }));
+    setSelectedArea((prevA) => ({ ...prevA, radius: newValue }));
+    for (let i=0; i<distributionMarkers.length; i++){
+      if(distributionMarkers[i].id === selectedArea.marker.id) {
+        return setDistributionMarkers(
+          distributionMarkers.splice(
+            i, 1, selectedArea.marker
+          )
+        )
+      }
+    }
+
+    setDistributionMarkers((prevDM)=>({...prevDM, }))
   };
 
   const cityNameChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
-    setCityRadius((prevCityRad) => ({
-      ...prevCityRad,
+    setSelectedArea((prevA) => ({
+      ...prevA,
       name: event.target.value,
     }));
   };
 
   const saveDistributionsHandler = () => {
-    props.settings.distributions = allDistributions;
-    props.settings.cityRadius = cityRadius;
+    for (let i = 0; i < allDistributionAreas.length; i++) {
+      if (selectedArea.id === allDistributionAreas[i].id) {
+        allDistributionAreas.splice(
+          i,
+          1,
+          selectedArea
+        );
+      }
+    }
+    props.settings.distributionAreas = allDistributionAreas;
     props.updatedSettings(props.settings);
   };
 
   const removeDistributionHandler = (id: string) => {
-    const newDistributionArray = allDistributions.filter(
+    const newDistributionArray = allSelectedDistributions.filter(
       (distribution) => distribution.id !== id
     );
-    setAllDistributions(newDistributionArray);
+    setAllSelectedDistributions(newDistributionArray);
   };
 
   const setMarkerHandler = () => {
@@ -107,16 +132,12 @@ const CustomerDistribution: React.FC<{
     setIsReadyToSetMarker(!value);
   };
 
-  const removeMarkerHandler = () => {
-    
-  };
-
- 
+  const removeMarkerHandler = () => {};
 
   useEffect(() => {
-    props.settings.distributions = allDistributions;
-    props.settings.cityRadius = cityRadius;
-  }, [allDistributions, cityRadius, props]);
+    props.settings.distributionAreas = allDistributionAreas;
+    props.updatedSettings(props.settings);
+  }, [allDistributionAreas]);
 
   return (
     <React.Fragment>
@@ -124,12 +145,9 @@ const CustomerDistribution: React.FC<{
         <Grid className="box" item xs={6}>
           {props.gmscriptLoaded && (
             <Gmap
-              settings = {props.settings}
-              isReadyToSetMarker={isReadyToSetMarker}
-              isMarkerInPlace={isMarkerInPlace}
+              settings={props.settings}
               circleAvailable={true}
               allMarkers={distributionMarkers}
-              selectedMarker={selectedMarkerHandler}
             />
           )}
         </Grid>
@@ -143,7 +161,7 @@ const CustomerDistribution: React.FC<{
                     id="symbolic-name"
                     label="Symbolicky nazev"
                     variant="outlined"
-                    value={cityRadius.name}
+                    value={selectedArea.name}
                     size="small"
                     onChange={cityNameChangeHandler}
                   />
@@ -163,22 +181,22 @@ const CustomerDistribution: React.FC<{
             <Grid item xs={1}>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={1}>
-                  {cityRadius.label}
+                  Radius
                 </Grid>
                 <Grid item xs={5}>
                   <SingleSlider
-                    label={cityRadius.label}
-                    minValue={cityRadius.minValue}
-                    maxValue={cityRadius.maxValue}
-                    setValue={cityRadius.setValue}
-                    sliderUnit={cityRadius.unit}
+                    label={selectedArea.name}
+                    minValue={0}
+                    maxValue={10}
+                    setValue={selectedArea.radius}
+                    sliderUnit={"km"}
                     singleSliderChange={sliderChangeHandler}
                   />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={1}>
-              {allDistributions.map((distribution) => (
+              {allSelectedDistributions.map((distribution) => (
                 <DistributionUnit
                   key={distribution.id}
                   distribution={distribution}

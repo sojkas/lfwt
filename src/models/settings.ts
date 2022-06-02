@@ -3,7 +3,7 @@ class Settings {
   customerId: number;
   distributionMarkerId: number;
   depotMarkerId: number;
-  
+
   /* RESOURCES */
   depotCity: DepotCity;
   depotUnits: DepotUnit[];
@@ -33,14 +33,11 @@ class Settings {
   parking: ParkingInterval[];*/
 
   /* CUSTOMER DISTRIBUTION */
-  cityRadius: CityRadius;
-  // pole distributionUnits
-  distributions: DistributionItem[];
-  distributionMarkers: MapMarker[];
+  distributionAreas: DistributionArea[];
 
   constructor() {
     this.customerId = 3;
-    this.distributionMarkerId=2;
+    this.distributionMarkerId = 2;
     this.depotMarkerId = 2;
     this.depotCity = new DepotCity("Prague");
     this.depotUnits = [new DepotUnit(this.depotCity.cityId, "depot A", 4)];
@@ -51,7 +48,10 @@ class Settings {
       new Shift("Evening shift", "8 am", "12 am", 8),
       new Shift("Night shift", "6 am", "10 pm", 12),
     ];
-    this.customers = [new Customer(1, "Outskirts car adicts"), new Customer(2, "Rohlik")];
+    this.customers = [
+      new Customer(1, "Outskirts car adicts"),
+      new Customer(2, "Rohlik"),
+    ];
     this.customerDetails = [
       new CustomerDetail(
         this.customers[0].id,
@@ -78,11 +78,20 @@ class Settings {
         ]
       ),
     ];
-    this.cityRadius = new CityRadius("Vnitrni mesto", 0, 10, 5, "km");
-    this.distributionMarkers = [new MapMarker(this.distributionMarkerId.toString(), 50.06983, 14.43713, 1)]
-    this.distributions = [
-      new DistributionItem(this.distributionMarkerId.toString(), this.customers[0].name, 50, true),
-      new DistributionItem(this.distributionMarkerId.toString(), this.customers[1].name, 25, false),
+    this.distributionAreas = [
+      new DistributionArea(
+        "Test A",
+        1,
+        new MapMarker(50.06983, 14.43713, 1),
+        [new DistributionItem("1", this.customers[0].name, 50, true)]
+      ),
+      new DistributionArea(
+        "Test B",
+        2,
+        new MapMarker(50.07983, 14.42713, 2),
+        [new DistributionItem("2", this.customers[1].name, 25, false),
+        new DistributionItem("2", this.customers[0].name, 50, true)]
+      ),
     ];
   }
 }
@@ -109,7 +118,7 @@ class ParkingInterval {
 
 class DistributionItem {
   id: string;
-  mapId: string; //distributionMarkerId 
+  mapId: string; //MapMarker id
   distributor: string;
   distributionValue: number;
   isChecked: boolean;
@@ -237,38 +246,37 @@ class Shift {
     this.drivers = drivers;
   }
 }
-class CityRadius {
-  id: string;
-  name: string;
-  cityId: string;
-  label: string;
-  minValue: number;
-  maxValue: number;
-  setValue: number;
-  unit: string;
-
-  constructor(name: string, min: number, max: number, set: number, unit: string) {
-    this.id = "CR" + Date.now().toString();
-    this.name = name;
-    this.cityId = name;
-    this.label = "Radius";
-    this.minValue = min;
-    this.maxValue = max;
-    this.setValue = set;
-    this.unit=unit;
-  }
-}
 class MapMarker {
   id: string;
   latitude: number;
   longitude: number;
   radius: number;
 
-  constructor(id: string, lat: number, lng: number, radius: number) {
-    this.id = id;
+  constructor(lat: number, lng: number, radius: number) {
+    this.id = "MM" + Date.now().toString + Math.random() + toString();
     this.latitude = lat;
     this.longitude = lng;
     this.radius = radius;
+  }
+}
+
+class DistributionArea {
+  id: string;
+  name: string;
+  radius: number;
+  marker: MapMarker;
+  distributions: DistributionItem[];
+  constructor(
+    name: string,
+    radius: number,
+    marker: MapMarker,
+    distributions: DistributionItem[]
+  ) {
+    this.id = "DA" + Date.now().toString() + Math.random() + toString();
+    this.name = name;
+    this.radius = radius;
+    this.marker = marker;
+    this.distributions = distributions;
   }
 }
 
@@ -284,6 +292,6 @@ export {
   Nimbee,
   Transporter,
   Shift,
-  CityRadius,
   MapMarker,
+  DistributionArea,
 };

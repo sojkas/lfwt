@@ -26,12 +26,12 @@ const Simulation: React.FC<{
     );
     return props.settings.customers[randomNumber].name;
   };
-  
+
   const randomPosition = () => {
     const latitude = Math.floor(Math.random() * (50 - 40 + 1)) + 40;
     const longitude = Math.floor(Math.random() * (17 - 14 + 1)) + 14;
     const radius = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-    return new MapMarker("order", latitude, longitude, radius);
+    return new MapMarker(latitude, longitude, radius);
   };
 
   const addRandomOrder = () => {
