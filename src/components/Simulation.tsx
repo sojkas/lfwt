@@ -8,34 +8,35 @@ import {
   TableRow,
   Button,
 } from "@mui/material";
-import React, { useState } from "react";
-import Order from "../models/order";
+import React, { useEffect, useState } from "react";
+import Order, { SimulationValues } from "../models/order";
 import Settings, { MapMarker } from "../models/settings";
 
-const Simulation: React.FC<{ settings: Settings }> = (props) => {
-  const [orders, setOrders] = useState<Order[]>([]);
+var isStopped = true;
 
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  let myInterval: ReturnType<typeof setInterval>;
-  let isStopped: boolean;
-
+const Simulation: React.FC<{
+  settings: Settings;
+  simulationValues: SimulationValues;
+  updatedSimulationValues: (simulationValues: SimulationValues) => void;
+}> = (props) => {
+  const [orders, setOrders] = useState<Order[]>(props.simulationValues.orders);
   const randomCustomer = () => {
     const randomNumber = Math.floor(
       Math.random() * props.settings.customers.length
     );
-    console.log("random number :" + randomNumber);
     return props.settings.customers[randomNumber].name;
   };
 
   const randomPosition = () => {
     const latitude = Math.floor(Math.random() * (50 - 40 + 1)) + 40;
     const longitude = Math.floor(Math.random() * (17 - 14 + 1)) + 14;
-    return new MapMarker("order", latitude, longitude);
+    const radius = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+    return new MapMarker("order", latitude, longitude, radius);
   };
 
   const addRandomOrder = () => {
-      console.log("addRandom = "+ isStopped);
     if (isStopped) return;
+    setTimeout(addRandomOrder, 1500);
     const customer: string = randomCustomer();
     const position: MapMarker = randomPosition();
     setOrders((prevOrders) =>
@@ -52,26 +53,26 @@ const Simulation: React.FC<{ settings: Settings }> = (props) => {
   };
 
   const startHandler = () => {
-    myInterval = setInterval(addRandomOrder, 1500);
-    console.log(myInterval);
-    isStopped = false;
-    setIsRunning(true);
-    console.log("start is stopped " + isStopped);
+    if(!isStopped) return;
+    isStopped= false;
+    setTimeout(addRandomOrder, 1500);
   };
 
   const stopHandler = () => {
+    if (isStopped) return;
     isStopped = true;
-    clearInterval(myInterval);
-    setIsRunning(false);
-    console.log("stop is stopped "+isStopped)
+    props.updatedSimulationValues({orders: orders, isStopped: isStopped});
   };
 
   const deleteHandler = () => {
-    isStopped = true;
-    console.log("delete" + isStopped);
-    clearInterval(myInterval);
+    if (!isStopped) return;
     setOrders([]);
+    isStopped = true;
   };
+
+  useEffect(()=>{
+    props.updatedSimulationValues({orders: orders, isStopped: isStopped});
+  }, [orders, isStopped]);
 
   return (
     <Grid container direction="column" spacing={2}>
@@ -80,8 +81,7 @@ const Simulation: React.FC<{ settings: Settings }> = (props) => {
           <Grid item xs={1}>
             <Button variant="outlined" onClick={startHandler}>
               Start
-            </Button>
-          </Grid>
+            </Button>          </Grid>
           <Grid item xs={1}>
             <Button variant="outlined" onClick={stopHandler}>
               Stop

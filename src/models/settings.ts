@@ -79,7 +79,7 @@ class Settings {
       ),
     ];
     this.cityRadius = new CityRadius("Vnitrni mesto", 0, 10, 5, "km");
-    this.distributionMarkers = [new MapMarker(this.distributionMarkerId.toString(), 50.06983, 14.43713)]
+    this.distributionMarkers = [new MapMarker(this.distributionMarkerId.toString(), 50.06983, 14.43713, 1)]
     this.distributions = [
       new DistributionItem(this.distributionMarkerId.toString(), this.customers[0].name, 50, true),
       new DistributionItem(this.distributionMarkerId.toString(), this.customers[1].name, 25, false),
@@ -262,13 +262,16 @@ class MapMarker {
   id: string;
   latitude: number;
   longitude: number;
+  radius: number;
 
-  constructor(id: string, lat: number, lng: number) {
+  constructor(id: string, lat: number, lng: number, radius: number) {
     this.id = id;
     this.latitude = lat;
     this.longitude = lng;
+    this.radius = radius;
   }
 }
+
 export default Settings;
 export {
   Settings,

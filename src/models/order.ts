@@ -24,4 +24,19 @@ class Order {
   }
 }
 
+
+class SimulationValues {
+  orders: Order[];
+  isStopped: boolean;
+
+  constructor (orders: Order[], isStopped: boolean) {
+    this.orders = orders;
+    this.isStopped = isStopped;
+  }
+ }
+
 export default Order;
+export {
+  Order,
+  SimulationValues,
+}

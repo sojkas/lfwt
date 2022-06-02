@@ -74,6 +74,7 @@ const Gmap: React.FC<{
       id: mapMarkerId,
       latitude: coordinate.lat(),
       longitude: coordinate.lng(),
+      radius: 1
     });
     setIsReadyToSetMarker(false);
     props.isMarkerInPlace(true);

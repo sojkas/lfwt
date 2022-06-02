@@ -5,15 +5,21 @@ import CustomerTypes from "./components/CustomerTypes";
 import Navbar from "./components/Navbar";
 import Resources from "./components/Resources";
 import Simulation from "./components/Simulation";
+import { SimulationValues } from "./models/order";
 import Settings from "./models/settings";
 import { loadMapApi } from "./utils/GoogleMapsUtils";
 
 function App() {
   const [settings, setSettings] = useState<Settings>(new Settings());
+  const [simulationValues, setSimulationValues] = useState<SimulationValues>(new SimulationValues([], false));
   const [menuItem, setMenuItem] = useState<number>(0);
 
   const updateSettingsHandler = (updatedSettings : Settings) => {
     setSettings(updatedSettings);
+  }
+
+  const updateSimulationValuesHandler = (updatedSimulationValues: SimulationValues) => {
+    setSimulationValues(updatedSimulationValues);
   }
 
   const selectedItemHandler = (selectedItem: number) => {
@@ -35,7 +41,7 @@ function App() {
         {menuItem === 0 && <Resources settings={settings}  updatedSettings={updateSettingsHandler} gmscriptLoaded={scriptLoaded}/>}
         {menuItem === 1 && <CustomerTypes settings={settings} updatedSettings={updateSettingsHandler}/>}
         {menuItem === 2 && <CustomerDistribution settings={settings} updatedSettings={updateSettingsHandler} gmscriptLoaded={scriptLoaded}/>}
-        {menuItem === 3 && <Simulation settings={settings}/>}
+        {menuItem === 3 && <Simulation settings={settings} simulationValues={simulationValues} updatedSimulationValues={updateSimulationValuesHandler}/>}
       </div>
     </div>
   );
