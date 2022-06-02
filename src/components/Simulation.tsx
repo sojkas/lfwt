@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import Order, { SimulationValues } from "../models/order";
 import Settings, { MapMarker } from "../models/settings";
 
-var isStopped = true;
+let isStopped = true;
 
 const Simulation: React.FC<{
   settings: Settings;
@@ -26,7 +26,7 @@ const Simulation: React.FC<{
     );
     return props.settings.customers[randomNumber].name;
   };
-
+  
   const randomPosition = () => {
     const latitude = Math.floor(Math.random() * (50 - 40 + 1)) + 40;
     const longitude = Math.floor(Math.random() * (17 - 14 + 1)) + 14;
