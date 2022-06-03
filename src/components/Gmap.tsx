@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Settings, { DistributionArea, MapMarker } from "../models/settings";
+import Settings, { MapMarker } from "../models/settings";
 
 type GoogleMapLatLng = google.maps.LatLng;
 type GoogleMap = google.maps.Map;
@@ -7,20 +7,20 @@ type GoogleMarker = google.maps.Marker;
 
 const Gmap: React.FC<{
   settings: Settings;
-  circleAvailable: boolean;
   allMarkers: MapMarker[];
+  setPosition: (position: GoogleMapLatLng) => void;
+  selectedMarker: (marker: MapMarker) => void;
 }> = (props) => {
-
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<GoogleMap>();
-  const [marker, setMarker] = useState<MapMarker>();
-  const [allMarker, setAllMarker] = useState<MapMarker[]>(props.allMarkers);
-  const [circleAvailable, setCircleAvailable] = useState<boolean>();
+  const [allGoogleMarkers, setAllGoogleMarkers] = useState<GoogleMarker[]>([]);
+  const [allGoogleCircles, setAllGoogleCircles] = useState<
+    google.maps.Circle[]
+  >([]);
 
   const startMap = (): void => {
     if (!map) {
       defaultMapStart();
-      setCircleAvailable(props.circleAvailable);
     }
   };
 
@@ -46,16 +46,35 @@ const Gmap: React.FC<{
         })
       );
     }
-    
   };
 
   const drawMarkers = () => {
-    if (allMarker.length>0 && map) {
-      console.log("kreslime markery");
-      loadSavedMarkers();
+    for (let m of allGoogleMarkers!) {
+      m.setMap(null);
     }
-  }
-  useEffect(drawMarkers,[map, props.allMarkers]);
+    for (let c of allGoogleCircles!) {
+      c.setMap(null);
+    }
+    if (props.allMarkers.length > 0 && map) {
+      for (let singleMarker of props.allMarkers) {
+        /* console.log(
+          "kreslim single marker :" +
+            singleMarker.id +
+            " / radius :" +
+            singleMarker.radius +
+            " / position: " +
+            singleMarker.latitude +
+            "-" +
+            singleMarker.longitude
+        ); */
+        addMarker(singleMarker);
+        if (singleMarker.radius > 0) {
+          addCircle(singleMarker);
+        }
+      }
+    }
+  };
+  useEffect(drawMarkers, [map, props.allMarkers]);
 
   const initEventListener = (): void => {
     if (map) {
@@ -63,7 +82,7 @@ const Gmap: React.FC<{
         map,
         "click",
         function (event: google.maps.MapMouseEvent) {
-          coordinatesToNamePlace(event.latLng!);
+          props.setPosition(event.latLng!);
         }
       );
     }
@@ -71,44 +90,36 @@ const Gmap: React.FC<{
 
   useEffect(initEventListener, [map]);
 
-  const coordinatesToNamePlace = (coordinate: GoogleMapLatLng) => {
+  /* const coordinatesToNamePlace = (coordinate: GoogleMapLatLng) => {
     /* console.log(isReadyToSetMarker);
-    if (!isReadyToSetMarker) return; */
+    if (!isReadyToSetMarker) return; 
     setMarker({
       id: "MM"+Date.now()+Math.random().toString(),
       latitude: coordinate.lat(),
       longitude: coordinate.lng(),
       radius: 1
     });
-  };
+  }; */
 
-  useEffect(() => {    
+  /* useEffect(() => {    
     if (marker) {
       addMarker(marker);
       if (circleAvailable) {
         addCircle(marker);
       }
     }
-  }, [marker]);
+  }, [marker]); */
 
-  const loadSavedMarkers = () => {
-    for (let singleMarker of allMarker) {
-      addMarker(singleMarker);
-      if (circleAvailable) {
-        addCircle(singleMarker);
-      }
-    }
-  }
-
-
-  const addMarker = (mapMarker: MapMarker): void => {    
+  const addMarker = (mapMarker: MapMarker): void => {
     const googleMarker: GoogleMarker = new google.maps.Marker({
       position: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       map: map,
     });
 
-    googleMarker.addListener("click", ()=>{
-      console.log("toz jsi klikl na areu s id " + mapMarker.id + " ktery ma radius " + mapMarker.radius);
+    allGoogleMarkers?.push(googleMarker);
+
+    googleMarker.addListener("click", () => {
+      props.selectedMarker(mapMarker);
     });
   };
 
@@ -123,6 +134,7 @@ const Gmap: React.FC<{
       center: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       radius: mapMarker.radius * 1000,
     });
+    allGoogleCircles?.push(circle);
   };
 
   return (

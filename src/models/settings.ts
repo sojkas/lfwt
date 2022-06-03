@@ -81,13 +81,11 @@ class Settings {
     this.distributionAreas = [
       new DistributionArea(
         "Test A",
-        1,
         new MapMarker(50.06983, 14.43713, 1),
         [new DistributionItem("1", this.customers[0].name, 50, true)]
       ),
       new DistributionArea(
         "Test B",
-        2,
         new MapMarker(50.07983, 14.42713, 2),
         [new DistributionItem("2", this.customers[1].name, 25, false),
         new DistributionItem("2", this.customers[0].name, 50, true)]
@@ -253,7 +251,7 @@ class MapMarker {
   radius: number;
 
   constructor(lat: number, lng: number, radius: number) {
-    this.id = "MM" + Date.now().toString + Math.random() + toString();
+    this.id = "MM" + Date.now().toString() + Math.random().toString();
     this.latitude = lat;
     this.longitude = lng;
     this.radius = radius;
@@ -263,18 +261,15 @@ class MapMarker {
 class DistributionArea {
   id: string;
   name: string;
-  radius: number;
   marker: MapMarker;
   distributions: DistributionItem[];
   constructor(
     name: string,
-    radius: number,
     marker: MapMarker,
     distributions: DistributionItem[]
   ) {
     this.id = "DA" + Date.now().toString() + Math.random() + toString();
     this.name = name;
-    this.radius = radius;
     this.marker = marker;
     this.distributions = distributions;
   }
