@@ -73,6 +73,7 @@ const CustomerTypes: React.FC<{
     props.settings.customerId = customerId;
     props.settings.customerDetails = customerDetails;
     props.updatedSettings(props.settings);
+    window.localStorage.setItem("data", JSON.stringify(props.settings));
   }, [customers, newNameCustomer, customerDetails, customerId]);
 
   useEffect(() => {

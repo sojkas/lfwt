@@ -28,10 +28,12 @@ class Order {
 class SimulationValues {
   orders: Order[];
   isStopped: boolean;
+  clockTime: Date;
 
   constructor (orders: Order[], isStopped: boolean) {
     this.orders = orders;
     this.isStopped = isStopped;
+    this.clockTime = new Date(Date.now());
   }
  }
 

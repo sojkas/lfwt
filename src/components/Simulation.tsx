@@ -20,6 +20,7 @@ const Simulation: React.FC<{
   updatedSimulationValues: (simulationValues: SimulationValues) => void;
 }> = (props) => {
   const [orders, setOrders] = useState<Order[]>(props.simulationValues.orders);
+  const [virtualClock, setVirtualClock] = useState<Date>(props.simulationValues.clockTime);
   const randomCustomer = () => {
     const randomNumber = Math.floor(
       Math.random() * props.settings.customers.length
@@ -34,9 +35,25 @@ const Simulation: React.FC<{
     return new MapMarker(latitude, longitude, radius);
   };
 
+  const clockRunning = () => {
+    let date = virtualClock;
+    let hh = date.getHours().toString();
+    let mm = date.getMinutes().toString();
+    mm = (parseInt(mm) < 10) ? "0"+mm : mm;
+    let time = hh + ":" + mm;
+    return time;
+  };
+
+  const addMinutes = (date: Date, minutes: number) => {
+    return new Date(date.getTime() + minutes*60000);
+  }
+
   const addRandomOrder = () => {
-    if (isStopped) return;
+    if (isStopped) return;    
     setTimeout(addRandomOrder, 1500);
+    setVirtualClock((prevClock)=>{
+      return addMinutes(prevClock, 10);
+  });
     const customer: string = randomCustomer();
     const position: MapMarker = randomPosition();
     setOrders((prevOrders) =>
@@ -53,25 +70,27 @@ const Simulation: React.FC<{
   };
 
   const startHandler = () => {
-    if(!isStopped) return;
-    isStopped= false;
+    if (!isStopped) return;
+    isStopped = false;
     setTimeout(addRandomOrder, 1500);
   };
 
   const stopHandler = () => {
     if (isStopped) return;
     isStopped = true;
-    props.updatedSimulationValues({orders: orders, isStopped: isStopped});
+    props.updatedSimulationValues({ orders: orders, isStopped: isStopped , clockTime: virtualClock });
   };
 
   const deleteHandler = () => {
     if (!isStopped) return;
     setOrders([]);
+    setVirtualClock(new Date(Date.now()));
     isStopped = true;
   };
 
-  useEffect(()=>{
-    props.updatedSimulationValues({orders: orders, isStopped: isStopped});
+  useEffect(() => {
+    props.updatedSimulationValues({ orders: orders, isStopped: isStopped, clockTime: virtualClock });
+    /* window.localStorage.setItem("orders", JSON.stringify({ orders: orders, isStopped: isStopped, clockTime: virtualClock })); */
   }, [orders, isStopped]);
 
   return (
@@ -81,7 +100,8 @@ const Simulation: React.FC<{
           <Grid item xs={1}>
             <Button variant="outlined" onClick={startHandler}>
               Start
-            </Button>          </Grid>
+            </Button>{" "}
+          </Grid>
           <Grid item xs={1}>
             <Button variant="outlined" onClick={stopHandler}>
               Stop
@@ -91,6 +111,9 @@ const Simulation: React.FC<{
             <Button variant="outlined" onClick={deleteHandler}>
               Delete
             </Button>
+          </Grid>
+          <Grid item xs={2}>
+            <p className="item-space">{clockRunning()}</p>
           </Grid>
         </Grid>
       </Grid>

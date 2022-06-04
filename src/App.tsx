@@ -10,17 +10,19 @@ import Settings from "./models/settings";
 import { loadMapApi } from "./utils/GoogleMapsUtils";
 
 function App() {
-  const [settings, setSettings] = useState<Settings>(new Settings());
+  const [settings, setSettings] = useState<Settings>();
   const [simulationValues, setSimulationValues] = useState<SimulationValues>(new SimulationValues([], false));
   const [menuItem, setMenuItem] = useState<number>(0);
 
-  const updateSettingsHandler = (updatedSettings : Settings) => {
+  const updateSettingsHandler = (updatedSettings: Settings) => {
     setSettings(updatedSettings);
-  }
+  };
 
-  const updateSimulationValuesHandler = (updatedSimulationValues: SimulationValues) => {
+  const updateSimulationValuesHandler = (
+    updatedSimulationValues: SimulationValues
+  ) => {
     setSimulationValues(updatedSimulationValues);
-  }
+  };
 
   const selectedItemHandler = (selectedItem: number) => {
     setMenuItem(selectedItem);
@@ -34,14 +36,60 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("data") !== null) {
+      const loadedSetting: Settings = JSON.parse(localStorage.getItem("data")!);
+      setSettings(loadedSetting);
+    } else {
+      setSettings(new Settings());
+    }
+    /* if (localStorage.getItem("orders") !== null) {
+      const loadedOrders = JSON.parse(localStorage.getItem("orders")!);
+      setSimulationValues(loadedOrders);
+    } else {
+      setSimulationValues(new SimulationValues([], false));
+    } */
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("data", JSON.stringify(settings));
+  }, [settings]);
+
+  /* useEffect(()=>{
+    window.localStorage.setItem("orders", JSON.stringify(simulationValues));
+  },[simulationValues]); */
+
   return (
     <div className="app">
       <Navbar selectedItem={selectedItemHandler} active={menuItem} />
       <div className="section">
-        {menuItem === 0 && <Resources settings={settings}  updatedSettings={updateSettingsHandler} gmscriptLoaded={scriptLoaded}/>}
-        {menuItem === 1 && <CustomerTypes settings={settings} updatedSettings={updateSettingsHandler}/>}
-        {menuItem === 2 && <CustomerDistribution settings={settings} updatedSettings={updateSettingsHandler} gmscriptLoaded={scriptLoaded}/>}
-        {menuItem === 3 && <Simulation settings={settings} simulationValues={simulationValues} updatedSimulationValues={updateSimulationValuesHandler}/>}
+        {settings && menuItem === 0 && (
+          <Resources
+            settings={settings}
+            updatedSettings={updateSettingsHandler}
+            gmscriptLoaded={scriptLoaded}
+          />
+        )}
+        {settings && menuItem === 1 && (
+          <CustomerTypes
+            settings={settings}
+            updatedSettings={updateSettingsHandler}
+          />
+        )}
+        {settings && menuItem === 2 && (
+          <CustomerDistribution
+            settings={settings}
+            updatedSettings={updateSettingsHandler}
+            gmscriptLoaded={scriptLoaded}
+          />
+        )}
+        {settings && simulationValues && menuItem === 3 && (
+          <Simulation
+            settings={settings}
+            simulationValues={simulationValues}
+            updatedSimulationValues={updateSimulationValuesHandler}
+          />
+        )}
       </div>
     </div>
   );

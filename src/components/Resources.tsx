@@ -140,6 +140,7 @@ const Resources: React.FC<{
     props.settings.transporters = transporters;
     props.settings.shifts = shifts;
     props.updatedSettings(props.settings);
+    window.localStorage.setItem("data", JSON.stringify(props.settings));
   }, [cityName, depotSlotUnits, nimbees, transporters, shifts, props]);
 
   return (
