@@ -1,5 +1,3 @@
-import { MapMarker } from "./settings";
-
 class Order {
   id: number
   distributionAreaId: string
