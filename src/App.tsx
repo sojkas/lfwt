@@ -11,7 +11,7 @@ import { loadMapApi } from "./utils/GoogleMapsUtils";
 
 function App() {
   const [settings, setSettings] = useState<Settings>();
-  const [simulationValues, setSimulationValues] = useState<SimulationValues>(new SimulationValues([], false));
+  const [simulationValues, setSimulationValues] = useState<SimulationValues>();
   const [menuItem, setMenuItem] = useState<number>(0);
 
   const updateSettingsHandler = (updatedSettings: Settings) => {
@@ -43,21 +43,21 @@ function App() {
     } else {
       setSettings(new Settings());
     }
-    /* if (localStorage.getItem("orders") !== null) {
+    if (localStorage.getItem("orders") !== null) {
       const loadedOrders = JSON.parse(localStorage.getItem("orders")!);
       setSimulationValues(loadedOrders);
     } else {
       setSimulationValues(new SimulationValues([], false));
-    } */
+    }
   }, []);
 
   useEffect(() => {
     window.localStorage.setItem("data", JSON.stringify(settings));
   }, [settings]);
 
-  /* useEffect(()=>{
+  useEffect(()=>{
     window.localStorage.setItem("orders", JSON.stringify(simulationValues));
-  },[simulationValues]); */
+  },[simulationValues]);
 
   return (
     <div className="app">

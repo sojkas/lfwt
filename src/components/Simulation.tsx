@@ -36,7 +36,7 @@ const Simulation: React.FC<{
   };
 
   const clockRunning = () => {
-    let date = virtualClock;
+    let date = new Date(virtualClock);
     let hh = date.getHours().toString();
     let mm = date.getMinutes().toString();
     mm = (parseInt(mm) < 10) ? "0"+mm : mm;
@@ -45,6 +45,7 @@ const Simulation: React.FC<{
   };
 
   const addMinutes = (date: Date, minutes: number) => {
+    date = new Date(date);
     return new Date(date.getTime() + minutes*60000);
   }
 
@@ -90,7 +91,7 @@ const Simulation: React.FC<{
 
   useEffect(() => {
     props.updatedSimulationValues({ orders: orders, isStopped: isStopped, clockTime: virtualClock });
-    /* window.localStorage.setItem("orders", JSON.stringify({ orders: orders, isStopped: isStopped, clockTime: virtualClock })); */
+    window.localStorage.setItem("orders", JSON.stringify({ orders: orders, isStopped: isStopped, clockTime: virtualClock }));
   }, [orders, isStopped]);
 
   return (
@@ -144,7 +145,7 @@ const Simulation: React.FC<{
                   </TableCell>
                   <TableCell align="center">{order.kWhValue}</TableCell>
                   <TableCell align="center">
-                    {order.time.toISOString()}
+                    {order.time.toString()}
                   </TableCell>
                 </TableRow>
               ))}
