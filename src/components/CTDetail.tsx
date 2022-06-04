@@ -59,8 +59,8 @@ const CTDetail: React.FC<{
     const parkingIntervalValueRemaining: number = 100 - allParkingValue;
     const newParkingInterval = new ParkingInterval(
       props.customerId,
-      "12 am",
-      "12 am",
+      12,
+      12,
       parkingIntervalValueRemaining
     );
     setAllParkingIntervals((prevIntervals) => {

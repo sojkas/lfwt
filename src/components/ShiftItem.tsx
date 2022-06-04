@@ -13,11 +13,11 @@ const ShiftItem: React.FC<{
   const shiftNameFrom: string = props.shift.shiftName + " from";
   const shiftNameTo: string = props.shift.shiftName + " to";
 
-  const changeFromHandler = (value: string) => {
+  const changeFromHandler = (value: number) => {
     setShift((prevShift) => ({ ...prevShift, from: value }));
   };
 
-  const changeToHandler = (value: string) => {
+  const changeToHandler = (value: number) => {
     setShift((prevShift) => ({ ...prevShift, to: value }));
   };
 

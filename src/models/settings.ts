@@ -44,9 +44,9 @@ class Settings {
     this.nimbees = [new Nimbee("v 1", 18, 4)];
     this.transporters = [new Transporter(2, 10, 5)];
     this.shifts = [
-      new Shift("Morning shift", "10 am", "2 pm", 5),
-      new Shift("Evening shift", "8 am", "12 am", 8),
-      new Shift("Night shift", "6 am", "10 pm", 12),
+      new Shift("Morning shift", 10, 2, 5),
+      new Shift("Evening shift", 20, 0, 8),
+      new Shift("Night shift", 18, 1, 12),
     ];
     this.customers = [
       new Customer(1, "Outskirts car adicts"),
@@ -61,8 +61,8 @@ class Settings {
         [0, 100, 60, "%"],
         [0, 40, 20, "%"],
         [
-          new ParkingInterval(this.customers[0].id, "10 am", "2 pm", 55),
-          new ParkingInterval(this.customers[0].id, "8 am", "3 pm", 45),
+          new ParkingInterval(this.customers[0].id, 10, 14, 55),
+          new ParkingInterval(this.customers[0].id, 8, 15, 45),
         ]
       ),
       new CustomerDetail(
@@ -73,8 +73,8 @@ class Settings {
         [0, 100, 45, "%"],
         [0, 55, 27, "%"],
         [
-          new ParkingInterval(this.customers[1].id, "8 am", "2 pm", 55),
-          new ParkingInterval(this.customers[1].id, "12 am", "4 pm", 45),
+          new ParkingInterval(this.customers[1].id, 8, 2, 55),
+          new ParkingInterval(this.customers[1].id, 12, 4, 45),
         ]
       ),
     ];
@@ -97,13 +97,13 @@ class Settings {
 class ParkingInterval {
   id: string;
   customerID: string;
-  from: string;
-  to: string;
+  from: number;
+  to: number;
   percent: number;
   constructor(
     customerId: string,
-    fromValue: string,
-    toValue: string,
+    fromValue: number,
+    toValue: number,
     percentValue: number
   ) {
     this.id = "PI" + Date.now().toString() + Math.random().toString();
@@ -232,11 +232,11 @@ class Transporter {
 class Shift {
   id: string;
   shiftName: string;
-  from: string;
-  to: string;
+  from: number;
+  to: number;
   drivers: number;
 
-  constructor(name: string, from: string, to: string, drivers: number) {
+  constructor(name: string, from: number, to: number, drivers: number) {
     this.id = "S" + Date.now().toString() + Math.random().toString();
     this.shiftName = name;
     this.from = from;

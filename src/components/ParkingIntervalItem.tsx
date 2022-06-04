@@ -15,12 +15,12 @@ const ParkingIntervalItem: React.FC<{
   const [parkingItervalValues, setParkingIntervalValues] =
     useState<ParkingInterval>(props.parkingIntervalItemValues);
 
-  const changedClockFromValueHandler = (newValue: string) => {
+  const changedClockFromValueHandler = (newValue: number) => {
     parkingItervalValues.from = newValue;
     return setParkingIntervalValues(parkingItervalValues);
   };
 
-  const changedClockToValueHandler = (newValue: string) => {
+  const changedClockToValueHandler = (newValue: number) => {
     parkingItervalValues.to = newValue;
     return setParkingIntervalValues(parkingItervalValues);
   };

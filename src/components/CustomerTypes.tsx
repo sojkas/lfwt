@@ -44,7 +44,7 @@ const CustomerTypes: React.FC<{
       [5, 40, 15, 25, "kWh"],
       [0, 100, 50, "%"],
       [0, 50, 25, "%"],
-      [new ParkingInterval(cdID.toString(), "8 am", "12 am", 100)]
+      [new ParkingInterval(cdID.toString(), 8, 12, 100)]
     );
     setCustomerDetails((prevDetails) => prevDetails.concat(newCustomerDetail));
   };
