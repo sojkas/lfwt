@@ -57,10 +57,10 @@ const Simulation: React.FC<{
     setVirtualClock((prevClock) => {
       return addMinutes(prevClock, 10);
     });
-    const customer: string = randomCustomer();
-    const position: MapMarker = randomPosition();
+    /* const customer: string = randomCustomer();
+    const position: MapMarker = randomPosition(); */
     console.log("add ranodm -> generateOrders " + virtualClock?.toString())
- /*    setOrders((prevOrders) =>
+    setOrders((prevOrders) =>
       prevOrders.concat(
         generateOrders(1 / 6, new Date(virtualClock).getHours())
         /* new Order(
@@ -69,10 +69,9 @@ const Simulation: React.FC<{
           "random position",
           new Date(Date.now()),
           Math.floor(Math.random() * (20 - 10 + 1)) + 10
-        ) 
+        ) */
       )
-    ); */
-    setOrders(generateOrders(1 / 6, new Date(virtualClock).getHours()));
+    );
   };
 
   const findCustomerById = (id: string) => {
