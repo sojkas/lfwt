@@ -61,8 +61,8 @@ class Settings {
         [0, 100, 60, "%"],
         [0, 40, 20, "%"],
         [
-          new ParkingInterval(this.customers[0].id, 10, 14, 55),
-          new ParkingInterval(this.customers[0].id, 8, 15, 45),
+          new ParkingInterval(this.customers[0].id, 0, 20, 55),
+          new ParkingInterval(this.customers[0].id, 21, 23, 45),
         ]
       ),
       new CustomerDetail(
@@ -73,8 +73,8 @@ class Settings {
         [0, 100, 45, "%"],
         [0, 55, 27, "%"],
         [
-          new ParkingInterval(this.customers[1].id, 8, 2, 55),
-          new ParkingInterval(this.customers[1].id, 12, 4, 45),
+          new ParkingInterval(this.customers[1].id, 0, 11, 55),
+          new ParkingInterval(this.customers[1].id, 12, 23, 45),
         ]
       ),
     ];
@@ -82,13 +82,13 @@ class Settings {
       new DistributionArea(
         "Test A",
         new MapMarker(50.06983, 14.43713, 1),
-        [new DistributionItem("1", this.customers[0].name, 50, true)]
+        [new DistributionItem("1", this.customers[0].name, this.customers[0].id, 50, true)]
       ),
       new DistributionArea(
         "Test B",
         new MapMarker(50.07983, 14.42713, 2),
-        [new DistributionItem("2", this.customers[1].name, 25, false),
-        new DistributionItem("2", this.customers[0].name, 50, true)]
+        [new DistributionItem("2", this.customers[1].name, this.customers[1].id,  25, false),
+        new DistributionItem("2", this.customers[0].name, this.customers[0].id, 50, true)]
       ),
     ];
   }
@@ -117,18 +117,21 @@ class ParkingInterval {
 class DistributionItem {
   id: string;
   mapId: string; //MapMarker id
-  distributor: string;
+  distributor: string; //customerName
+  customerId: string; 
   distributionValue: number;
   isChecked: boolean;
   constructor(
     mapId: string,
     distributor: string,
+    customerId: string,
     distributionValue: number,
     isChecked: boolean
   ) {
     this.id = "DI" + Date.now().toString() + Math.random().toString();
     this.mapId = mapId;
     this.distributor = distributor;
+    this.customerId = customerId;
     this.distributionValue = distributionValue;
     this.isChecked = isChecked;
   }

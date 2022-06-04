@@ -29,7 +29,7 @@ const ClockSelect: React.FC<{label: string, clockValue: number, changedClockValu
               size="small"
             >
               {hours.map((hour)=>
-              <MenuItem value={hour}>{hour}</MenuItem>
+              <MenuItem key={hour} value={hour}>{hour}</MenuItem>
               )}
             </Select>
           </FormControl>

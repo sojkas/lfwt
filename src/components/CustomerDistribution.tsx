@@ -42,6 +42,7 @@ const CustomerDistribution: React.FC<{
       const newDistribution = new DistributionItem(
         prevArea!.id,
         props.settings.customers[0].name,
+        props.settings.customers[0].id,
         10,
         false
       );

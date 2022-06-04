@@ -1,26 +1,30 @@
 import { MapMarker } from "./settings";
 
 class Order {
-  id: string;
-  customerType: string;
-  position: MapMarker;
-  positionName: string;
-  time: Date;
-  kWhValue: number;
-
+  id: number
+  distributionAreaId: string
+  latitude: number
+  longitude: number
+  kw: number
+  customerId: string
+  orderDate: Date
+  
   constructor(
-    customerType: string,
-    position: MapMarker,
-    positionName: string,
-    time: Date,
-    kWhValue: number
+    id: number,
+    distributionAreaId: string,
+    latitude: number,
+    longitude: number,
+    kw: number,
+    customerId: string,
+    orderDate: Date 
   ) {
-    this.id = "O" + Date.now().toString();
-    this.customerType = customerType;
-    this.position = position;
-    this.positionName = positionName;
-    this.time = time;
-    this.kWhValue = kWhValue;
+    this.id=id
+    this.distributionAreaId=distributionAreaId
+    this.latitude=latitude
+    this.longitude=longitude
+    this.kw=kw
+    this.customerId=customerId
+    this.orderDate = orderDate
   }
 }
 
