@@ -24,19 +24,6 @@ const Simulation: React.FC<{
   const [virtualClock, setVirtualClock] = useState<Date>(
       props.simulationValues.clockTime
   );
-  const randomCustomer = () => {
-    const randomNumber = Math.floor(
-        Math.random() * props.settings.customers.length
-    );
-    return props.settings.customers[randomNumber].name;
-  };
-
-  const randomPosition = () => {
-    const latitude = Math.floor(Math.random() * (50 - 40 + 1)) + 40;
-    const longitude = Math.floor(Math.random() * (17 - 14 + 1)) + 14;
-    const radius = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-    return new MapMarker(latitude, longitude, radius);
-  };
 
   const clockRunning = () => {
     return virtualClock.toLocaleString("cs-CZ");
@@ -123,7 +110,12 @@ const Simulation: React.FC<{
           console.log("calculated orderNums " + orderNums)
           for (var k = 0; k < orderNums; k++) {
             var angle = Math.random() * 360;
-            var radius = Math.random() * oblast.marker.radius;
+            var rndRadius = Math.random();
+            if (oblast.distributions[j].isChecked) {
+              // Polopaticky zpusob, jak to prisunout vic ke stredu oblasti
+              rndRadius = rndRadius * rndRadius;
+            }
+            var radius = rndRadius * oblast.marker.radius;
             orders[orders.length] = new Order(
                 oblast.id,
                 addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
@@ -175,6 +167,16 @@ const Simulation: React.FC<{
     isStopped = true;
   };
 
+  const downloadHandler = () => {
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(orders));
+    var dlAnchorElem = document.createElement("a");
+    document.body.append(dlAnchorElem);
+    dlAnchorElem.setAttribute("href",     dataStr     );
+    dlAnchorElem.setAttribute("download", "simulation.json");
+    dlAnchorElem.click();
+    dlAnchorElem.remove();
+  }
+
   useEffect(() => {
     props.updatedSimulationValues({
       orders: orders,
@@ -204,6 +206,9 @@ const Simulation: React.FC<{
             Delete
           </Button>
           <p className="item-space">{clockRunning()}</p>
+          <Button variant="outlined" onClick={downloadHandler}>
+            Download simulation
+          </Button>
         </Stack>
         <TableContainer component={Paper} className="topPadding">
           <TableHead>
