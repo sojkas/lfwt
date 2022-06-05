@@ -19,6 +19,10 @@
   transition: border-color 350ms;
 }
 
+.section {
+  padding-left: 20px;
+  padding-right: 20px;
+}
 .btn-group {
   width: 100% !important;
   padding: 20px 0px;
@@ -36,8 +40,13 @@
 }
 
 .box {
-  border: 1px solid;
   box-sizing: border-box;
+}
+.box:not(:first-child) {
+  border-left: 1px solid #aaa;
+}
+.box:not(:last-child) {
+  border-right: 1px solid #aaa;
 }
 
 .grid {

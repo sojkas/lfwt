@@ -24,7 +24,7 @@ const clearStorageHandler = () => {
 }
 
   return (
-    <Grid container direction="row" spacing={2}>
+    <Grid container direction="row" spacing={2} className="navigation">
       <Grid item xs={10}>
         <ButtonGroup
           className="btn-group"

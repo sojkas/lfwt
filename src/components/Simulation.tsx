@@ -19,6 +19,7 @@ const Simulation: React.FC<{
   simulationValues: SimulationValues;
   updatedSimulationValues: (simulationValues: SimulationValues) => void;
 }> = (props) => {
+
   const [orders, setOrders] = useState<Order[]>(props.simulationValues.orders);
   const [virtualClock, setVirtualClock] = useState<Date>(
     props.simulationValues.clockTime
@@ -38,12 +39,7 @@ const Simulation: React.FC<{
   };
 
   const clockRunning = () => {
-    let date = new Date(virtualClock);
-    let hh = date.getHours().toString();
-    let mm = date.getMinutes().toString();
-    mm = parseInt(mm) < 10 ? "0" + mm : mm;
-    let time = hh + ":" + mm;
-    return time;
+    return virtualClock.toLocaleString("cs-CZ");
   };
 
   const addMinutes = (date: Date, minutes: number) => {
@@ -53,25 +49,17 @@ const Simulation: React.FC<{
 
   const addRandomOrder = () => {
     if (isStopped) return;
-    setTimeout(addRandomOrder, 1500);
+    setTimeout(addRandomOrder, 500);
     setVirtualClock((prevClock) => {
-      return addMinutes(prevClock, 10);
+      const newDate = addMinutes(prevClock, 15);
+      console.log("add ranodm -> generateOrders " + virtualClock?.toString())
+      setOrders((prevOrders) => {
+        const orders = generateOrders(1 / 4, newDate);
+        console.log("Generated orders: "+orders);
+        return prevOrders.concat(orders);
+      });
+      return newDate;
     });
-    /* const customer: string = randomCustomer();
-    const position: MapMarker = randomPosition(); */
-    console.log("add ranodm -> generateOrders " + virtualClock?.toString())
-    setOrders((prevOrders) =>
-      prevOrders.concat(
-        generateOrders(1 / 6, new Date(virtualClock).getHours())
-        /* new Order(
-          customer,
-          position,
-          "random position",
-          new Date(Date.now()),
-          Math.floor(Math.random() * (20 - 10 + 1)) + 10
-        ) */
-      )
-    );
   };
 
   const findCustomerById = (id: string) => {
@@ -100,7 +88,9 @@ const Simulation: React.FC<{
 
   // simRatio = interval simulace 0.1 = 10 x za hodinu
   // hour = aktualni hodina
-  function generateOrders(simRatio: number, hour: number) {
+  function generateOrders(simRatio: number, virtualDate: Date) {
+    const hour = virtualDate.getHours();
+    console.log("Generating orders for "+hour+" hour");
     var orders = [];
     for (var i = 0; i < props.settings.distributionAreas.length; i++) {
       const oblast = props.settings.distributionAreas[i];
@@ -113,20 +103,17 @@ const Simulation: React.FC<{
           continue;
         }
         const customerDetail = findCustomerDetailById(customerId);
-        const customernum = props.settings.customers.indexOf(customer!) + 1; 
+
+        // const customernum = props.settings.customers.indexOf(customer!) + 1;
+        const customernum = oblast.distributions[j].distributionValue;
         var interval = findIntervalByHour(customerDetail!.parking, hour);
         console.log("interval -> " + JSON.stringify(interval) + " [] " + JSON.stringify(customerDetail!.parking) + " hour " + hour);
         if (interval) {
-          var charge =
-            customerDetail!.chargesPerMonth[2] +
-            (customerDetail!.chargesPerMonth[3] -
-              customerDetail!.chargesPerMonth[2]) *
-              Math.random();
-          var orderNums =
-            ((charge * customernum) / (24 * 30)) *
-            (interval.percent / 100) *
-            simRatio;
-          console.log("orderNumber " + orderNums + " charge " + charge)    
+          const minCharge = customerDetail!.chargesPerMonth[2];
+          const maxCharge = customerDetail!.chargesPerMonth[3];
+          var charge =  minCharge + (maxCharge - maxCharge) * Math.random();
+          var orderNums = ((charge * customernum) / (24 * 30)) * (interval.percent / 100) * simRatio;
+          console.log("orderNumber " + orderNums + " charge " + charge)
           var decimalPart = orderNums - Math.floor(orderNums);
           if (Math.random() <= decimalPart) {
             orderNums = Math.ceil(orderNums);
@@ -138,7 +125,6 @@ const Simulation: React.FC<{
             var angle = Math.random() * 360;
             var radius = Math.random() * oblast.marker.radius;
             orders[orders.length] = new Order(
-              Date.now(),
               oblast.id,
               addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
               addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
@@ -147,7 +133,7 @@ const Simulation: React.FC<{
                   customerDetail!.kWhPerMonth[2]) *
                   Math.random(),
               customer!.id,
-              virtualClock
+              virtualDate
             );
           }
         }
@@ -169,13 +155,11 @@ const Simulation: React.FC<{
   }
 
   const startHandler = () => {
-    if (!isStopped) return;
     isStopped = false;
-    setTimeout(addRandomOrder, 1500);
+    setTimeout(addRandomOrder, 500);
   };
 
   const stopHandler = () => {
-    if (isStopped) return;
     isStopped = true;
     props.updatedSimulationValues({
       orders: orders,
@@ -208,7 +192,7 @@ const Simulation: React.FC<{
   }, [orders, isStopped]);
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid container direction="column" spacing={2} className="topPadding">
       <Grid item xs={1}>
         <Grid container direction="row" spacing={2}>
           <Grid item xs={1}>
@@ -254,10 +238,10 @@ const Simulation: React.FC<{
                   <TableCell align="center">{findCustomerById(order.customerId)?.name}</TableCell>
                   <TableCell align="center">{findDistributionAreaById(order.distributionAreaId)?.name}</TableCell>
                   <TableCell align="center">
-                    {order.latitude} / {order.longitude}
+                    {order.latitude.toFixed(4)} / {order.longitude.toFixed(4)}
                   </TableCell>
-                  <TableCell align="center">{order.kw}</TableCell>
-                  <TableCell align="center">{order.orderDate.toString()}</TableCell>
+                  <TableCell align="center">{order.kw.toFixed(1)}</TableCell>
+                  <TableCell align="center">{order.orderDate.toLocaleString("cs-CZ")}</TableCell>
                 </TableRow>
               ))}
           </TableBody>

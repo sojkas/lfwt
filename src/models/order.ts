@@ -1,5 +1,7 @@
+var orderId = 1;
+
 class Order {
-  id: number
+  id: string
   distributionAreaId: string
   latitude: number
   longitude: number
@@ -8,7 +10,6 @@ class Order {
   orderDate: Date
   
   constructor(
-    id: number,
     distributionAreaId: string,
     latitude: number,
     longitude: number,
@@ -16,7 +17,7 @@ class Order {
     customerId: string,
     orderDate: Date 
   ) {
-    this.id=id
+    this.id="ORDER"+(orderId++)
     this.distributionAreaId=distributionAreaId
     this.latitude=latitude
     this.longitude=longitude

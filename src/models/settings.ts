@@ -82,12 +82,12 @@ class Settings {
       new DistributionArea(
         "Test A",
         new MapMarker(50.06983, 14.43713, 1),
-        [new DistributionItem("1", this.customers[0].name, this.customers[0].id, 50, true)]
+        [new DistributionItem("1", this.customers[0].name, this.customers[0].id, 100, true)]
       ),
       new DistributionArea(
         "Test B",
         new MapMarker(50.07983, 14.42713, 2),
-        [new DistributionItem("2", this.customers[1].name, this.customers[1].id,  25, false),
+        [new DistributionItem("2", this.customers[1].name, this.customers[1].id,  50, false),
         new DistributionItem("2", this.customers[0].name, this.customers[0].id, 50, true)]
       ),
     ];
