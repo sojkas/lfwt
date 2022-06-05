@@ -1,4 +1,4 @@
-var orderId = 1;
+var orderId = new Date().getTime()
 
 class Order {
   id: string
