@@ -43,10 +43,10 @@
   box-sizing: border-box;
 }
 .box:not(:first-child) {
-  border-left: 1px solid #aaa;
+  border-left: 1px solid #ddd;
 }
 .box:not(:last-child) {
-  border-right: 1px solid #aaa;
+  border-right: 1px solid #ddd;
 }
 
 .grid {

@@ -6,7 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
+  Button, ButtonGroup, Stack,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Order, { SimulationValues } from "../models/order";
@@ -22,11 +22,11 @@ const Simulation: React.FC<{
 
   const [orders, setOrders] = useState<Order[]>(props.simulationValues.orders);
   const [virtualClock, setVirtualClock] = useState<Date>(
-    props.simulationValues.clockTime
+      props.simulationValues.clockTime
   );
   const randomCustomer = () => {
     const randomNumber = Math.floor(
-      Math.random() * props.settings.customers.length
+        Math.random() * props.settings.customers.length
     );
     return props.settings.customers[randomNumber].name;
   };
@@ -81,7 +81,7 @@ const Simulation: React.FC<{
   }
 
   const findIntervalByHour = (parking: ParkingInterval[], hour:number) => {
-    for (let interval of parking) { 
+    for (let interval of parking) {
       if (interval.from <= hour && interval.to >=hour ) return interval
     }
   }
@@ -125,15 +125,15 @@ const Simulation: React.FC<{
             var angle = Math.random() * 360;
             var radius = Math.random() * oblast.marker.radius;
             orders[orders.length] = new Order(
-              oblast.id,
-              addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
-              addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
-              customerDetail!.kWhPerMonth[2] +
+                oblast.id,
+                addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
+                addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
+                customerDetail!.kWhPerMonth[2] +
                 (customerDetail!.kWhPerMonth[3] =
-                  customerDetail!.kWhPerMonth[2]) *
-                  Math.random(),
-              customer!.id,
-              virtualDate
+                    customerDetail!.kWhPerMonth[2]) *
+                Math.random(),
+                customer!.id,
+                virtualDate
             );
           }
         }
@@ -149,8 +149,8 @@ const Simulation: React.FC<{
 
   function addToLongitude(longitude: number, dx: number) {
     return (
-      longitude +
-      ((dx / 6378) * (180 / Math.PI)) / Math.cos((longitude * Math.PI) / 180)
+        longitude +
+        ((dx / 6378) * (180 / Math.PI)) / Math.cos((longitude * Math.PI) / 180)
     );
   }
 
@@ -192,31 +192,20 @@ const Simulation: React.FC<{
   }, [orders, isStopped]);
 
   return (
-    <Grid container direction="column" spacing={2} className="topPadding">
-      <Grid item xs={1}>
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={1}>
-            <Button variant="outlined" onClick={startHandler}>
-              Start
-            </Button>{" "}
-          </Grid>
-          <Grid item xs={1}>
-            <Button variant="outlined" onClick={stopHandler}>
-              Stop
-            </Button>
-          </Grid>
-          <Grid item xs={1}>
-            <Button variant="outlined" onClick={deleteHandler}>
-              Delete
-            </Button>
-          </Grid>
-          <Grid item xs={2}>
-            <p className="item-space">{clockRunning()}</p>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={2}>
-        <TableContainer component={Paper}>
+      <div>
+        <Stack direction="row" spacing={2} className="topPadding">
+          <Button variant="outlined" onClick={startHandler}>
+            Start
+          </Button>{" "}
+          <Button variant="outlined" onClick={stopHandler}>
+            Stop
+          </Button>
+          <Button variant="outlined" onClick={deleteHandler}>
+            Delete
+          </Button>
+          <p className="item-space">{clockRunning()}</p>
+        </Stack>
+        <TableContainer component={Paper} className="topPadding">
           <TableHead>
             <TableRow>
               <TableCell align="center">ID</TableCell>
@@ -229,25 +218,24 @@ const Simulation: React.FC<{
           </TableHead>
           <TableBody>
             {orders.length > 0 &&
-              orders.map((order) => (
-                <TableRow
-                  key={order.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="center">{order.id}</TableCell>
-                  <TableCell align="center">{findCustomerById(order.customerId)?.name}</TableCell>
-                  <TableCell align="center">{findDistributionAreaById(order.distributionAreaId)?.name}</TableCell>
-                  <TableCell align="center">
-                    {order.latitude.toFixed(4)} / {order.longitude.toFixed(4)}
-                  </TableCell>
-                  <TableCell align="center">{order.kw.toFixed(1)}</TableCell>
-                  <TableCell align="center">{order.orderDate.toLocaleString("cs-CZ")}</TableCell>
-                </TableRow>
-              ))}
+                orders.map((order) => (
+                    <TableRow
+                        key={order.id}
+                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell align="center">{order.id}</TableCell>
+                      <TableCell align="center">{findCustomerById(order.customerId)?.name}</TableCell>
+                      <TableCell align="center">{findDistributionAreaById(order.distributionAreaId)?.name}</TableCell>
+                      <TableCell align="center">
+                        {order.latitude.toFixed(4)} / {order.longitude.toFixed(4)}
+                      </TableCell>
+                      <TableCell align="center">{order.kw.toFixed(1)}</TableCell>
+                      <TableCell align="center">{order.orderDate.toLocaleString("cs-CZ")}</TableCell>
+                    </TableRow>
+                ))}
           </TableBody>
         </TableContainer>
-      </Grid>
-    </Grid>
+      </div>
   );
 };
 

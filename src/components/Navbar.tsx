@@ -35,11 +35,9 @@ const clearStorageHandler = () => {
             {...(props.active === 0
               ? { className: "menu-active btn" }
               : { className: "btn" })}
-            onClick={resourcesHandler}
-          >
+            onClick={resourcesHandler} >
             Resources
           </Button>
-          <span className="space"></span>
           <Button
             {...(props.active === 1
               ? { className: "menu-active btn" }
@@ -48,7 +46,6 @@ const clearStorageHandler = () => {
           >
             Customer Types
           </Button>
-          <span className="space"></span>
           <Button
             {...(props.active === 2
               ? { className: "menu-active btn" }
@@ -57,20 +54,18 @@ const clearStorageHandler = () => {
           >
             Customer Distribution
           </Button>
-          <span className="space"></span>
           <Button
             {...(props.active === 3
               ? { className: "menu-active btn" }
               : { className: "btn" })}
-            onClick={simulationHandler}
-          >
+            onClick={simulationHandler} >
             Simulation
           </Button>
         </ButtonGroup>
       </Grid>
       <Grid item xs={2}>
         <Button className="item-space" variant="contained" onClick={clearStorageHandler}>
-          Clear storage
+          Delete configuration
         </Button>
       </Grid>
     </Grid>

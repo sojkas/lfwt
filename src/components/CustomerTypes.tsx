@@ -108,14 +108,9 @@ const CustomerTypes: React.FC<{
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
         <Grid className="box" item xs={4}>
-          <Grid container direction="column" spacing={2}>
-            <Grid item xs={1}>
-              <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
-                <AddIcon />
-              </Fab>
-            </Grid>
+          <Grid container direction="column" spacing={2} className="topPaddingBig">
             <Grid item xs={5}>
-              <ButtonGroup orientation="vertical" variant="contained">
+              <ButtonGroup orientation="vertical" variant="text" fullWidth={true}>
                 {customers.map((customer) => (
                   <CustomerComponent
                     key={customer.id}
@@ -126,6 +121,11 @@ const CustomerTypes: React.FC<{
                   />
                 ))}
               </ButtonGroup>
+            </Grid>
+            <Grid item xs={1}>
+              <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
+                <AddIcon />
+              </Fab>
             </Grid>
           </Grid>
         </Grid>
