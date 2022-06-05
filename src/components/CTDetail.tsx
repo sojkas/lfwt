@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Grid,
-  TextField,
-  Button,
-  Alert,
-  Fab,
-} from "@mui/material";
+import { Grid, TextField, Button, Alert, Fab } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import RangeSlider from "./RangeSlider";
 import SingleSlider from "./SingleSlider";
@@ -16,14 +10,14 @@ const CTDetail: React.FC<{
   customerId: string;
   customerDetail: CustomerDetail;
   updatedCustomerDetail: (
-      customerId: string,
-      updatedDetail: CustomerDetail
+    customerId: string,
+    updatedDetail: CustomerDetail
   ) => void;
   updateCustomerName: (customerId: string, updatedName: string) => void;
 }> = (props) => {
   const [allParkingIntervals, setAllParkingIntervals] = useState<
-      CustomerDetail["parking"]
-      >(props.customerDetail.parking);
+    CustomerDetail["parking"]
+  >(props.customerDetail.parking);
 
   const getAllParkingValue = (allParkingIntervals: ParkingInterval[]) => {
     let parkingValue: number = 0;
@@ -33,35 +27,44 @@ const CTDetail: React.FC<{
     return parkingValue;
   };
   const [allParkingValue, setAllParkingValue] = useState<number>(
-      getAllParkingValue(allParkingIntervals)
+    getAllParkingValue(allParkingIntervals)
   );
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const [segmentName, setSegmentName] = useState<string>(
-      props.customerDetail.segmentName
+    props.customerDetail.segmentName
   );
-  const [chargesPerMonth, setChargesPerMonth] = useState<
-      [number, number, number, number, string]
-      >(props.customerDetail.chargesPerMonth);
-  const [kwh, setKwh] = useState<[number, number, number, number, string]>(
-      props.customerDetail.kWhPerMonth
+  const [minChargesPerMonth, setMinChargesPerMonth] = useState<number>(
+    props.customerDetail.minChargesPerMonth
+  );
+  const [maxChargesPerMonth, setMaxChargesPerMonth] = useState<number>(
+    props.customerDetail.maxChargesPerMonth
+  );
+  const [minKwh, setMinKwh] = useState<number>(
+    props.customerDetail.minkWhPerMonth
+  );
+  const [maxKwh, setMaxKwh] = useState<number>(
+    props.customerDetail.minkWhPerMonth
   );
 
-  const [subscriberRatio, setSubscriberRatio] = useState<
-      [number, number, number, string]
-      >(props.customerDetail.subscriberRatio);
-  const [sameDayOrders, setSameDayOrders] = useState<
-      [number, number, number, string]
-      >(props.customerDetail.sameDayOrders);
+  const [subscriberRatio, setSubscriberRatio] = useState<number>(
+    props.customerDetail.subscriberRatio
+  );
+  const [setSameDayOrders, setSetSameDayOrders] = useState<number>(
+    props.customerDetail.setSameDayOrdersValue
+  );
+  const [maxSameDayOrders, setMaxSameDayOrders] = useState<number>(
+    props.customerDetail.setSameDayOrdersValue
+  );
 
   const addParkingHandler = () => {
     const parkingIntervalValueRemaining: number = 100 - allParkingValue;
     const newParkingInterval = new ParkingInterval(
-        props.customerId,
-        12,
-        12,
-        parkingIntervalValueRemaining
+      props.customerId,
+      12,
+      12,
+      parkingIntervalValueRemaining
     );
     setAllParkingIntervals((prevIntervals) => {
       return prevIntervals.concat(newParkingInterval);
@@ -74,38 +77,20 @@ const CTDetail: React.FC<{
   };
 
   const chargesHandler = (newValue: number[]) => {
-    setChargesPerMonth([
-      chargesPerMonth[0],
-      chargesPerMonth[1],
-      newValue[0],
-      newValue[1],
-      chargesPerMonth[4],
-    ]);
+    setMinChargesPerMonth(newValue[0]);
+    setMaxChargesPerMonth(newValue[1]);
   };
   const kwhHandler = (newValue: number[]) => {
-    setKwh([kwh[0], kwh[1], newValue[0], newValue[1], kwh[4]]);
+    setMinKwh(newValue[0]);
+    setMaxKwh(newValue[1]);
   };
   const subscriberRatioHandler = (newValue: number) => {
-    setSubscriberRatio([
-      subscriberRatio[0],
-      subscriberRatio[1],
-      newValue,
-      subscriberRatio[3],
-    ]);
-    setSameDayOrders([
-      sameDayOrders[0],
-      100 - newValue,
-      Math.round((100 - newValue) / 2),
-      sameDayOrders[3],
-    ]);
+    setSubscriberRatio(newValue);
+    setMaxSameDayOrders(100 - newValue);
+    setSetSameDayOrders(Math.round((100 - newValue) / 2));
   };
   const sameDayOrderHandler = (newValue: number) => {
-    setSameDayOrders([
-      sameDayOrders[0],
-      sameDayOrders[1],
-      newValue,
-      sameDayOrders[3],
-    ]);
+    setSetSameDayOrders(newValue);
   };
 
   const parkingIntervalHandler = (updatedParkingInterval: ParkingInterval) => {
@@ -119,9 +104,9 @@ const CTDetail: React.FC<{
 
   const removeParkingIntervalItemHandler = (parkingIntervalId: string) => {
     const newAllParkingInterVals: ParkingInterval[] =
-        allParkingIntervals.filter(
-            (parkingOne) => parkingOne.id !== parkingIntervalId
-        );
+      allParkingIntervals.filter(
+        (parkingOne) => parkingOne.id !== parkingIntervalId
+      );
     setAllParkingIntervals(newAllParkingInterVals);
   };
 
@@ -131,10 +116,13 @@ const CTDetail: React.FC<{
 
   useEffect(() => {
     setSegmentName(props.customerDetail.segmentName);
-    setChargesPerMonth(props.customerDetail.chargesPerMonth);
-    setKwh(props.customerDetail.kWhPerMonth);
+    setMinChargesPerMonth(props.customerDetail.minChargesPerMonth);
+    setMaxChargesPerMonth(props.customerDetail.maxChargesPerMonth);
+    setMinKwh(props.customerDetail.minkWhPerMonth);
+    setMaxKwh(props.customerDetail.maxkWhPerMonth);
     setSubscriberRatio(props.customerDetail.subscriberRatio);
-    setSameDayOrders(props.customerDetail.sameDayOrders);
+    setSetSameDayOrders(props.customerDetail.setSameDayOrdersValue);
+    setMaxSameDayOrders(props.customerDetail.maxSameDayOrdersValue);
     setAllParkingIntervals(props.customerDetail.parking);
   }, [props.customerDetail]);
 
@@ -146,130 +134,134 @@ const CTDetail: React.FC<{
     setAllParkingValue(getAllParkingValue(allParkingIntervals));
     props.customerDetail.segmentName = segmentName;
     props.customerDetail.parking = allParkingIntervals;
-    props.customerDetail.chargesPerMonth = chargesPerMonth;
-    props.customerDetail.kWhPerMonth = kwh;
+    props.customerDetail.minChargesPerMonth = minChargesPerMonth;
+    props.customerDetail.maxChargesPerMonth = maxChargesPerMonth;
+    props.customerDetail.minkWhPerMonth = minKwh;
+    props.customerDetail.maxkWhPerMonth = maxKwh;
     props.customerDetail.subscriberRatio = subscriberRatio;
-    props.customerDetail.sameDayOrders = sameDayOrders;
+    props.customerDetail.setSameDayOrdersValue = setSameDayOrders;
+    props.customerDetail.maxSameDayOrdersValue = maxSameDayOrders;
+
     return props.updatedCustomerDetail(props.customerId, props.customerDetail);
   };
 
   return (
-      <React.Fragment>
-        <h4>Add / Edit Customer segment</h4>
-        <Grid container direction="row" spacing={1}>
-          <Grid item xs={6}>
-            <TextField
-                fullWidth={true}
-                id="segment-name"
-                label="Segment name"
-                variant="outlined"
-                value={segmentName}
-                size="small"
-                onChange={textFieldHandler}
-            />
-          </Grid>
+    <React.Fragment>
+      <h4>Add / Edit Customer segment</h4>
+      <Grid container direction="row" spacing={1}>
+        <Grid item xs={6}>
+          <TextField
+            fullWidth={true}
+            id="segment-name"
+            label="Segment name"
+            variant="outlined"
+            value={segmentName}
+            size="small"
+            onChange={textFieldHandler}
+          />
         </Grid>
-        <p className="topPadding"></p>
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={2}>
-            <label>Charges per month</label>
-          </Grid>
-          <Grid item xs={6}>
-            <RangeSlider
-                label="Charges per month"
-                minValue={chargesPerMonth[0]}
-                maxValue={chargesPerMonth[1]}
-                minSetValue={chargesPerMonth[2]}
-                maxSetValue={chargesPerMonth[3]}
-                sliderUnit={chargesPerMonth[4]}
-                rangeSliderChange={chargesHandler}
-            />
-          </Grid>
+      </Grid>
+      <p className="topPadding"></p>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={2}>
+          <label>Charges per month</label>
         </Grid>
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={2}>
-            <label>kWh per charge</label>
-          </Grid>
-          <Grid item xs={6}>
-            <RangeSlider
-                label="kWh per charge"
-                minValue={kwh[0]}
-                maxValue={kwh[1]}
-                minSetValue={kwh[2]}
-                maxSetValue={kwh[3]}
-                sliderUnit={kwh[4]}
-                rangeSliderChange={kwhHandler}
-            />
-          </Grid>
+        <Grid item xs={6}>
+          <RangeSlider
+            label="Charges per month"
+            minValue={1}
+            maxValue={30}
+            minSetValue={minChargesPerMonth}
+            maxSetValue={maxChargesPerMonth}
+            sliderUnit="charges"
+            rangeSliderChange={chargesHandler}
+          />
         </Grid>
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={2}>
-            <label>Subscriber ratio</label>
-          </Grid>
-          <Grid item xs={6}>
-            <SingleSlider
-                label="Subscriber ratio"
-                minValue={subscriberRatio[0]}
-                maxValue={subscriberRatio[1]}
-                setValue={subscriberRatio[2]}
-                sliderUnit={subscriberRatio[3]}
-                singleSliderChange={subscriberRatioHandler}
-            />
-          </Grid>
+      </Grid>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={2}>
+          <label>kWh per charge</label>
         </Grid>
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={2}>
-            <label>Same day orders</label>
-          </Grid>
-          <Grid item xs={6}>
-            <SingleSlider
-                label="Same day orders"
-                minValue={sameDayOrders[0]}
-                maxValue={sameDayOrders[1]}
-                setValue={sameDayOrders[2]}
-                sliderUnit={sameDayOrders[3]}
-                singleSliderChange={sameDayOrderHandler}
-            />
-          </Grid>
+        <Grid item xs={6}>
+          <RangeSlider
+            label="kWh per charge"
+            minValue={5}
+            maxValue={40}
+            minSetValue={minKwh}
+            maxSetValue={maxKwh}
+            sliderUnit="kWh"
+            rangeSliderChange={kwhHandler}
+          />
         </Grid>
-        <p className="topPadding"></p>
-        <Grid container direction="row" spacing={2}>
-          {allParkingIntervals.map((parkingOne) => (
-              <ParkingIntervalItem
-                  key={parkingOne.id}
-                  parkingIntervalItemValues={parkingOne}
-                  updatedParkingInterval={parkingIntervalHandler}
-                  removeParkingInterval={removeParkingIntervalItemHandler}
-              />
-          ))}
+      </Grid>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={2}>
+          <label>Subscriber ratio</label>
         </Grid>
-        {showAlert && (
-            <Grid item xs={1}>
-              <Alert severity="warning">
-                All parking intervals percentige is over 100%.
-              </Alert>
-              ;
-            </Grid>
-        )}
+        <Grid item xs={6}>
+          <SingleSlider
+            label="Subscriber ratio"
+            minValue={0}
+            maxValue={100}
+            setValue={subscriberRatio}
+            sliderUnit="%"
+            singleSliderChange={subscriberRatioHandler}
+          />
+        </Grid>
+      </Grid>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={2}>
+          <label>Same day orders</label>
+        </Grid>
+        <Grid item xs={6}>
+          <SingleSlider
+            label="Same day orders"
+            minValue={0}
+            maxValue={maxSameDayOrders}
+            setValue={setSameDayOrders}
+            sliderUnit="%"
+            singleSliderChange={sameDayOrderHandler}
+          />
+        </Grid>
+      </Grid>
+      <p className="topPadding"></p>
+      <Grid container direction="row" spacing={2}>
+        {allParkingIntervals.map((parkingOne) => (
+          <ParkingIntervalItem
+            key={parkingOne.id}
+            parkingIntervalItemValues={parkingOne}
+            updatedParkingInterval={parkingIntervalHandler}
+            removeParkingInterval={removeParkingIntervalItemHandler}
+          />
+        ))}
+      </Grid>
+      {showAlert && (
+        <Grid item xs={1}>
+          <Alert severity="warning">
+            All parking intervals percentige is over 100%.
+          </Alert>
+          ;
+        </Grid>
+      )}
 
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={8}></Grid>
-          <Grid item xs={4}>
-            <Fab
-                disabled={allParkingValue > 100}
-                aria-label="add"
-                size="small"
-                onClick={addParkingHandler}
-            >
-              <Add />
-            </Fab>
-          </Grid>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={8}></Grid>
+        <Grid item xs={4}>
+          <Fab
+            disabled={allParkingValue > 100}
+            aria-label="add"
+            size="small"
+            onClick={addParkingHandler}
+          >
+            <Add />
+          </Fab>
         </Grid>
-        <Button variant="outlined" onClick={saveHandler} className="item-space">
-          Save
-        </Button>
-</React.Fragment>
-);
+      </Grid>
+      <Button variant="outlined" onClick={saveHandler} className="item-space">
+        Save
+      </Button>
+    </React.Fragment>
+  );
 };
 
 export default CTDetail;

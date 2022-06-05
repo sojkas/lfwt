@@ -56,10 +56,7 @@ class Settings {
       new CustomerDetail(
         this.customers[0].id,
         "Outskirts car adicts",
-        [1, 30, 8, 17, "charges"],
-        [5, 40, 17, 26, "kWh"],
-        [0, 100, 60, "%"],
-        [0, 40, 20, "%"],
+        8, 17, 17, 26, 60, 20, 40,
         [
           new ParkingInterval(this.customers[0].id, 0, 20, 55),
           new ParkingInterval(this.customers[0].id, 21, 23, 45),
@@ -68,10 +65,7 @@ class Settings {
       new CustomerDetail(
         this.customers[1].id,
         "Rohlik",
-        [1, 30, 6, 13, "charges"],
-        [5, 40, 12, 30, "kWh"],
-        [0, 100, 45, "%"],
-        [0, 55, 27, "%"],
+        6, 13, 12, 30, 45, 27, 55,
         [
           new ParkingInterval(this.customers[1].id, 0, 11, 55),
           new ParkingInterval(this.customers[1].id, 12, 23, 45),
@@ -93,7 +87,7 @@ class Settings {
     ];
   }
 }
-
+var parkingId = new Date().getTime();
 class ParkingInterval {
   id: string;
   customerID: string;
@@ -106,14 +100,14 @@ class ParkingInterval {
     toValue: number,
     percentValue: number
   ) {
-    this.id = "PI" + Date.now().toString() + Math.random().toString();
+    this.id = "PARKING" + (parkingId++);
     this.customerID = customerId;
     this.from = fromValue;
     this.to = toValue;
     this.percent = percentValue;
   }
 }
-
+var distributionId = new Date().getTime();
 class DistributionItem {
   id: string;
   mapId: string; //MapMarker id
@@ -128,7 +122,7 @@ class DistributionItem {
     distributionValue: number,
     isChecked: boolean
   ) {
-    this.id = "DI" + Date.now().toString() + Math.random().toString();
+    this.id = "DISTRIBUTION" + (distributionId++);
     this.mapId = mapId;
     this.distributor = distributor;
     this.customerId = customerId;
@@ -149,46 +143,52 @@ class Customer {
 class CustomerDetail {
   id: string;
   segmentName: string;
-  //charges per month [minValueChart, maxValueChart, minValue, maxValue, sliderUnit]
-  chargesPerMonth: [number, number, number, number, string];
-  //kWh per charge [minValueChart, maxValueChart, minValue, maxValue, sliderUnit]
-  kWhPerMonth: [number, number, number, number, string];
-  //subscriber ratio [minValueChart, maxVauleChart, setValue, sliderUnit]
-  subscriberRatio: [number, number, number, string];
-  //same day orders [minValueChart, maxVauleChart, setValue, sliderUnit]
-  sameDayOrders: [number, number, number, string];
+  minChargesPerMonth: number;
+  maxChargesPerMonth: number;
+  
+  minkWhPerMonth: number;
+  maxkWhPerMonth: number;
+  subscriberRatio: number;
+  setSameDayOrdersValue: number;
+  maxSameDayOrdersValue: number;
   //pole intervalu
   parking: ParkingInterval[];
 
   constructor(
     id: string,
     segmentName: string,
-    chargesPerMonth: [number, number, number, number, string],
-    kWhPerMonth: [number, number, number, number, string],
-    subscriberRatio: [number, number, number, string],
-    sameDayOrders: [number, number, number, string],
+    minChargesPerMonth: number,
+    maxChargesPerMonth: number,
+    minkWhPerMonth: number,
+    maxkWhPerMonth: number,
+    subscriberRatio: number,
+    setSameDayOrdersValue: number,
+    maxSameDayOrdersValue: number,
     parking: ParkingInterval[]
   ) {
     this.id = id;
     this.segmentName = segmentName;
-    this.chargesPerMonth = chargesPerMonth;
-    this.kWhPerMonth = kWhPerMonth;
+    this.minChargesPerMonth = minChargesPerMonth;
+    this.maxChargesPerMonth = maxChargesPerMonth;
+    this.minkWhPerMonth = minkWhPerMonth;
+    this.maxkWhPerMonth = maxkWhPerMonth;
     this.subscriberRatio = subscriberRatio;
-    this.sameDayOrders = sameDayOrders;
+    this.setSameDayOrdersValue = setSameDayOrdersValue;
+    this.maxSameDayOrdersValue = maxSameDayOrdersValue;
     this.parking = parking;
   }
 }
-
+var depotCityId = new Date().getTime();
 class DepotCity {
   cityId: string;
   cityName: string;
 
   constructor(cityName: string) {
-    this.cityId = "DC" + Date.now().toString();
+    this.cityId = "DEPOTCITY" + (depotCityId++);
     this.cityName = cityName;
   }
 }
-
+var depotUnitId = new Date().getTime();
 class DepotUnit {
   id: string;
   cityId: string;
@@ -198,13 +198,13 @@ class DepotUnit {
   depotSlotNumber: number;
 
   constructor(cityId: string, depotName: string, depotSlotNumber: number) {
-    this.id = "DU" + Date.now().toString();
+    this.id = "DEPOTUNIT" + (depotUnitId++);
     this.cityId = cityId;
     this.depotName = depotName;
     this.depotSlotNumber = depotSlotNumber;
   }
 }
-
+var nimbeeId = new Date().getTime();
 class Nimbee {
   id: string;
   nimbeeName: string;
@@ -212,12 +212,13 @@ class Nimbee {
   nimbeePieces: number;
 
   constructor(name: string, capacity: number, pieces: number) {
-    this.id = "N" + Date.now().toString();
+    this.id = "NIMBEE" + (nimbeeId++);
     this.nimbeeName = name;
     this.nimbeeCapacity = capacity;
     this.nimbeePieces = pieces;
   }
 }
+var transporterId = new Date().getTime();
 class Transporter {
   id: string;
   transporterSlots: number;
@@ -225,13 +226,13 @@ class Transporter {
   transporterPieces: number;
 
   constructor(slots: number, capacity: number, pieces: number) {
-    this.id = "T" + Date.now().toString();
+    this.id = "TRANSPORTER" + (transporterId++);
     this.transporterSlots = slots;
     this.transporterCapacity = capacity;
     this.transporterPieces = pieces;
   }
 }
-
+var shiftId = new Date().getTime();
 class Shift {
   id: string;
   shiftName: string;
@@ -240,13 +241,14 @@ class Shift {
   drivers: number;
 
   constructor(name: string, from: number, to: number, drivers: number) {
-    this.id = "S" + Date.now().toString() + Math.random().toString();
+    this.id = "SHIFT" + (shiftId++);
     this.shiftName = name;
     this.from = from;
     this.to = to;
     this.drivers = drivers;
   }
 }
+var mapmarkerId = new Date().getTime();
 class MapMarker {
   id: string;
   latitude: number;
@@ -254,13 +256,13 @@ class MapMarker {
   radius: number;
 
   constructor(lat: number, lng: number, radius: number) {
-    this.id = "MM" + Date.now().toString() + Math.random().toString();
+    this.id = "MAPMARKER" + (mapmarkerId++);
     this.latitude = lat;
     this.longitude = lng;
     this.radius = radius;
   }
 }
-
+var distributionAreaId = new Date().getTime();
 class DistributionArea {
   id: string;
   name: string;
@@ -271,7 +273,7 @@ class DistributionArea {
     marker: MapMarker,
     distributions: DistributionItem[]
   ) {
-    this.id = "DA" + Date.now().toString() + Math.random() + toString();
+    this.id = "DISTRIBUTIONAREA" + (distributionAreaId++);
     this.name = name;
     this.marker = marker;
     this.distributions = distributions;

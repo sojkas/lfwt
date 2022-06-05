@@ -1,16 +1,15 @@
 import {
-  Grid,
   Paper,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Button, ButtonGroup, Stack,
+  Button, Stack,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Order, { SimulationValues } from "../models/order";
-import Settings, { MapMarker, ParkingInterval } from "../models/settings";
+import Settings, { ParkingInterval } from "../models/settings";
 
 let isStopped = true;
 
@@ -39,10 +38,10 @@ const Simulation: React.FC<{
     setTimeout(addRandomOrder, 500);
     setVirtualClock((prevClock) => {
       const newDate = addMinutes(prevClock, 15);
-      console.log("add ranodm -> generateOrders " + virtualClock?.toString())
+      /* console.log("add ranodm -> generateOrders " + virtualClock?.toString()) */
       setOrders((prevOrders) => {
         const orders = generateOrders(1 / 4, newDate);
-        console.log("Generated orders: "+orders);
+        /* console.log("Generated orders: "+orders); */
         return prevOrders.concat(orders);
       });
       return newDate;
@@ -77,7 +76,7 @@ const Simulation: React.FC<{
   // hour = aktualni hodina
   function generateOrders(simRatio: number, virtualDate: Date) {
     const hour = virtualDate.getHours();
-    console.log("Generating orders for "+hour+" hour");
+    /* console.log("Generating orders for "+hour+" hour"); */
     var orders = [];
     for (var i = 0; i < props.settings.distributionAreas.length; i++) {
       const oblast = props.settings.distributionAreas[i];
@@ -94,20 +93,20 @@ const Simulation: React.FC<{
         // const customernum = props.settings.customers.indexOf(customer!) + 1;
         const customernum = oblast.distributions[j].distributionValue;
         var interval = findIntervalByHour(customerDetail!.parking, hour);
-        console.log("interval -> " + JSON.stringify(interval) + " [] " + JSON.stringify(customerDetail!.parking) + " hour " + hour);
+        /* console.log("interval -> " + JSON.stringify(interval) + " [] " + JSON.stringify(customerDetail!.parking) + " hour " + hour); */
         if (interval) {
-          const minCharge = customerDetail!.chargesPerMonth[2];
-          const maxCharge = customerDetail!.chargesPerMonth[3];
+          const minCharge = customerDetail!.minChargesPerMonth;
+          const maxCharge = customerDetail!.maxChargesPerMonth;
           var charge =  minCharge + (maxCharge - maxCharge) * Math.random();
           var orderNums = ((charge * customernum) / (24 * 30)) * (interval.percent / 100) * simRatio;
-          console.log("orderNumber " + orderNums + " charge " + charge)
+          /* console.log("orderNumber " + orderNums + " charge " + charge) */
           var decimalPart = orderNums - Math.floor(orderNums);
           if (Math.random() <= decimalPart) {
             orderNums = Math.ceil(orderNums);
           } else {
             orderNums = Math.floor(orderNums);
           }
-          console.log("calculated orderNums " + orderNums)
+          /* console.log("calculated orderNums " + orderNums) */
           for (var k = 0; k < orderNums; k++) {
             var angle = Math.random() * 360;
             var rndRadius = Math.random();
@@ -120,9 +119,9 @@ const Simulation: React.FC<{
                 oblast.id,
                 addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
                 addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
-                customerDetail!.kWhPerMonth[2] +
-                (customerDetail!.kWhPerMonth[3] =
-                    customerDetail!.kWhPerMonth[2]) *
+                customerDetail!.minkWhPerMonth +
+                (customerDetail!.maxkWhPerMonth =
+                    customerDetail!.minkWhPerMonth) *
                 Math.random(),
                 customer!.id,
                 virtualDate
@@ -131,7 +130,7 @@ const Simulation: React.FC<{
         }
       }
     }
-    console.log("orders -> "+ JSON.stringify(orders))
+    /* console.log("orders -> "+ JSON.stringify(orders)) */
     return orders;
   }
 

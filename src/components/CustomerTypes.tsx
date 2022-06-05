@@ -40,10 +40,7 @@ const CustomerTypes: React.FC<{
     const newCustomerDetail = new CustomerDetail(
       cdID.toString(),
       "New Customer",
-      [1, 30, 10, 20, "charges"],
-      [5, 40, 15, 25, "kWh"],
-      [0, 100, 50, "%"],
-      [0, 50, 25, "%"],
+      10, 20, 15, 25, 50, 25, 50,
       [new ParkingInterval(cdID.toString(), 8, 12, 100)]
     );
     setCustomerDetails((prevDetails) => prevDetails.concat(newCustomerDetail));
