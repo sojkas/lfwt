@@ -114,6 +114,7 @@ const Gmap: React.FC<{
     const googleMarker: GoogleMarker = new google.maps.Marker({
       position: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       map: map,
+      draggable: true,
     });
 
     allGoogleMarkers?.push(googleMarker);
@@ -121,7 +122,12 @@ const Gmap: React.FC<{
     googleMarker.addListener("click", () => {
       props.selectedMarker(mapMarker);
     });
+
+    googleMarker.addListener("dragend", ()=> {
+      props.setPosition(googleMarker.getPosition()!);
+    })
   };
+
 
   const addCircle = (mapMarker: MapMarker): void => {
     const circle: google.maps.Circle = new google.maps.Circle({
