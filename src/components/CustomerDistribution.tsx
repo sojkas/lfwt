@@ -25,11 +25,15 @@ const CustomerDistribution: React.FC<{
 
   const initDistributionMarkers = () => {
     const mkrs = [];
-    for (let i = 0; i < allDistributionAreas.length; i++) {
-      if (selectedArea && allDistributionAreas[i].id === selectedArea!.id) {
-        mkrs.push(selectedArea!.marker);
-      } else {
-        mkrs.push(allDistributionAreas[i].marker);
+    if (selectedArea) {
+      mkrs.push(selectedArea.marker);
+    } else {
+      for (let i = 0; i < allDistributionAreas.length; i++) {
+        /* if (selectedArea && allDistributionAreas[i].id === selectedArea!.id) {
+          mkrs.push(selectedArea!.marker);
+        } else { */
+          mkrs.push(allDistributionAreas[i].marker);
+        /* } */
       }
     }
     setDistributionMarkers(mkrs);

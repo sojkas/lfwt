@@ -133,7 +133,11 @@ const Gmap: React.FC<{
       map,
       center: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       radius: mapMarker.radius * 1000,
+      draggable: true,
     });
+    circle.addListener("dragend", ()=> {
+      props.setPosition(circle.getCenter()!);
+    })
     allGoogleCircles?.push(circle);
   };
 
