@@ -60,7 +60,6 @@ const CustomerTypes: React.FC<{
   };
 
   const removeCustomerHandler = (id: string) => {
-    if (customers.length <= 1) return;
     const custName = findCustomerById(props.settings, id)?.name;
     if (window.confirm('Do you really want to remove customer "' + custName + '"?')) {
       const newCustomerList: Customer[] = customers.filter(
