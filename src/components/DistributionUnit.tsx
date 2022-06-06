@@ -13,6 +13,7 @@ import {
 import { RemoveCircleOutline } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { Customer, DistributionItem } from "../models/settings";
+import { findCustomerIdByName } from "../utils/supportFunctions";
 
 const DistributionUnit: React.FC<{
   distribution: DistributionItem;
@@ -29,6 +30,7 @@ const DistributionUnit: React.FC<{
     setDistribution((prevDistr) => ({
       ...prevDistr,
       distributor: event.target.value,
+      customerId: findCustomerIdByName(props.allCustomers, event.target.value)!
     }));
   };
   const distributionValueHandler = (

@@ -1,4 +1,4 @@
-import Settings, { ParkingInterval } from "../models/settings";
+import Settings from "../models/settings";
 import Order from "../models/order";
 import {
   findCustomerById,

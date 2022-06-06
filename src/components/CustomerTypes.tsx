@@ -5,10 +5,12 @@ import {
   CustomerDetail,
   Customer,
   ParkingInterval,
+  DistributionArea,
 } from "../models/settings";
 import CTDetail from "./CTDetail";
 import CustomerComponent from "./CustomerComponent";
 import AddIcon from "@mui/icons-material/Add";
+import { findCustomerById } from "../utils/supportFunctions";
 
 const CustomerTypes: React.FC<{
   settings: Settings;
@@ -38,7 +40,13 @@ const CustomerTypes: React.FC<{
     const newCustomerDetail = new CustomerDetail(
       cdID.toString(),
       "New Customer",
-      10, 20, 15, 25, 50, 25, 50,
+      10,
+      20,
+      15,
+      25,
+      50,
+      25,
+      50,
       [new ParkingInterval(cdID.toString(), 8, 12, 100)]
     );
     setCustomerDetails((prevDetails) => prevDetails.concat(newCustomerDetail));
@@ -53,14 +61,30 @@ const CustomerTypes: React.FC<{
 
   const removeCustomerHandler = (id: string) => {
     if (customers.length <= 1) return;
-    const newCustomerList: Customer[] = customers.filter(
-      (customer) => customer.id !== id
-    );
-    setCustomers(newCustomerList);
-    const newCustomerDetailList: CustomerDetail[] = customerDetails.filter(
-      (detail) => detail.id !== id
-    );
-    setCustomerDetails(newCustomerDetailList);
+    const custName = findCustomerById(props.settings, id)?.name;
+    if (window.confirm('Do you really want to remove customer "' + custName + '"?')) {
+      const newCustomerList: Customer[] = customers.filter(
+        (customer) => customer.id !== id
+      );
+      setCustomers(newCustomerList);
+      const newCustomerDetailList: CustomerDetail[] = customerDetails.filter(
+        (detail) => detail.id !== id
+      );
+      setCustomerDetails(newCustomerDetailList);
+      const newDistributionAreas: DistributionArea[] =
+        props.settings.distributionAreas;
+      for (let i = 0; i < props.settings.distributionAreas.length; i++) {
+        const newDistributions = props.settings.distributionAreas[
+          i
+        ].distributions.filter(
+          (distribution) => id !== distribution.customerId
+        );
+        newDistributionAreas[i].distributions = newDistributions;
+      }
+
+      props.settings.distributionAreas = newDistributionAreas;
+      props.updatedSettings(props.settings);
+    }
   };
 
   useEffect(() => {
@@ -105,9 +129,18 @@ const CustomerTypes: React.FC<{
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
         <Grid className="box" item xs={4}>
-          <Grid container direction="column" spacing={2} className="topPaddingBig">
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            className="topPaddingBig"
+          >
             <Grid item xs={5}>
-              <ButtonGroup orientation="vertical" variant="text" fullWidth={true}>
+              <ButtonGroup
+                orientation="vertical"
+                variant="text"
+                fullWidth={true}
+              >
                 {customers.map((customer) => (
                   <CustomerComponent
                     key={customer.id}
