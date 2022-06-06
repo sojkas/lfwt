@@ -5,8 +5,7 @@ class Settings {
   depotMarkerId: number;
 
   /* RESOURCES */
-  depotCity: DepotCity;
-  depotUnits: DepotUnit[];
+  depotAreas: DepotArea[];
 
   /* Nimbees */
   nimbees: Nimbee[];
@@ -20,17 +19,6 @@ class Settings {
   /* CUSTOMER TYPES */
   customers: Customer[];
   customerDetails: CustomerDetail[];
-  /* segmentName: string;
-  //charges per month [minValueChart, maxValueChart, minValue, maxValue, sliderUnit]
-  chargesPerMonth: [number, number, number, number, string];
-  //kWh per charge [minValueChart, maxValueChart, minValue, maxValue, sliderUnit]
-  kWhPerMonth: [number, number, number, number, string];
-  //subscriber ratio [minValueChart, maxVauleChart, setValue, sliderUnit]
-  subscriberRatio: [number, number, number, string];
-  //same day orders [minValueChart, maxVauleChart, setValue, sliderUnit]
-  sameDayOrders: [number, number, number, string];
-  //pole intervalu
-  parking: ParkingInterval[];*/
 
   /* CUSTOMER DISTRIBUTION */
   distributionAreas: DistributionArea[];
@@ -39,8 +27,15 @@ class Settings {
     this.customerId = 3;
     this.distributionMarkerId = 2;
     this.depotMarkerId = 2;
-    this.depotCity = new DepotCity("Prague");
-    this.depotUnits = [new DepotUnit(this.depotCity.cityId, "depot A", 4)];
+    this.depotAreas = [
+      new DepotArea("Vnitrni mesto", new MapMarker(50.06983, 14.43713, 0), [
+        new DepotUnit("todo", "depot A", 4),
+        new DepotUnit("todo", "depot B", 8),
+      ]),
+    ];
+    this.depotAreas.forEach((area) =>
+      area.depots.forEach((unit) => (unit.areaId = area.id))
+    );
     this.nimbees = [new Nimbee("v 1", 18, 4)];
     this.transporters = [new Transporter(2, 10, 5)];
     this.shifts = [
@@ -56,7 +51,13 @@ class Settings {
       new CustomerDetail(
         this.customers[0].id,
         "Outskirts car adicts",
-        8, 17, 17, 26, 60, 20, 40,
+        8,
+        17,
+        17,
+        26,
+        60,
+        20,
+        40,
         [
           new ParkingInterval(this.customers[0].id, 0, 20, 55),
           new ParkingInterval(this.customers[0].id, 21, 23, 45),
@@ -65,7 +66,13 @@ class Settings {
       new CustomerDetail(
         this.customers[1].id,
         "Rohlik",
-        6, 13, 12, 30, 45, 27, 55,
+        6,
+        13,
+        12,
+        30,
+        45,
+        27,
+        55,
         [
           new ParkingInterval(this.customers[1].id, 0, 11, 55),
           new ParkingInterval(this.customers[1].id, 12, 23, 45),
@@ -73,17 +80,31 @@ class Settings {
       ),
     ];
     this.distributionAreas = [
-      new DistributionArea(
-        "Test A",
-        new MapMarker(50.06983, 14.43713, 1),
-        [new DistributionItem("1", this.customers[0].name, this.customers[0].id, 100, true)]
-      ),
-      new DistributionArea(
-        "Test B",
-        new MapMarker(50.07983, 14.42713, 2),
-        [new DistributionItem("2", this.customers[1].name, this.customers[1].id,  50, false),
-        new DistributionItem("2", this.customers[0].name, this.customers[0].id, 50, true)]
-      ),
+      new DistributionArea("Test A", new MapMarker(50.06983, 14.43713, 1), [
+        new DistributionItem(
+          "1",
+          this.customers[0].name,
+          this.customers[0].id,
+          100,
+          true
+        ),
+      ]),
+      new DistributionArea("Test B", new MapMarker(50.07983, 14.42713, 2), [
+        new DistributionItem(
+          "2",
+          this.customers[1].name,
+          this.customers[1].id,
+          50,
+          false
+        ),
+        new DistributionItem(
+          "2",
+          this.customers[0].name,
+          this.customers[0].id,
+          50,
+          true
+        ),
+      ]),
     ];
   }
 }
@@ -100,7 +121,7 @@ class ParkingInterval {
     toValue: number,
     percentValue: number
   ) {
-    this.id = "PARKING" + (parkingId++);
+    this.id = "PARKING" + parkingId++;
     this.customerID = customerId;
     this.from = fromValue;
     this.to = toValue;
@@ -112,7 +133,7 @@ class DistributionItem {
   id: string;
   mapId: string; //MapMarker id
   distributor: string; //customerName
-  customerId: string; 
+  customerId: string;
   distributionValue: number;
   isChecked: boolean;
   constructor(
@@ -122,7 +143,7 @@ class DistributionItem {
     distributionValue: number,
     isChecked: boolean
   ) {
-    this.id = "DISTRIBUTION" + (distributionId++);
+    this.id = "DISTRIBUTION" + distributionId++;
     this.mapId = mapId;
     this.distributor = distributor;
     this.customerId = customerId;
@@ -145,7 +166,7 @@ class CustomerDetail {
   segmentName: string;
   minChargesPerMonth: number;
   maxChargesPerMonth: number;
-  
+
   minkWhPerMonth: number;
   maxkWhPerMonth: number;
   subscriberRatio: number;
@@ -178,28 +199,33 @@ class CustomerDetail {
     this.parking = parking;
   }
 }
-var depotCityId = new Date().getTime();
-class DepotCity {
-  cityId: string;
-  cityName: string;
+var depotAreaId = new Date().getTime();
+class DepotArea {
+  id: string;
+  name: string;
+  marker: MapMarker;
+  depots: DepotUnit[];
 
-  constructor(cityName: string) {
-    this.cityId = "DEPOTCITY" + (depotCityId++);
-    this.cityName = cityName;
+  constructor(name: string, marker: MapMarker, depots: DepotUnit[]) {
+    this.id = "DEPOTAREA" + depotAreaId++;
+    this.name = name;
+    this.marker = marker;
+    this.depots = depots;
   }
 }
+
 var depotUnitId = new Date().getTime();
 class DepotUnit {
   id: string;
-  cityId: string;
+  areaId: string;
   /* Depots Default Variables */
 
   depotName: string;
   depotSlotNumber: number;
 
-  constructor(cityId: string, depotName: string, depotSlotNumber: number) {
-    this.id = "DEPOTUNIT" + (depotUnitId++);
-    this.cityId = cityId;
+  constructor(areaId: string, depotName: string, depotSlotNumber: number) {
+    this.id = "DEPOTUNIT" + depotUnitId++;
+    this.areaId = areaId;
     this.depotName = depotName;
     this.depotSlotNumber = depotSlotNumber;
   }
@@ -212,7 +238,7 @@ class Nimbee {
   nimbeePieces: number;
 
   constructor(name: string, capacity: number, pieces: number) {
-    this.id = "NIMBEE" + (nimbeeId++);
+    this.id = "NIMBEE" + nimbeeId++;
     this.nimbeeName = name;
     this.nimbeeCapacity = capacity;
     this.nimbeePieces = pieces;
@@ -226,7 +252,7 @@ class Transporter {
   transporterPieces: number;
 
   constructor(slots: number, capacity: number, pieces: number) {
-    this.id = "TRANSPORTER" + (transporterId++);
+    this.id = "TRANSPORTER" + transporterId++;
     this.transporterSlots = slots;
     this.transporterCapacity = capacity;
     this.transporterPieces = pieces;
@@ -241,7 +267,7 @@ class Shift {
   drivers: number;
 
   constructor(name: string, from: number, to: number, drivers: number) {
-    this.id = "SHIFT" + (shiftId++);
+    this.id = "SHIFT" + shiftId++;
     this.shiftName = name;
     this.from = from;
     this.to = to;
@@ -256,7 +282,7 @@ class MapMarker {
   radius: number;
 
   constructor(lat: number, lng: number, radius: number) {
-    this.id = "MAPMARKER" + (mapmarkerId++);
+    this.id = "MAPMARKER" + mapmarkerId++;
     this.latitude = lat;
     this.longitude = lng;
     this.radius = radius;
@@ -273,7 +299,7 @@ class DistributionArea {
     marker: MapMarker,
     distributions: DistributionItem[]
   ) {
-    this.id = "DISTRIBUTIONAREA" + (distributionAreaId++);
+    this.id = "DISTRIBUTIONAREA" + distributionAreaId++;
     this.name = name;
     this.marker = marker;
     this.distributions = distributions;
@@ -287,7 +313,7 @@ export {
   DistributionItem,
   CustomerDetail,
   Customer,
-  DepotCity,
+  DepotArea,
   DepotUnit,
   Nimbee,
   Transporter,

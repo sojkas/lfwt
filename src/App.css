@@ -103,3 +103,7 @@ h4 {
 .list-customer:hover {
   cursor: pointer;
 }
+
+.gmap-resources{
+  height: 50vh;
+}
