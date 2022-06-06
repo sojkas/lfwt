@@ -7,6 +7,7 @@ const SingleSlider: React.FC<{
   maxValue: number;
   setValue: number;
   sliderUnit: string;
+  step: number;
   singleSliderChange: (value: number) => void;
 }> = (props) => {
 
@@ -57,6 +58,7 @@ const SingleSlider: React.FC<{
         max={props.maxValue}
         size="small"
         marks={marks}
+        step={props.step}
       />
     </React.Fragment>
   );

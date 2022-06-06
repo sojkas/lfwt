@@ -192,10 +192,11 @@ const CustomerDistribution: React.FC<{
                     <SingleSlider
                       label={selectedArea!.name}
                       minValue={0}
-                      maxValue={10}
+                      maxValue={30}
                       setValue={selectedArea!.marker.radius}
                       sliderUnit={"km"}
                       singleSliderChange={sliderChangeHandler}
+                      step={0.1}
                     />
                   </Grid>
                 </Grid>

@@ -206,6 +206,7 @@ const CTDetail: React.FC<{
             setValue={subscriberRatio}
             sliderUnit="%"
             singleSliderChange={subscriberRatioHandler}
+            step={1}
           />
         </Grid>
       </Grid>
@@ -221,6 +222,7 @@ const CTDetail: React.FC<{
             setValue={setSameDayOrders}
             sliderUnit="%"
             singleSliderChange={sameDayOrderHandler}
+            step={1}
           />
         </Grid>
       </Grid>
