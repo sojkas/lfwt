@@ -12,7 +12,7 @@ const findCustomerIdByName = (customers: Customer[], name: string) => {
 };
 const findCustomerDetailById = (settings: Settings, id: string) => {
   for (let detail of settings.customerDetails) {
-    if (detail.id === id) return detail;
+    if (detail.customerId === id) return detail;
   }
 };
 

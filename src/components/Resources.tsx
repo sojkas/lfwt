@@ -281,7 +281,7 @@ const Resources: React.FC<{
                       className="item-space"
                       onClick={removeAreaHandler}
                     >
-                      Delete area
+                      Delete depot
                     </Button>
                   </Grid>
                 </Grid>

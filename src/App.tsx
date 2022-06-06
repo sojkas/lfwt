@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import CustomerDistribution from "./components/CustomerDistribution";
 import CustomerTypes from "./components/CustomerTypes";

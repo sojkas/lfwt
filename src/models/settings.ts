@@ -1,6 +1,5 @@
 class Settings {
   /* GENERAL */
-  customerId: number;
   distributionMarkerId: number;
   depotMarkerId: number;
 
@@ -24,7 +23,6 @@ class Settings {
   distributionAreas: DistributionArea[];
 
   constructor() {
-    this.customerId = 3;
     this.distributionMarkerId = 2;
     this.depotMarkerId = 2;
     this.depotAreas = [
@@ -44,8 +42,8 @@ class Settings {
       new Shift("Night shift", 18, 1, 12),
     ];
     this.customers = [
-      new Customer(1, "Outskirts car adicts"),
-      new Customer(2, "Rohlik"),
+      new Customer("Outskirts car adicts"),
+      new Customer("Rohlik"),
     ];
     this.customerDetails = [
       new CustomerDetail(
@@ -151,18 +149,18 @@ class DistributionItem {
     this.isChecked = isChecked;
   }
 }
-
+var customerId = new Date().getTime();
 class Customer {
   id: string;
   name: string;
-  constructor(id: number, name: string) {
-    this.id = id.toString();
+  constructor(name: string) {
+    this.id = "CUSTOMER" + (customerId++);
     this.name = name;
   }
 }
 
 class CustomerDetail {
-  id: string;
+  customerId: string;
   segmentName: string;
   minChargesPerMonth: number;
   maxChargesPerMonth: number;
@@ -187,7 +185,7 @@ class CustomerDetail {
     maxSameDayOrdersValue: number,
     parking: ParkingInterval[]
   ) {
-    this.id = id;
+    this.customerId = id;
     this.segmentName = segmentName;
     this.minChargesPerMonth = minChargesPerMonth;
     this.maxChargesPerMonth = maxChargesPerMonth;

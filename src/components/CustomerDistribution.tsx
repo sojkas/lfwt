@@ -34,7 +34,7 @@ const CustomerDistribution: React.FC<{
         /* if (selectedArea && allDistributionAreas[i].id === selectedArea!.id) {
           mkrs.push(selectedArea!.marker);
         } else { */
-          mkrs.push(allDistributionAreas[i].marker);
+        mkrs.push(allDistributionAreas[i].marker);
         /* } */
       }
     }
@@ -154,9 +154,9 @@ const CustomerDistribution: React.FC<{
   };
 
   if (selectedArea) {
-    draggable=true;
+    draggable = true;
   } else {
-    draggable=false;
+    draggable = false;
   }
 
   return (
@@ -225,13 +225,15 @@ const CustomerDistribution: React.FC<{
                 <Grid container direction="row" spacing={2}>
                   <Grid item xs={9}></Grid>
                   <Grid item xs={3}>
-                    <Fab
-                      aria-label="add"
-                      size="small"
-                      onClick={addDistributionHandler}
-                    >
-                      <Add />
-                    </Fab>
+                    {props.settings.customers === undefined && (
+                      <Fab
+                        aria-label="add"
+                        size="small"
+                        onClick={addDistributionHandler}
+                      >
+                        <Add />
+                      </Fab>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
