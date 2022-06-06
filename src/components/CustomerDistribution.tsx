@@ -10,6 +10,8 @@ import Settings, {
 } from "../models/settings";
 import SingleSlider from "./SingleSlider";
 
+let draggable: boolean = false;
+
 const CustomerDistribution: React.FC<{
   settings: Settings;
   gmscriptLoaded: boolean;
@@ -151,6 +153,12 @@ const CustomerDistribution: React.FC<{
     }
   };
 
+  if (selectedArea) {
+    draggable=true;
+  } else {
+    draggable=false;
+  }
+
   return (
     <React.Fragment>
       <Grid className="grid" container direction="row" spacing={2}>
@@ -161,6 +169,7 @@ const CustomerDistribution: React.FC<{
               allMarkers={distributionMarkers}
               selectedMarker={selectedMarkerHandler}
               setPosition={setPositionHandler}
+              draggable={draggable}
             />
           )}
         </Grid>

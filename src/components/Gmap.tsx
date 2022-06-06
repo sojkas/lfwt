@@ -8,6 +8,7 @@ type GoogleMarker = google.maps.Marker;
 const Gmap: React.FC<{
   settings: Settings;
   allMarkers: MapMarker[];
+  draggable: boolean;
   setPosition: (position: GoogleMapLatLng) => void;
   selectedMarker: (marker: MapMarker) => void;
 }> = (props) => {
@@ -114,7 +115,7 @@ const Gmap: React.FC<{
     const googleMarker: GoogleMarker = new google.maps.Marker({
       position: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       map: map,
-      draggable: true,
+      draggable: props.draggable,
     });
 
     allGoogleMarkers?.push(googleMarker);
@@ -122,12 +123,12 @@ const Gmap: React.FC<{
     googleMarker.addListener("click", () => {
       props.selectedMarker(mapMarker);
     });
-
-    googleMarker.addListener("dragend", ()=> {
-      props.setPosition(googleMarker.getPosition()!);
-    })
+    if (props.draggable) {
+      googleMarker.addListener("dragend", () => {
+        props.setPosition(googleMarker.getPosition()!);
+      });
+    }
   };
-
 
   const addCircle = (mapMarker: MapMarker): void => {
     const circle: google.maps.Circle = new google.maps.Circle({
@@ -139,11 +140,12 @@ const Gmap: React.FC<{
       map,
       center: new google.maps.LatLng(mapMarker.latitude, mapMarker.longitude),
       radius: mapMarker.radius * 1000,
-      draggable: true,
+      /* draggable: true, */
+      clickable: false,
     });
-    circle.addListener("dragend", ()=> {
+    /* circle.addListener("dragend", ()=> {
       props.setPosition(circle.getCenter()!);
-    })
+    }) */
     allGoogleCircles?.push(circle);
   };
 
