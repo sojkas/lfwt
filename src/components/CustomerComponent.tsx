@@ -18,7 +18,7 @@ const CustomerComponent: React.FC<{
     return (
         <Grid container spacing={2}>
             <Grid item xs={8}>
-                <a onClick={customerButtonHandler}>{props.name}</a>
+                <a onClick={customerButtonHandler} className="list-customer">{props.name}</a>
             </Grid>
             <Grid item xs={2}>
                 <IconButton onClick={removeCustomerHandler}>

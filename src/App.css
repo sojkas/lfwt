@@ -100,3 +100,6 @@ h4 {
   height: 85vh;
   width: 100%;
 }
+.list-customer:hover {
+  cursor: pointer;
+}
