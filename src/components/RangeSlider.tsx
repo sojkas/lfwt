@@ -8,6 +8,7 @@ const RangeSlider: React.FC<{
   minSetValue: number;
   maxSetValue: number;
   sliderUnit: string;
+  step: number;
   rangeSliderChange: (values: number[]) => void;
 }> = (props) => {
   const [value, setValue] = React.useState<number[]>([
@@ -49,13 +50,14 @@ const RangeSlider: React.FC<{
     },
   ];
 
-  useEffect(()=>{
-    setValue([props.minSetValue,props.maxSetValue])
-  },[props.minSetValue, props.maxSetValue]);
+  useEffect(() => {
+    setValue([props.minSetValue, props.maxSetValue]);
+  }, [props.minSetValue, props.maxSetValue]);
 
   return (
     <React.Fragment>
       <Slider
+        key={props.label}
         getAriaLabel={() => props.label}
         value={value}
         onChange={handleChange}
@@ -65,6 +67,7 @@ const RangeSlider: React.FC<{
         max={props.maxValue}
         size="small"
         marks={marks}
+        step={props.step}
       />
     </React.Fragment>
   );

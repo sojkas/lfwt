@@ -49,6 +49,7 @@ const SingleSlider: React.FC<{
   return (
     <React.Fragment>
       <Slider
+        key={props.label}
         getAriaLabel={() => props.label}
         value={value}
         onChange={handleChange}

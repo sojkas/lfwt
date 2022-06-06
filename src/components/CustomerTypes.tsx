@@ -21,9 +21,7 @@ const CustomerTypes: React.FC<{
     props.settings.customers
   );
   const [newNameCustomer, setNewNameCustomer] = useState<string>("");
-  const [selectedCustomerId, setSelectedCustomerId] = useState<string>(
-    props.settings.customers[0].id
-  );
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>();
 
   const [selectedCustomerDetail, setSelectedCustomerDetail] =
     useState<CustomerDetail>(props.settings.customerDetails[0]);
@@ -84,12 +82,14 @@ const CustomerTypes: React.FC<{
 
   const updateDetail = (id: string, updatedDetail: CustomerDetail) => {
     for (let detail of customerDetails) {
-      if (detail.id === id)
+      if (detail.id === id) {
+        setSelectedCustomerId(undefined);
         return props.settings.customerDetails.splice(
           customerDetails.indexOf(detail),
           1,
           updatedDetail
         );
+      }
     }
   };
   const updateCustomerNameHandler = (id: string, newName: string) => {
@@ -127,7 +127,7 @@ const CustomerTypes: React.FC<{
           </Grid>
         </Grid>
         <Grid className="box" item xs={8}>
-          {customers.length > 0 && (
+          {selectedCustomerId && (
             <CTDetail
               customerId={selectedCustomerId}
               customerDetail={selectedCustomerDetail}

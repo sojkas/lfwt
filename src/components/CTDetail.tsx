@@ -175,6 +175,7 @@ const CTDetail: React.FC<{
             maxSetValue={maxChargesPerMonth}
             sliderUnit="charges"
             rangeSliderChange={chargesHandler}
+            step={1}
           />
         </Grid>
       </Grid>
@@ -191,6 +192,7 @@ const CTDetail: React.FC<{
             maxSetValue={maxKwh}
             sliderUnit="kWh"
             rangeSliderChange={kwhHandler}
+            step={1}
           />
         </Grid>
       </Grid>
