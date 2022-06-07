@@ -22,7 +22,7 @@ const Navbar: React.FC<{
     return props.selectedItem(3);
   };
   const keplerHandler = () => {
-    return props.selectedItem(4);
+    // return props.selectedItem(4);
   };
 
   const clearStorageHandler = () => {
@@ -111,7 +111,7 @@ const Navbar: React.FC<{
             Download
           </Button>
           &nbsp;
-          <Button className="item-space" variant="contained" onClick={clearStorageHandler}>
+          <Button className="item-space" variant="outlined" onClick={clearStorageHandler}>
             Delete
           </Button>
         </Grid>

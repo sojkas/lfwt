@@ -15,12 +15,12 @@ function App() {
   const [menuItem, setMenuItem] = useState<number>(0);
 
   const updateSettingsHandler = (updatedSettings: Settings) => {
+    console.log("Saving settings");
+    window.localStorage.setItem("data", JSON.stringify(updatedSettings));
     setSettings(updatedSettings);
   };
 
-  const updateSimulationValuesHandler = (
-    updatedSimulationValues: SimulationValues
-  ) => {
+  const updateSimulationValuesHandler = (updatedSimulationValues: SimulationValues) => {
     setSimulationValues(updatedSimulationValues);
   };
 
@@ -38,8 +38,13 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem("data") !== null) {
-      const loadedSetting: Settings = JSON.parse(localStorage.getItem("data")!);
-      setSettings(loadedSetting);
+      try {
+        const loadedSetting: Settings = JSON.parse(localStorage.getItem("data")!);
+        setSettings(loadedSetting);
+      } catch (e) {
+        window.alert("Nepodarilo se obnovit ulozenou konfiguraci, je nutne zacit znovu.")
+        setSettings(new Settings());
+      }
     } else {
       setSettings(new Settings());
     }
@@ -50,10 +55,6 @@ function App() {
       setSimulationValues(new SimulationValues([], false));
     } */
   }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem("data", JSON.stringify(settings));
-  }, [settings]);
 
   /* useEffect(()=>{
     window.localStorage.setItem("orders", JSON.stringify(simulationValues));
