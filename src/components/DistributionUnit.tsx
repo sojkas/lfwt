@@ -69,7 +69,7 @@ const DistributionUnit: React.FC<{
               onChange={distributorChangeHandler}
               size="small"
             >
-              {props.allCustomers.map(
+              {props.allCustomers && props.allCustomers.map(
                 (customer) =>(
                   <MenuItem key={customer.id} value={customer.name}>{customer.name}</MenuItem>
                 )

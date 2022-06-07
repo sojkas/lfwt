@@ -223,7 +223,7 @@ const Resources: React.FC<{
                   </Grid>
                 </Grid>
               </Grid>
-              {selectedUnit && <div className="space-20"></div>}
+              <div className="space-20"></div>
               {props.gmscriptLoaded && (
                   <Gmap
                       settings={props.settings}
