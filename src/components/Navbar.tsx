@@ -21,9 +21,6 @@ const Navbar: React.FC<{
   const simulationHandler = () => {
     return props.selectedItem(3);
   };
-  const keplerHandler = () => {
-    // return props.selectedItem(4);
-  };
 
   const clearStorageHandler = () => {
     window.localStorage.clear();
@@ -36,7 +33,7 @@ const Navbar: React.FC<{
     var dlAnchorElem = document.createElement("a");
     document.body.append(dlAnchorElem);
     dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", "configuration.json");
+    dlAnchorElem.setAttribute("download", "nimbee-configuration.json");
     dlAnchorElem.click();
     dlAnchorElem.remove();
   }
@@ -94,13 +91,6 @@ const Navbar: React.FC<{
                     : { className: "btn" })}
                 onClick={simulationHandler} >
               Simulation
-            </Button>
-            <Button
-                {...(props.active === 4
-                    ? { className: "menu-active btn" }
-                    : { className: "btn" })}
-                onClick={keplerHandler} >
-              Vizualization
             </Button>
           </ButtonGroup>
         </Grid>

@@ -62,7 +62,8 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar selectedItem={selectedItemHandler} active={menuItem} settings={settings} updatedSettings={updateSettingsHandler}/>
+      <Navbar selectedItem={selectedItemHandler} active={menuItem}
+              settings={settings} updatedSettings={updateSettingsHandler}/>
       <div className="section">
         {settings && menuItem === 0 && (
           <Resources
