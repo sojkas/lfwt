@@ -223,6 +223,7 @@ const Resources: React.FC<{
             {props.gmscriptLoaded && (
                 <Grid item xs={1}>
                   <Gmap
+                      settings={props.settings}
                       allMarkers={getAllDepotMarkers()}
                       draggable={draggable}
                       setPosition={setPositionHandler}

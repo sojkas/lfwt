@@ -26,7 +26,7 @@ class Settings {
     this.distributionMarkerId = 2;
     this.depotMarkerId = 2;
     this.depots = [
-      new DepotUnit("depot A",new MapMarker(50.06983, 14.43713, 0), 4),
+      new DepotUnit("depot A", new MapMarker(50.06983, 14.43713, 0), 4),
     ];
     this.nimbees = [new Nimbee("v 1", 18, 4)];
     this.transporters = [new Transporter(2, 10, 5)];
@@ -41,60 +41,60 @@ class Settings {
     ];
     this.customerDetails = [
       new CustomerDetail(
-          this.customers[0].id,
-          "Outskirts car adicts",
-          8,
-          17,
-          17,
-          26,
-          60,
-          20,
-          40,
-          [
-            new ParkingInterval(this.customers[0].id, 0, 20, 55),
-            new ParkingInterval(this.customers[0].id, 21, 23, 45),
-          ]
+        this.customers[0].id,
+        "Outskirts car adicts",
+        8,
+        17,
+        17,
+        26,
+        60,
+        20,
+        40,
+        [
+          new ParkingInterval(this.customers[0].id, 0, 20, 55),
+          new ParkingInterval(this.customers[0].id, 21, 23, 45),
+        ]
       ),
       new CustomerDetail(
-          this.customers[1].id,
-          "Rohlik",
-          6,
-          13,
-          12,
-          30,
-          45,
-          27,
-          55,
-          [
-            new ParkingInterval(this.customers[1].id, 0, 11, 55),
-            new ParkingInterval(this.customers[1].id, 12, 23, 45),
-          ]
+        this.customers[1].id,
+        "Rohlik",
+        6,
+        13,
+        12,
+        30,
+        45,
+        27,
+        55,
+        [
+          new ParkingInterval(this.customers[1].id, 0, 11, 55),
+          new ParkingInterval(this.customers[1].id, 12, 23, 45),
+        ]
       ),
     ];
     this.distributionAreas = [
       new DistributionArea("Test A", new MapMarker(50.06983, 14.43713, 1), [
         new DistributionItem(
-            "1",
-            this.customers[0].name,
-            this.customers[0].id,
-            100,
-            true
+          "1",
+          this.customers[0].name,
+          this.customers[0].id,
+          100,
+          true
         ),
       ]),
       new DistributionArea("Test B", new MapMarker(50.07983, 14.42713, 2), [
         new DistributionItem(
-            "2",
-            this.customers[1].name,
-            this.customers[1].id,
-            50,
-            false
+          "2",
+          this.customers[1].name,
+          this.customers[1].id,
+          50,
+          false
         ),
         new DistributionItem(
-            "2",
-            this.customers[0].name,
-            this.customers[0].id,
-            50,
-            true
+          "2",
+          this.customers[0].name,
+          this.customers[0].id,
+          50,
+          true
         ),
       ]),
     ];
@@ -108,10 +108,10 @@ class ParkingInterval {
   to: number;
   percent: number;
   constructor(
-      customerId: string,
-      fromValue: number,
-      toValue: number,
-      percentValue: number
+    customerId: string,
+    fromValue: number,
+    toValue: number,
+    percentValue: number
   ) {
     this.id = "PARKING" + parkingId++;
     this.customerID = customerId;
@@ -129,11 +129,11 @@ class DistributionItem {
   distributionValue: number;
   isChecked: boolean;
   constructor(
-      mapId: string,
-      distributor: string,
-      customerId: string,
-      distributionValue: number,
-      isChecked: boolean
+    mapId: string,
+    distributor: string,
+    customerId: string,
+    distributionValue: number,
+    isChecked: boolean
   ) {
     this.id = "DISTRIBUTION" + distributionId++;
     this.mapId = mapId;
@@ -148,7 +148,7 @@ class Customer {
   id: string;
   name: string;
   constructor(name: string) {
-    this.id = "CUSTOMER" + (customerId++);
+    this.id = "CUSTOMER" + customerId++;
     this.name = name;
   }
 }
@@ -168,16 +168,16 @@ class CustomerDetail {
   parking: ParkingInterval[];
 
   constructor(
-      id: string,
-      segmentName: string,
-      minChargesPerMonth: number,
-      maxChargesPerMonth: number,
-      minkWhPerMonth: number,
-      maxkWhPerMonth: number,
-      subscriberRatio: number,
-      setSameDayOrdersValue: number,
-      maxSameDayOrdersValue: number,
-      parking: ParkingInterval[]
+    id: string,
+    segmentName: string,
+    minChargesPerMonth: number,
+    maxChargesPerMonth: number,
+    minkWhPerMonth: number,
+    maxkWhPerMonth: number,
+    subscriberRatio: number,
+    setSameDayOrdersValue: number,
+    maxSameDayOrdersValue: number,
+    parking: ParkingInterval[]
   ) {
     this.customerId = id;
     this.segmentName = segmentName;
@@ -190,6 +190,21 @@ class CustomerDetail {
     this.maxSameDayOrdersValue = maxSameDayOrdersValue;
     this.parking = parking;
   }
+}
+
+function getBestLatitude (settings: Settings):number {
+  let i = 0;
+  for (let item of settings.depots){
+    i = i + item.marker.latitude;
+  }
+  return i/settings.depots.length; 
+}
+function getBestLongitude (settings: Settings):number {
+  let i = 0;
+  for (let item of settings.depots){
+    i = i+ item.marker.longitude;
+  }
+  return i/settings.depots.length; 
 }
 
 var depotUnitId = new Date().getTime();
@@ -272,9 +287,9 @@ class DistributionArea {
   marker: MapMarker;
   distributions: DistributionItem[];
   constructor(
-      name: string,
-      marker: MapMarker,
-      distributions: DistributionItem[]
+    name: string,
+    marker: MapMarker,
+    distributions: DistributionItem[]
   ) {
     this.id = "DISTRIBUTIONAREA" + distributionAreaId++;
     this.name = name;
@@ -296,4 +311,6 @@ export {
   Shift,
   MapMarker,
   DistributionArea,
+  getBestLatitude,
+  getBestLongitude,
 };
