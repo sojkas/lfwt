@@ -20,7 +20,7 @@ const CustomerTypes: React.FC<{
   const [newNameCustomer, setNewNameCustomer] = useState<string>("");
 
   const [selectedCustomerDetail, setSelectedCustomerDetail] =
-    useState<CustomerDetail>();
+      useState<CustomerDetail>();
 
   const [customerDetails, setCustomerDetails] = useState<CustomerDetail[]>(props.settings.customerDetails);
 
@@ -37,23 +37,23 @@ const CustomerTypes: React.FC<{
       for (let detail of customerDetails!) {
         if (detail.customerId === customerDetailId) {
           return detail
-        } 
+        }
       }
     });
   };
 
   const createCustomerDetail = (cdID: string) => {
     const newCustomerDetail = new CustomerDetail(
-      cdID,
-      "New Customer",
-      10,
-      20,
-      15,
-      25,
-      50,
-      25,
-      50,
-      [new ParkingInterval(cdID, 8, 12, 100)]
+        cdID,
+        "New Customer",
+        10,
+        20,
+        15,
+        25,
+        50,
+        25,
+        50,
+        [new ParkingInterval(cdID, 8, 12, 100)]
     );
     setCustomerDetails((prevDetails) => prevDetails!.concat(newCustomerDetail));
   };
@@ -68,20 +68,20 @@ const CustomerTypes: React.FC<{
     const custName = findCustomerById(props.settings, id)?.name;
     if (window.confirm('Do you really want to remove customer "' + custName + '"?')) {
       const newCustomerList: Customer[] = customers!.filter(
-        (customer) => customer.id !== id
+          (customer) => customer.id !== id
       );
       setCustomers(newCustomerList);
       const newCustomerDetailList: CustomerDetail[] = customerDetails!.filter(
-        (detail) => detail.customerId !== id
+          (detail) => detail.customerId !== id
       );
       setCustomerDetails(newCustomerDetailList);
       const newDistributionAreas: DistributionArea[] =
-        props.settings.distributionAreas;
+          props.settings.distributionAreas;
       for (let i = 0; i < props.settings.distributionAreas.length; i++) {
         const newDistributions = props.settings.distributionAreas[
-          i
-        ].distributions.filter(
-          (distribution) => id !== distribution.customerId
+            i
+            ].distributions.filter(
+            (distribution) => id !== distribution.customerId
         );
         newDistributionAreas[i].distributions = newDistributions;
       }
@@ -95,14 +95,13 @@ const CustomerTypes: React.FC<{
     props.settings.customers = customers!;
     props.settings.customerDetails = customerDetails!;
     props.updatedSettings(props.settings);
-    window.localStorage.setItem("data", JSON.stringify(props.settings));
   }, [customers, newNameCustomer, customerDetails]);
 
   useEffect(() => {
     for (let detail of customerDetails!) {
       if (detail.customerId === selectedCustomerDetail?.customerId)
         return setSelectedCustomerDetail(
-          customerDetails![customerDetails!.indexOf(detail)]
+            customerDetails![customerDetails!.indexOf(detail)]
         );
     }
   }, [selectedCustomerDetail]);
@@ -111,11 +110,12 @@ const CustomerTypes: React.FC<{
     for (let detail of customerDetails!) {
       if (detail.customerId === id) {
         setSelectedCustomerDetail(undefined);
-        return props.settings.customerDetails.splice(
-          customerDetails!.indexOf(detail),
-          1,
-          updatedDetail
+        props.settings.customerDetails.splice(
+            customerDetails!.indexOf(detail),
+            1,
+            updatedDetail
         );
+        props.updatedSettings(props.settings);
       }
     }
   };
@@ -124,56 +124,56 @@ const CustomerTypes: React.FC<{
     for (let customer of customers!) {
       if (customer.id.toString() === id)
         return (props.settings.customers[customers!.indexOf(customer)].name =
-          newName);
+            newName);
     }
   };
 
   return (
-    <React.Fragment>
-      <Grid className="grid" container direction="row" spacing={2}>
-        <Grid className="box" item xs={4}>
-          <Grid
-            container
-            direction="column"
-            spacing={2}
-            className="topPaddingBig"
-          >
-            <Grid item xs={5}>
-              <ButtonGroup
-                orientation="vertical"
-                variant="text"
-                fullWidth={true}
-              >
-                {customers && customers.map((customer) => (
-                  <CustomerComponent
-                    key={customer.id}
-                    customerId={customer.id}
-                    name={customer.name}
-                    removeCustomer={removeCustomerHandler}
-                    activeCustomerId={activeCustomerIdHandler}
-                  />
-                ))}
-              </ButtonGroup>
-            </Grid>
-            <Grid item xs={1}>
-              <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
-                <AddIcon />
-              </Fab>
+      <React.Fragment>
+        <Grid className="grid" container direction="row" spacing={2}>
+          <Grid className="box" item xs={4}>
+            <Grid
+                container
+                direction="column"
+                spacing={2}
+                className="topPaddingBig"
+            >
+              <Grid item xs={5}>
+                <ButtonGroup
+                    orientation="vertical"
+                    variant="text"
+                    fullWidth={true}
+                >
+                  {customers && customers.map((customer) => (
+                      <CustomerComponent
+                          key={customer.id}
+                          customerId={customer.id}
+                          name={customer.name}
+                          removeCustomer={removeCustomerHandler}
+                          activeCustomerId={activeCustomerIdHandler}
+                      />
+                  ))}
+                </ButtonGroup>
+              </Grid>
+              <Grid item xs={1}>
+                <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
+                  <AddIcon />
+                </Fab>
+              </Grid>
             </Grid>
           </Grid>
+          <Grid className="box" item xs={8}>
+            {selectedCustomerDetail && (
+                <CTDetail
+                    customerId={selectedCustomerDetail.customerId}
+                    customerDetail={selectedCustomerDetail!}
+                    updatedCustomerDetail={updateDetail}
+                    updateCustomerName={updateCustomerNameHandler}
+                />
+            )}
+          </Grid>
         </Grid>
-        <Grid className="box" item xs={8}>
-          {selectedCustomerDetail && (
-            <CTDetail
-              customerId={selectedCustomerDetail.customerId}
-              customerDetail={selectedCustomerDetail!}
-              updatedCustomerDetail={updateDetail}
-              updateCustomerName={updateCustomerNameHandler}
-            />
-          )}
-        </Grid>
-      </Grid>
-    </React.Fragment>
+      </React.Fragment>
   );
 };
 

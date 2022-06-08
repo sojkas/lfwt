@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Resources from "./components/Resources";
 import Simulation from "./components/Simulation";
 import {SimulationValues} from "./models/order";
-import Settings from "./models/settings";
+import Settings, {settingsName} from "./models/settings";
 import {loadMapApi} from "./utils/GoogleMapsUtils";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
 
   const updateSettingsHandler = (updatedSettings: Settings) => {
     console.log("Saving settings -> " + JSON.stringify(updatedSettings.nimbees));
-    window.localStorage.setItem("data", JSON.stringify(updatedSettings));
+    window.localStorage.setItem(settingsName, JSON.stringify(updatedSettings));
     setSettings(updatedSettings);
   };
 
@@ -40,9 +40,9 @@ function App() {
 
   useEffect(() => {
     console.log("Load settings effect");
-    if (localStorage.getItem("data") !== null) {
+    if (localStorage.getItem(settingsName) !== null) {
       try {
-        const loadedSetting: Settings = JSON.parse(localStorage.getItem("data")!);
+        const loadedSetting: Settings = JSON.parse(localStorage.getItem(settingsName)!);
         setSettings(loadedSetting);
       } catch (e) {
         window.alert("Nepodarilo se obnovit ulozenou konfiguraci, je nutne zacit znovu.")

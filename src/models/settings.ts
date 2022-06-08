@@ -1,3 +1,5 @@
+const settingsName = "nimbeeSimulatorV1";
+
 class Settings {
   /* GENERAL */
   distributionMarkerId: number;
@@ -313,4 +315,5 @@ export {
   DistributionArea,
   getBestLatitude,
   getBestLongitude,
+    settingsName
 };

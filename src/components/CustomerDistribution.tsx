@@ -119,7 +119,6 @@ const CustomerDistribution: React.FC<{
 
   useEffect(() => {
     props.settings.distributionAreas = allDistributionAreas;
-    window.localStorage.setItem("data", JSON.stringify(props.settings));
     props.updatedSettings(props.settings);
   }, [allDistributionAreas]);
 
