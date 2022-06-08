@@ -15,7 +15,7 @@ function App() {
   const [menuItem, setMenuItem] = useState<number>(0);
 
   const updateSettingsHandler = (updatedSettings: Settings) => {
-    console.log("Incomming settings");
+    console.log("Saving settings -> " + JSON.stringify(updatedSettings.nimbees));
     window.localStorage.setItem("data", JSON.stringify(updatedSettings));
     setSettings({...updatedSettings});
   };
@@ -29,7 +29,6 @@ function App() {
   };
 
   const [scriptLoaded, setScriptLoaded] = useState(false);
-
   useEffect(() => {
     const googleMapScript = loadMapApi();
     googleMapScript.addEventListener("load", function () {
@@ -40,7 +39,6 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("data") !== null) {
       try {
-        console.log("Loading settings from storage");
         const loadedSetting: Settings = JSON.parse(localStorage.getItem("data")!);
         setSettings(loadedSetting);
       } catch (e) {

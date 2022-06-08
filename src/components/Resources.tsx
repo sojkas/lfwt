@@ -1,7 +1,5 @@
 import { Button, Fab, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import DepotSetUnit from "./DepotSetUnit";
-import TransportersItem from "./TransportersItem";
 import Settings, {
   DepotUnit,
   MapMarker,
@@ -10,10 +8,11 @@ import Settings, {
   Transporter,
 } from "../models/settings";
 import { Add } from "@mui/icons-material";
+import DepotSetUnit from "./DepotSetUnit";
 import NimbeeItem from "./NimbeeItem";
+import TransportersItem from "./TransportersItem";
 import ShiftItem from "./ShiftItem";
 import Gmap from "./Gmap";
-import {setFlagsFromString} from "v8";
 
 let draggable: boolean = false;
 
@@ -23,11 +22,6 @@ const Resources: React.FC<{
   updatedSettings: (updatedSettings: Settings) => void;
 }> = (props) => {
   const [selectedUnit, setSelectedUnit] = useState<DepotUnit>();
-  const [nimbees, setNimbees] = useState<Nimbee[]>(props.settings.nimbees);
-  const [transporters, setTransporters] = useState<Transporter[]>(
-      props.settings.transporters
-  );
-  const shifts: Shift[] = props.settings.shifts;
 
   const getAllDepotMarkers = () => {
     if (selectedUnit) {
@@ -129,7 +123,7 @@ const Resources: React.FC<{
     console.log("all nimbs " +JSON.stringify(nimbees)); */
     for (let nimbee of props.settings.nimbees) {
       if (nimbee.id === id) {
-        return props.settings.nimbees.splice(props.settings.nimbees.indexOf(nimbee), 1, nimb);
+        return props.updatedSettings({...props.settings, nimbees: props.settings.nimbees.splice(props.settings.nimbees.indexOf(nimbee), 1, nimb)});
       }
     }
   };
@@ -141,57 +135,57 @@ const Resources: React.FC<{
   };
 
   const removeNimbeeHandler = (id: string) => {
-    const newNimbeesList = nimbees.filter((nimbee) => nimbee.id !== id);
-    props.updatedSettings({...props.settings, nimbees: newNimbeesList });
+    const newNimbeesList = props.settings.nimbees.filter((nimbee) => nimbee.id !== id);
+    props.updatedSettings({ ...props.settings, nimbees: newNimbeesList });
   };
 
   const updateTransporterHandler = (id: string, transp: Transporter) => {
     /* console.log("to be updated " +JSON.stringify(nimb));
     console.log("all nimbs " +JSON.stringify(nimbees)); */
-    for (let transporter of transporters) {
+    for (let transporter of props.settings.transporters) {
       if (transporter.id === id) {
-        return props.settings.transporters.splice(
-            transporters.indexOf(transporter),
+        return props.updatedSettings({ ...props.settings, transporters: props.settings.transporters.splice(
+            props.settings.transporters.indexOf(transporter),
             1,
             transp
-        );
+        )});
       }
     }
   };
 
   const addTransporterHandler = () => {
     const newTransporter: Transporter = new Transporter(3, 10, 5);
-    setTransporters(transporters.concat(newTransporter));
+    props.updatedSettings({ ...props.settings, transporters: [...props.settings.transporters, newTransporter]});
   };
 
   const removeTransporterHandler = (id: string) => {
-    const newTransportersList = transporters.filter(
+    const newTransportersList = props.settings.transporters.filter(
         (transporter) => transporter.id !== id
     );
-    setTransporters(newTransportersList);
+    props.updatedSettings({ ...props.settings, transporters: newTransportersList });
   };
 
   const updateShiftHandler = (id: string, shiftItem: Shift) => {
-    for (let shift of shifts) {
+    for (let shift of props.settings.shifts) {
       if (shift.id === id) {
-        return props.settings.shifts.splice(
-            shifts.indexOf(shift),
+        return props.updatedSettings({...props.settings, shifts: props.settings.shifts.splice(
+            props.settings.shifts.indexOf(shift),
             1,
             shiftItem
-        );
+        )});
       }
     }
   };
 
-  // TODO: todle radeji neee
+  /* // TODO: todle radeji neee
   useEffect(() => {
     //props.settings.depots = depotUnits;
-    props.settings.nimbees = nimbees;
-    props.settings.transporters = transporters;
+    //props.settings.nimbees = nimbees;
+    //props.settings.transporters = transporters;
     props.settings.shifts = shifts;
     props.updatedSettings(props.settings);
     window.localStorage.setItem("data", JSON.stringify(props.settings));
-  }, [nimbees, transporters, shifts]);
+  }, [shifts]); */
 
   return (
       <Grid
@@ -280,7 +274,7 @@ const Resources: React.FC<{
             <Grid item xs={6}>
               <Grid container direction="column" spacing={2}>
                 <Grid item xs={6}>
-                  {transporters.map((transporter) => (
+                  {props.settings.transporters.map((transporter) => (
                       <TransportersItem
                           key={transporter.id}
                           transporter={transporter}
@@ -311,7 +305,7 @@ const Resources: React.FC<{
           <h4>Drivers & Workshifts</h4>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={6}>
-              {shifts.map((shift) => (
+              {props.settings.shifts.map((shift) => (
                   <ShiftItem
                       key={shift.id}
                       shift={shift}
