@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {MapMarker} from "../models/settings";
+import Settings, {MapMarker, getBestLatitude, getBestLongitude} from "../models/settings";
 
 type GoogleMapLatLng = google.maps.LatLng;
 type GoogleMap = google.maps.Map;
@@ -9,6 +9,7 @@ type GoogleMarker = google.maps.Marker;
 var listener: google.maps.MapsEventListener;
 
 const Gmap: React.FC<{
+  settings: Settings,
   allMarkers: MapMarker[];
   draggable: boolean;
   setPosition: (position: GoogleMapLatLng) => void;
@@ -30,7 +31,7 @@ const Gmap: React.FC<{
   useEffect(startMap, [map, props]);
 
   const defaultMapStart = (): void => {
-    const defaultPlace = new google.maps.LatLng(50.06983, 14.43713);
+    const defaultPlace = new google.maps.LatLng(getBestLatitude(props.settings), getBestLongitude(props.settings));
     initMap(13, defaultPlace);
   };
 
