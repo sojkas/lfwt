@@ -1,5 +1,14 @@
 import Settings, { Customer, ParkingInterval } from "../models/settings";
 
+
+
+function toSafeInt(value: string): number {
+  const i = parseInt(value);
+  if (isNaN(i)) return 0;
+  return i;
+}
+
+
 const findCustomerById = (settings: Settings, id: string) => {
   for (let customer of settings.customers) {
     if (customer.id === id) return customer;
@@ -47,4 +56,5 @@ export {
   findIntervalByHour,
   addToLatitude,
   addToLongitude,
+  toSafeInt
 };

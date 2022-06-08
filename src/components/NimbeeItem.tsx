@@ -6,6 +6,7 @@ import { TextField, IconButton, Grid } from "@mui/material";
 import { RemoveCircleOutline } from "@mui/icons-material";
 import { Nimbee } from "../models/settings";
 import React, { useEffect, useState } from "react";
+import {toSafeInt} from "../utils/supportFunctions";
 
 const NimbeeItem: React.FC<{
   nimbee: Nimbee;
@@ -25,7 +26,7 @@ const NimbeeItem: React.FC<{
     event.preventDefault();
     setNimbee((nimb) => ({
       ...nimb,
-      nimbeeCapacity: parseInt(event.target.value),
+      nimbeeCapacity: toSafeInt(event.target.value),
     }));
   };
 
@@ -33,7 +34,7 @@ const NimbeeItem: React.FC<{
     event.preventDefault();
     setNimbee((nimb) => ({
       ...nimb,
-      nimbeePieces: parseInt(event.target.value),
+      nimbeePieces: toSafeInt(event.target.value),
     }));
   };
   const removeNimbeeHandler = () => {

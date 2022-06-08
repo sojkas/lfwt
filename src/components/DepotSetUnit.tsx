@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import {FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField,} from "@mui/material";
 import {RemoveCircleOutline} from "@mui/icons-material";
 import {DepotUnit} from "../models/settings";
+import {toSafeInt} from "../utils/supportFunctions";
 
 const DepotSetUnit: React.FC<{
   depotUnit: DepotUnit;
@@ -16,7 +17,7 @@ const DepotSetUnit: React.FC<{
 
   const depotSlotsHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
-    const newValue: number = parseInt(event.target.value);
+    const newValue: number = toSafeInt(event.target.value);
     setDepotUnit((prevSetDepotUnit) => {
       const unit = {...prevSetDepotUnit, depotSlotNumber: newValue};
       props.updateDepotUnit(unit);

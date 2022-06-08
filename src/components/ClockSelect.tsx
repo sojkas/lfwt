@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 
 import { Select, InputLabel,  FormControl, MenuItem, SelectChangeEvent} from "@mui/material";
+import {toSafeInt} from "../utils/supportFunctions";
 
 const ClockSelect: React.FC<{label: string, clockValue: number, changedClockValue: (value: number) => void}> = (props) => {
     const clockId = props.label + "-select";
     const [selectedClock, setSelectedClock]=useState<number>(props.clockValue);
     const setClockHandler = (event: SelectChangeEvent) => {
         event.preventDefault();
-        setSelectedClock(parseInt(event.target.value));
-        return props.changedClockValue(parseInt(event.target.value));
+        setSelectedClock(toSafeInt(event.target.value));
+        return props.changedClockValue(toSafeInt(event.target.value));
     }
     const hours: number[] = [];
     for (let i=0; i<24; i++){
       hours[i]=i;
     };
-
 
     return (
         <React.Fragment>

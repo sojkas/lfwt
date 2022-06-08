@@ -13,7 +13,7 @@ import {
 import { RemoveCircleOutline } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { Customer, DistributionItem } from "../models/settings";
-import { findCustomerIdByName } from "../utils/supportFunctions";
+import {findCustomerIdByName, toSafeInt} from "../utils/supportFunctions";
 
 const DistributionUnit: React.FC<{
   distribution: DistributionItem;
@@ -39,7 +39,7 @@ const DistributionUnit: React.FC<{
     event.preventDefault();
     setDistribution((prevDistr) => ({
       ...prevDistr,
-      distributionValue: parseInt(event.target.value),
+      distributionValue: toSafeInt(event.target.value),
     }));
   };
   const isCheckedHandler = () => {

@@ -23,7 +23,11 @@ const Navbar: React.FC<{
   };
 
   const clearStorageHandler = () => {
-    window.localStorage.clear();
+    if (window.confirm("Skutecne smazeme aktualni konfiguraci?")) {
+      window.localStorage.clear();
+      props.updatedSettings(new Settings());
+      props.selectedItem(0);
+    }
   }
 
   const downloadHandler = () => {
@@ -50,6 +54,7 @@ const Navbar: React.FC<{
       console.log("Finished reading "+newSettings);
       props.updatedSettings(newSettings);
       fin.files = null;
+      props.selectedItem(0)
     };
     fileread.readAsText(file_to_read);
   }

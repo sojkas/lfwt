@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import ClockSelect from "./ClockSelect";
 import { Shift } from "../models/settings";
+import {toSafeInt} from "../utils/supportFunctions";
 
 const ShiftItem: React.FC<{
   shift: Shift;
@@ -25,7 +26,7 @@ const ShiftItem: React.FC<{
     event.preventDefault();
     setShift((prevShift) => ({
       ...prevShift,
-      drivers: parseInt(event.target.value),
+      drivers: toSafeInt(event.target.value),
     }));
   };
 

@@ -7,6 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { TextField, IconButton } from "@mui/material";
 import { RemoveCircleOutline } from "@mui/icons-material";
 import { Transporter } from "../models/settings";
+import {toSafeInt} from "../utils/supportFunctions";
 
 const TransportersItem: React.FC<{
   transporter: Transporter;
@@ -19,7 +20,7 @@ const TransportersItem: React.FC<{
 
   const transporterSlotsHandler = (event: SelectChangeEvent) => {
     event.preventDefault();
-    setTransporter((transp) => ({ ...transp, transporterSlots: parseInt(event.target.value) }));
+    setTransporter((transp) => ({ ...transp, transporterSlots: toSafeInt(event.target.value) }));
   };
 
   const transporterCapacityHandler = (
@@ -28,7 +29,7 @@ const TransportersItem: React.FC<{
     event.preventDefault();
     setTransporter((transp) => ({
       ...transp,
-      transporterCapacity: parseInt(event.target.value),
+      transporterCapacity: toSafeInt(event.target.value),
     }));
   };
 
@@ -36,7 +37,7 @@ const TransportersItem: React.FC<{
     event.preventDefault();
     setTransporter((transp) => ({
       ...transp,
-      transporterPieces: parseInt(event.target.value),
+      transporterPieces: toSafeInt(event.target.value),
     }));
   };
   const removeTransporterHandler = () => {
