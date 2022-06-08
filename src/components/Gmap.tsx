@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import Settings, { MapMarker } from "../models/settings";
+import {MapMarker} from "../models/settings";
 
 type GoogleMapLatLng = google.maps.LatLng;
 type GoogleMap = google.maps.Map;
 type GoogleMarker = google.maps.Marker;
 
+
+var listener: google.maps.MapsEventListener;
+
 const Gmap: React.FC<{
-  settings: Settings;
   allMarkers: MapMarker[];
   draggable: boolean;
   setPosition: (position: GoogleMapLatLng) => void;
@@ -58,16 +60,6 @@ const Gmap: React.FC<{
     }
     if (props.allMarkers.length > 0 && map) {
       for (let singleMarker of props.allMarkers) {
-        /* console.log(
-          "kreslim single marker :" +
-            singleMarker.id +
-            " / radius :" +
-            singleMarker.radius +
-            " / position: " +
-            singleMarker.latitude +
-            "-" +
-            singleMarker.longitude
-        ); */
         addMarker(singleMarker);
         if (singleMarker.radius > 0) {
           addCircle(singleMarker);
@@ -79,7 +71,8 @@ const Gmap: React.FC<{
 
   const initEventListener = (): void => {
     if (map) {
-      google.maps.event.addListener(
+      listener?.remove();
+      listener = google.maps.event.addListener(
         map,
         "click",
         function (event: google.maps.MapMouseEvent) {
@@ -89,7 +82,7 @@ const Gmap: React.FC<{
     }
   };
 
-  useEffect(initEventListener, [map]);
+  useEffect(initEventListener, [map, props.allMarkers]);
 
   /* const coordinatesToNamePlace = (coordinate: GoogleMapLatLng) => {
     /* console.log(isReadyToSetMarker);

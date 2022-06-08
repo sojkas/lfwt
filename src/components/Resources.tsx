@@ -13,6 +13,7 @@ import { Add } from "@mui/icons-material";
 import NimbeeItem from "./NimbeeItem";
 import ShiftItem from "./ShiftItem";
 import Gmap from "./Gmap";
+import {setFlagsFromString} from "v8";
 
 let draggable: boolean = false;
 
@@ -24,7 +25,7 @@ const Resources: React.FC<{
   const [selectedUnit, setSelectedUnit] = useState<DepotUnit>();
   const [nimbees, setNimbees] = useState<Nimbee[]>(props.settings.nimbees);
   const [transporters, setTransporters] = useState<Transporter[]>(
-    props.settings.transporters
+      props.settings.transporters
   );
   const shifts: Shift[] = props.settings.shifts;
 
@@ -34,23 +35,13 @@ const Resources: React.FC<{
     }
     return props.settings.depots.map((depot) => depot.marker);
   };
-  const addUnitHandler = () => {
-    setSelectedUnit((prevUnit) => {
-      const newDepot = new DepotUnit("new Depot", new MapMarker(50, 14, 0), 4);
 
-      const settings = {
-        ...props.settings,
-        depots: [...props.settings.depots, newDepot],
-      };
-      props.updatedSettings(settings);
-      return newDepot;
-    });
-  };
+
 
   const removeUnitHandler = (id: string) => {
     setSelectedUnit((prevUnit) => {
       const newDepotsArray = props.settings.depots.filter(
-        (depotUnit) => depotUnit.id !== id
+          (depotUnit) => depotUnit.id !== id
       );
       const settings = { ...props.settings, depots: newDepotsArray };
       props.updatedSettings(settings);
@@ -65,9 +56,9 @@ const Resources: React.FC<{
         return setSelectedUnit((prevUnit) => {
           const newDepotArray = [...props.settings.depots];
           newDepotArray.splice(
-            newDepotArray.indexOf(depotUnit),
-            1,
-            changedUnit
+              newDepotArray.indexOf(depotUnit),
+              1,
+              changedUnit
           );
           const settings = { ...props.settings, depots: newDepotArray };
           props.updatedSettings(settings);
@@ -77,30 +68,22 @@ const Resources: React.FC<{
     }
   };
 
-  /*
-    const initDepotMarkers = () => {
-      const mkrs = [];
-      if (selectedUnit) {
-        mkrs.push(selectedUnit.marker);
-      } else {
-        for (let i = 0; i < depotUnits.length; i++) {
-          // /* if (selectedUnit && allDistributionUnits[i].id === selectedUnit!.id) {
-          //   mkrs.push(selectedUnit!.marker);
-          // } else {
-          mkrs.push(depotUnits[i].marker);
-          // /* }
-        }
-      }
-      setDepotMarkers(mkrs);
+  const addUnitHandler = () => {
+    console.log("Creating new unit from button")
+    const newDepot = new DepotUnit("new Depot", new MapMarker(50, 14, 0), 4);
+    const settings = {
+      ...props.settings,
+      depots: [...props.settings.depots, newDepot],
     };
-  */
-
-  // useEffect(initDepotMarkers, [selectedUnit, depotUnits]);
+    props.updatedSettings(settings);
+    setSelectedUnit(newDepot);
+  };
 
   const setPositionHandler = (newPositon: google.maps.LatLng) => {
-    console.log("Marker "+ JSON.stringify(selectedUnit?.marker));
+    console.log("Handling incoming position")
     setSelectedUnit((prevUnit) => {
-      if (prevUnit?.marker) {
+      if (prevUnit) {
+        console.log("Updating unit")
         const newMarker: MapMarker = {
           ...prevUnit!.marker,
           latitude: newPositon.lat(),
@@ -110,14 +93,8 @@ const Resources: React.FC<{
         updateUnitHandler(newUnit);
         return newUnit;
       } else {
-        const newUnit = new DepotUnit(
-          "New Unit",
-          new MapMarker(newPositon.lat(), newPositon.lng(), 0),
-          1
-        );
-        // setDepotUnits((prevDepots) => {
-        //   return [...prevDepots!, newUnit];
-        // });
+        console.log("Creating new unit from position")
+        const newUnit = new DepotUnit("New Unit", new MapMarker(newPositon.lat(), newPositon.lng(), 0), 1);
         const settings = {
           ...props.settings,
           depots: [...props.settings.depots, newUnit],
@@ -127,7 +104,9 @@ const Resources: React.FC<{
       }
     });
   };
+
   const selectedMarkerHandler = (selectedMarker: MapMarker) => {
+    console.log("Selected marker: "+selectedMarker);
     for (let i = 0; i < props.settings.depots.length; i++) {
       if (props.settings.depots[i].marker.id === selectedMarker.id) {
         setSelectedUnit(props.settings.depots[i]);
@@ -172,9 +151,9 @@ const Resources: React.FC<{
     for (let transporter of transporters) {
       if (transporter.id === id) {
         return props.settings.transporters.splice(
-          transporters.indexOf(transporter),
-          1,
-          transp
+            transporters.indexOf(transporter),
+            1,
+            transp
         );
       }
     }
@@ -187,7 +166,7 @@ const Resources: React.FC<{
 
   const removeTransporterHandler = (id: string) => {
     const newTransportersList = transporters.filter(
-      (transporter) => transporter.id !== id
+        (transporter) => transporter.id !== id
     );
     setTransporters(newTransportersList);
   };
@@ -196,14 +175,15 @@ const Resources: React.FC<{
     for (let shift of shifts) {
       if (shift.id === id) {
         return props.settings.shifts.splice(
-          shifts.indexOf(shift),
-          1,
-          shiftItem
+            shifts.indexOf(shift),
+            1,
+            shiftItem
         );
       }
     }
   };
 
+  // TODO: todle radeji neee
   useEffect(() => {
     //props.settings.depots = depotUnits;
     props.settings.nimbees = nimbees;
@@ -211,64 +191,58 @@ const Resources: React.FC<{
     props.settings.shifts = shifts;
     props.updatedSettings(props.settings);
     window.localStorage.setItem("data", JSON.stringify(props.settings));
-  }, [nimbees, transporters, shifts, props]);
+  }, [nimbees, transporters, shifts]);
 
   return (
-    <React.Fragment>
       <Grid
-        className="grid"
-        container
-        direction="row"
-        justifyContent="center"
-        spacing={1}
+          className="grid"
+          container
+          direction="row"
+          justifyContent="center"
+          spacing={1}
       >
         <Grid className="box" item xs={4}>
           <h4>Depots configuration</h4>
           <Grid container direction="column" spacing={2}>
             {props.settings.depots.map((depotUnit) => (
-              <Grid item rowSpacing={2}>
-                <DepotSetUnit
-                  key={depotUnit.id}
-                  depotUnit={
-                    depotUnit.id === selectedUnit?.id ? selectedUnit : depotUnit
-                  }
-                  removeDepotUnit={removeUnitHandler}
-                  updateDepotUnit={updateUnitHandler}
-                  disabled={depotUnit.id !== selectedUnit?.id}
-                />
-              </Grid>
+                <Grid item rowSpacing={2}>
+                  <DepotSetUnit
+                      key={depotUnit.id}
+                      depotUnit={
+                        depotUnit.id === selectedUnit?.id ? selectedUnit : depotUnit
+                      }
+                      removeDepotUnit={removeUnitHandler}
+                      updateDepotUnit={updateUnitHandler}
+                      disabled={depotUnit.id !== selectedUnit?.id}
+                  />
+                </Grid>
             ))}
             <Grid item xs={1}>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={9}></Grid>
                 <Grid item xs={3}>
                   {selectedUnit && (
-                    <Button
-                      variant="outlined"
-                      className="item-space"
-                      onClick={depotDoneHandler}
-                    >
-                      Done
-                    </Button>
+                      <Button
+                          variant="outlined"
+                          className="item-space"
+                          onClick={depotDoneHandler}
+                      >
+                        Done
+                      </Button>
                   )}
-                  {/* <Fab
-                        aria-label="add"
-                        size="small"
-                        onClick={addUnitHandler}>
-                      <Add />
-                    </Fab> */}
                 </Grid>
               </Grid>
             </Grid>
             <div className="space-20"></div>
             {props.gmscriptLoaded && (
-              <Gmap
-                settings={props.settings}
-                allMarkers={getAllDepotMarkers()}
-                draggable={draggable}
-                setPosition={setPositionHandler}
-                selectedMarker={selectedMarkerHandler}
-              />
+                <Grid item xs={1}>
+                  <Gmap
+                      allMarkers={getAllDepotMarkers()}
+                      draggable={draggable}
+                      setPosition={setPositionHandler}
+                      selectedMarker={selectedMarkerHandler}
+                  />
+                </Grid>
             )}
           </Grid>
         </Grid>
@@ -279,12 +253,12 @@ const Resources: React.FC<{
               <Grid container direction="column" spacing={2}>
                 <Grid item xs={6}>
                   {props.settings.nimbees.map((nimbee) => (
-                    <NimbeeItem
-                      key={nimbee.id}
-                      nimbee={nimbee}
-                      updatedNimbee={updateNimbeeHandler}
-                      removeNimbee={removeNimbeeHandler}
-                    />
+                      <NimbeeItem
+                          key={nimbee.id}
+                          nimbee={nimbee}
+                          updatedNimbee={updateNimbeeHandler}
+                          removeNimbee={removeNimbeeHandler}
+                      />
                   ))}
                 </Grid>
                 <Grid item xs={6}>
@@ -292,9 +266,9 @@ const Resources: React.FC<{
                     <Grid item xs={10}></Grid>
                     <Grid item xs={2}>
                       <Fab
-                        aria-label="add"
-                        size="small"
-                        onClick={addNimbeeHandler}
+                          aria-label="add"
+                          size="small"
+                          onClick={addNimbeeHandler}
                       >
                         <Add />
                       </Fab>
@@ -307,12 +281,12 @@ const Resources: React.FC<{
               <Grid container direction="column" spacing={2}>
                 <Grid item xs={6}>
                   {transporters.map((transporter) => (
-                    <TransportersItem
-                      key={transporter.id}
-                      transporter={transporter}
-                      updatedTransporter={updateTransporterHandler}
-                      removeTransporter={removeTransporterHandler}
-                    />
+                      <TransportersItem
+                          key={transporter.id}
+                          transporter={transporter}
+                          updatedTransporter={updateTransporterHandler}
+                          removeTransporter={removeTransporterHandler}
+                      />
                   ))}
                 </Grid>
                 <Grid item xs={6}>
@@ -320,9 +294,9 @@ const Resources: React.FC<{
                     <Grid item xs={10}></Grid>
                     <Grid item xs={2}>
                       <Fab
-                        aria-label="add"
-                        size="small"
-                        onClick={addTransporterHandler}
+                          aria-label="add"
+                          size="small"
+                          onClick={addTransporterHandler}
                       >
                         <Add />
                       </Fab>
@@ -338,17 +312,16 @@ const Resources: React.FC<{
           <Grid container direction="column" spacing={2}>
             <Grid item xs={6}>
               {shifts.map((shift) => (
-                <ShiftItem
-                  key={shift.id}
-                  shift={shift}
-                  updateShift={updateShiftHandler}
-                />
+                  <ShiftItem
+                      key={shift.id}
+                      shift={shift}
+                      updateShift={updateShiftHandler}
+                  />
               ))}
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </React.Fragment>
   );
 };
 

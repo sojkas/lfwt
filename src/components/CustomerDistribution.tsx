@@ -1,13 +1,9 @@
-import { Grid, TextField, Button, Fab } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import {Button, Fab, Grid, TextField} from "@mui/material";
+import {Add} from "@mui/icons-material";
+import React, {useEffect, useState} from "react";
 import Gmap from "./Gmap";
 import DistributionUnit from "./DistributionUnit";
-import Settings, {
-  DistributionArea,
-  DistributionItem,
-  MapMarker,
-} from "../models/settings";
+import Settings, {DistributionArea, DistributionItem, MapMarker,} from "../models/settings";
 import SingleSlider from "./SingleSlider";
 
 let draggable: boolean = false;
@@ -165,7 +161,6 @@ const CustomerDistribution: React.FC<{
         <Grid className="box" item xs={6}>
           {props.gmscriptLoaded && (
             <Gmap
-              settings={props.settings}
               allMarkers={distributionMarkers}
               selectedMarker={selectedMarkerHandler}
               setPosition={setPositionHandler}
