@@ -29,7 +29,7 @@ const Simulation: React.FC<{
 
   const addRandomOrder = () => {
     if (isStopped) return;
-    setTimeout(addRandomOrder, 500);
+    setTimeout(addRandomOrder, 250);
     setVirtualClock((prevClock) => {
       const newDate = addMinutes(prevClock, 15);
       return newDate;
@@ -47,7 +47,7 @@ const Simulation: React.FC<{
 
   const startHandler = () => {
     isStopped = false;
-    setTimeout(addRandomOrder, 500);
+    setTimeout(addRandomOrder, 250);
   };
 
   const stopHandler = () => {
@@ -64,8 +64,8 @@ const Simulation: React.FC<{
     const d = new Date(Date.now());
     setVirtualClock(d);
     props.updatedSimulationValues({
-      orders: props.simulationValues.orders,
-      isStopped: isStopped,
+      orders: [],
+      isStopped: true,
       clockTime: d
     });
   };

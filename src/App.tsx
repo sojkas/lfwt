@@ -51,52 +51,42 @@ function App() {
     } else {
       setSettings(new Settings());
     }
-    /* if (localStorage.getItem("orders") !== null) {
-      const loadedOrders = JSON.parse(localStorage.getItem("orders")!);
-      setSimulationValues(loadedOrders);
-    } else {
-      setSimulationValues(new SimulationValues([], false));
-    } */
   }, []);
 
-  /* useEffect(()=>{
-    window.localStorage.setItem("orders", JSON.stringify(simulationValues));
-  },[simulationValues]); */
-
   return (
-    <div className="app">
-      <Navbar selectedItem={selectedItemHandler} active={menuItem}
-              settings={settings} updatedSettings={updateSettingsHandler} />
-      <div className="section">
-        {settings && menuItem === 0 && (
-          <Resources
-            settings={settings}
-            updatedSettings={updateSettingsHandler}
-            gmscriptLoaded={scriptLoaded}
-          />
-        )}
-        {settings && menuItem === 1 && (
-          <CustomerTypes
-            settings={settings}
-            updatedSettings={updateSettingsHandler}
-          />
-        )}
-        {settings && menuItem === 2 && (
-          <CustomerDistribution
-            settings={settings}
-            updatedSettings={updateSettingsHandler}
-            gmscriptLoaded={scriptLoaded}
-          />
-        )}
-        {settings && simulationValues && menuItem === 3 && (
-          <Simulation
-            settings={settings}
-            simulationValues={simulationValues}
-            updatedSimulationValues={updateSimulationValuesHandler}
-          />
-        )}
+      <div className="app">
+        <Navbar selectedItem={selectedItemHandler} active={menuItem}
+                settings={settings} updatedSettings={updateSettingsHandler} />
+        <div className="section">
+          {settings && menuItem === 0 && (
+              <Resources
+                  settings={settings}
+                  updatedSettings={updateSettingsHandler}
+                  gmscriptLoaded={scriptLoaded}
+              />
+          )}
+          {settings && menuItem === 1 && (
+              <CustomerTypes
+                  settings={settings}
+                  updatedSettings={updateSettingsHandler}
+              />
+          )}
+          {settings && menuItem === 2 && (
+              <CustomerDistribution
+                  settings={settings}
+                  updatedSettings={updateSettingsHandler}
+                  gmscriptLoaded={scriptLoaded}
+              />
+          )}
+          {settings && simulationValues && menuItem === 3 && (
+              <Simulation
+                  settings={settings}
+                  simulationValues={simulationValues}
+                  updatedSimulationValues={updateSimulationValuesHandler}
+              />
+          )}
+        </div>
       </div>
-    </div>
   );
 }
 

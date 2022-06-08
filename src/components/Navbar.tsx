@@ -53,7 +53,7 @@ const Navbar: React.FC<{
       var newSettings = JSON.parse(content!.toString()); // parse json
       console.log("Finished reading "+newSettings);
       props.updatedSettings(newSettings);
-      fin.files = null;
+      fin.value = "";
       props.selectedItem(0)
     };
     fileread.readAsText(file_to_read);
@@ -61,7 +61,7 @@ const Navbar: React.FC<{
 
   return (
       <Grid container direction="row" spacing={2} className="navigation">
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <ButtonGroup
               className="btn-group"
               variant="text"
@@ -99,7 +99,7 @@ const Navbar: React.FC<{
             </Button>
           </ButtonGroup>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <input type="file" id="jsonfileinput" onChange={loadSettingsFromFile} placeholder="Upload"/>
           &nbsp;
           <Button className="item-space" variant="contained" onClick={downloadHandler}>
