@@ -240,11 +240,10 @@ const CTDetail: React.FC<{
         ))}
       </Grid>
       {showAlert && (
-        <Grid item xs={1}>
-          <Alert severity="warning">
+        <Grid item xs={8}>
+          <Alert severity="warning" className="item-space">
             All parking intervals percentige is over 100%.
           </Alert>
-          ;
         </Grid>
       )}
 
