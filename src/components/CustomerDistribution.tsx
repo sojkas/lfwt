@@ -224,7 +224,7 @@ const CustomerDistribution: React.FC<{
                 <Grid container direction="row" spacing={2}>
                   <Grid item xs={9}></Grid>
                   <Grid item xs={3}>
-                    {props.settings.customers === undefined && (
+                    {props.settings.customers !== undefined && (
                       <Fab
                         aria-label="add"
                         size="small"
