@@ -33,11 +33,9 @@ const CustomerTypes: React.FC<{
   useEffect(initTypes, []);
 
   const activeCustomerIdHandler = (customerDetailId: string) => {
-    console.log("posilam id "+ customerDetailId);
     setSelectedCustomerDetail(()=>{
       for (let detail of customerDetails!) {
         if (detail.customerId === customerDetailId) {
-          console.log("toz vybiram "+ JSON.stringify(detail));
           return detail
         } 
       }
