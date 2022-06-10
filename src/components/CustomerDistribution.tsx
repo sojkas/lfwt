@@ -193,10 +193,10 @@ const CustomerDistribution: React.FC<{
               </Grid>
               <Grid item xs={1}>
                 <Grid container direction="row" spacing={2}>
-                  <Grid item xs={1}>
-                    Radius
+                  <Grid item xs={2}>
+                    <p className="item-space">Radius</p>
                   </Grid>
-                  <Grid item xs={5}>
+                  <Grid item xs={10}>
                     <SingleSlider
                       label={selectedArea!.name}
                       minValue={0}

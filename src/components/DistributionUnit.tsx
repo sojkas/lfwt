@@ -87,18 +87,18 @@ const DistributionUnit: React.FC<{
             onChange={distributionValueHandler}
           />
         </Grid>
-        <Grid item xs={3}>
-          <Stack direction="row" spacing={1}>
-            <Typography>Random</Typography>
+        <Grid item xs={4}>
+          <Stack direction="row" spacing={2}>
+            <Typography className="item-space">Random</Typography>
             <Switch
               checked={distribution.isChecked}
               inputProps={{ "aria-label": "ant design" }}
               onChange={isCheckedHandler}
             />
-            <Typography>Cluster</Typography>
+            <Typography className="item-space">Cluster</Typography>
           </Stack>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={1}>
           <IconButton aria-label="add" size="small" onClick={removeDistributonHandler}>
             <RemoveCircleOutline />
           </IconButton>

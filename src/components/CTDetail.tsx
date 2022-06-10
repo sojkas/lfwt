@@ -255,6 +255,7 @@ const CTDetail: React.FC<{
             aria-label="add"
             size="small"
             onClick={addParkingHandler}
+            className="item-space"
           >
             <Add />
           </Fab>

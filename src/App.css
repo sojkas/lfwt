@@ -1,6 +1,13 @@
+html, body, #root {
+  height: 100%;
+}
+
 .app {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .btn {
@@ -22,6 +29,9 @@
 .section {
   padding-left: 20px;
   padding-right: 20px;
+  flex-grow: 1;
+  min-height: 0;
+  overflow: auto;
 }
 .btn-group {
   width: 100% !important;
@@ -73,11 +83,6 @@ h4 {
 }
 
 
-.gmap {
-  display: flex;
-  height: 100%;
-}
-
 .space-20 {
   height: 20px;
 }
@@ -88,22 +93,25 @@ h4 {
 }
 
 .item-space {
-  margin-top: 10px!important;
-  margin-bottom:  10px!important;
+  margin-top: 8px!important;
+  margin-bottom:  8px!important;
 }
 
 .map-container {
-  display: flex;
-  justify-content: center;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-height: 50vh;
 }
 .map-container__map {
-  height: 85vh;
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
 }
 .list-customer:hover {
   cursor: pointer;
 }
 
-.gmap-resources{
-  height: 50vh;
-}

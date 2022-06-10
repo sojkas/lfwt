@@ -95,7 +95,7 @@ const Simulation: React.FC<{
   };
 
   return (
-      <div>
+      <>
         <Stack direction="row" spacing={2} className="topPadding">
           <Button variant="outlined" onClick={startHandler}>
             Start
@@ -152,7 +152,7 @@ const Simulation: React.FC<{
             </TableBody>
           </TableContainer>
         </div>
-      </div>
+      </>
   );
 };
 
