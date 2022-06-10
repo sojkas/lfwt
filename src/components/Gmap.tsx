@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import Settings, {MapMarker, getBestLatitude, getBestLongitude} from "../models/settings";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import Settings, {getBestLatitude, getBestLongitude, MapMarker} from "../models/settings";
 
 type GoogleMapLatLng = google.maps.LatLng;
 type GoogleMap = google.maps.Map;
 type GoogleMarker = google.maps.Marker;
-
-
 var listener: google.maps.MapsEventListener;
 
 const Gmap: React.FC<{
@@ -19,8 +17,8 @@ const Gmap: React.FC<{
   const [map, setMap] = useState<GoogleMap>();
   const [allGoogleMarkers, setAllGoogleMarkers] = useState<GoogleMarker[]>([]);
   const [allGoogleCircles, setAllGoogleCircles] = useState<
-    google.maps.Circle[]
-  >([]);
+      google.maps.Circle[]
+      >([]);
 
   const startMap = (): void => {
     if (!map) {
@@ -39,15 +37,15 @@ const Gmap: React.FC<{
     //pokud existuje ref.current
     if (mapRef.current) {
       setMap(
-        new google.maps.Map(mapRef.current, {
-          zoom: zoomLevel,
-          center: place,
-          mapTypeControl: false,
-          streetViewControl: false,
-          zoomControl: true,
-          scaleControl: true,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-        })
+          new google.maps.Map(mapRef.current, {
+            zoom: zoomLevel,
+            center: place,
+            mapTypeControl: false,
+            streetViewControl: false,
+            zoomControl: true,
+            scaleControl: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+          })
       );
     }
   };
@@ -68,42 +66,23 @@ const Gmap: React.FC<{
       }
     }
   };
+
   useEffect(drawMarkers, [map, props.allMarkers]);
 
   const initEventListener = (): void => {
     if (map) {
       listener?.remove();
       listener = google.maps.event.addListener(
-        map,
-        "click",
-        function (event: google.maps.MapMouseEvent) {
-          props.setPosition(event.latLng!);
-        }
+          map,
+          "click",
+          (event: google.maps.MapMouseEvent)=> {
+            props.setPosition(event.latLng!);
+          }
       );
     }
   };
 
-  useEffect(initEventListener, [map, props.allMarkers]);
-
-  /* const coordinatesToNamePlace = (coordinate: GoogleMapLatLng) => {
-    /* console.log(isReadyToSetMarker);
-    if (!isReadyToSetMarker) return; 
-    setMarker({
-      id: "MM"+Date.now()+Math.random().toString(),
-      latitude: coordinate.lat(),
-      longitude: coordinate.lng(),
-      radius: 1
-    });
-  }; */
-
-  /* useEffect(() => {    
-    if (marker) {
-      addMarker(marker);
-      if (circleAvailable) {
-        addCircle(marker);
-      }
-    }
-  }, [marker]); */
+  useEffect(initEventListener, [map, props]);
 
   const addMarker = (mapMarker: MapMarker): void => {
     const googleMarker: GoogleMarker = new google.maps.Marker({
@@ -144,9 +123,9 @@ const Gmap: React.FC<{
   };
 
   return (
-    <div className="map-container">
-      <div ref={mapRef} className="map-container__map"></div>
-    </div>
+      <div className="map-container">
+        <div ref={mapRef} className="map-container__map"></div>
+      </div>
   );
 };
 
