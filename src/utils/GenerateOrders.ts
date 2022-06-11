@@ -1,11 +1,11 @@
 import Settings from "../models/settings";
 import Order from "../models/order";
 import {
+  addToLatitude,
+  addToLongitude, countCustomerParkingDuration,
   findCustomerById,
   findCustomerDetailById,
   findIntervalByHour,
-  addToLatitude,
-  addToLongitude,
 } from "./supportFunctions";
 
 // simRatio = interval simulace 0.1 = 10 x za hodinu
@@ -38,8 +38,9 @@ const generateOrders = (
         const minCharge = customerDetail!.minChargesPerMonth;
         const maxCharge = customerDetail!.maxChargesPerMonth;
         var charge = minCharge + (maxCharge - maxCharge) * Math.random();
+        const parkingLengthDaily = countCustomerParkingDuration(customerDetail!)
         var orderNums =
-          ((charge * customernum) / (24 * 30)) *
+          ((charge * customernum) / (parkingLengthDaily * 30)) *
           (interval.percent / 100) *
           simRatio;
         /* console.log("orderNumber " + orderNums + " charge " + charge) */

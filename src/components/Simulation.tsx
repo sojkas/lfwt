@@ -106,7 +106,7 @@ const Simulation: React.FC<{
           <Button variant="outlined" onClick={deleteHandler}>
             Delete
           </Button>
-          <p className="item-space">{clockRunning()}</p>
+          <p className="item-space">{clockRunning()} ({props.simulationValues.orders.length} orders)</p>
           <Button variant="outlined" onClick={downloadHandler}>
             Download simulation
           </Button>

@@ -170,7 +170,7 @@ const CTDetail: React.FC<{
           <RangeSlider
             label="Charges per month"
             minValue={1}
-            maxValue={30}
+            maxValue={60}
             minSetValue={minChargesPerMonth}
             maxSetValue={maxChargesPerMonth}
             sliderUnit="charges"
@@ -187,7 +187,7 @@ const CTDetail: React.FC<{
           <RangeSlider
             label="kWh per charge"
             minValue={5}
-            maxValue={40}
+            maxValue={60}
             minSetValue={minKwh}
             maxSetValue={maxKwh}
             sliderUnit="kWh"
