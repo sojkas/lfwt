@@ -2,7 +2,7 @@ import Settings from "../models/settings";
 import Order from "../models/order";
 import {
   addToLatitude,
-  addToLongitude, countCustomerParkingDuration,
+  addToLongitude, countCustomerParkingDuration, countIntervalLength,
   findCustomerById,
   findCustomerDetailById,
   findIntervalByHour,
@@ -38,9 +38,9 @@ const generateOrders = (
         const minCharge = customerDetail!.minChargesPerMonth;
         const maxCharge = customerDetail!.maxChargesPerMonth;
         var charge = minCharge + (maxCharge - maxCharge) * Math.random();
-        const parkingLengthDaily = countCustomerParkingDuration(customerDetail!)
+        const intervalLength = countIntervalLength(interval!)
         var orderNums =
-          ((charge * customernum) / (parkingLengthDaily * 30)) *
+          ((charge * customernum) / (intervalLength * 30)) *
           (interval.percent / 100) *
           simRatio;
         /* console.log("orderNumber " + orderNums + " charge " + charge) */

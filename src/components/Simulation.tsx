@@ -128,7 +128,7 @@ const Simulation: React.FC<{
             </TableHead>
             <TableBody>
               {props.simulationValues.orders.length > 0 &&
-                  props.simulationValues.orders.map((order) => (
+                  props.simulationValues.orders.slice(0,100).map((order) => (
                       <TableRow
                           key={order.id}
                           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -151,6 +151,9 @@ const Simulation: React.FC<{
                   ))}
             </TableBody>
           </TableContainer>
+          {props.simulationValues.orders.length > 100 &&
+              <p>Listing is limited to the first 100 orders.</p>
+          }
         </div>
       </>
   );

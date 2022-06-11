@@ -82,5 +82,6 @@ export {
   addToLatitude,
   addToLongitude,
   toSafeInt,
-  countCustomerParkingDuration
+  countCustomerParkingDuration,
+  countIntervalLength
 };
