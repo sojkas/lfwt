@@ -2,7 +2,8 @@ import Settings from "../models/settings";
 import Order from "../models/order";
 import {
   addToLatitude,
-  addToLongitude, countCustomerParkingDuration, countIntervalLength,
+  addToLongitude,
+  countIntervalLength,
   findCustomerById,
   findCustomerDetailById,
   findIntervalByHour,
@@ -63,9 +64,7 @@ const generateOrders = (
             oblast.id,
             addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
             addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
-            customerDetail!.minkWhPerMonth +
-              (customerDetail!.maxkWhPerMonth =
-                customerDetail!.minkWhPerMonth) *
+            customerDetail!.minkWhPerMonth + (customerDetail!.maxkWhPerMonth - customerDetail!.minkWhPerMonth) *
                 Math.random(),
             customer!.id,
             virtualDate

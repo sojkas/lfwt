@@ -37,12 +37,14 @@ const Simulation: React.FC<{
   };
 
   useEffect(( )=> {
-    const newOrders = generateOrders(props.settings, 1 / 4, virtualClock);
-    props.updatedSimulationValues({
-      orders: [...props.simulationValues.orders,...newOrders],
-      isStopped: isStopped,
-      clockTime: virtualClock,
-    });
+    if (!isStopped) {
+      const newOrders = generateOrders(props.settings, 1 / 4, virtualClock);
+      props.updatedSimulationValues({
+        orders: [...props.simulationValues.orders, ...newOrders],
+        isStopped: isStopped,
+        clockTime: virtualClock,
+      });
+    }
   }, [virtualClock])
 
   const startHandler = () => {
