@@ -30,7 +30,7 @@ const Gmap: React.FC<{
 
   const defaultMapStart = (): void => {
     const defaultPlace = new google.maps.LatLng(getBestLatitude(props.settings), getBestLongitude(props.settings));
-    initMap(13, defaultPlace);
+    initMap(11, defaultPlace);
   };
 
   const initMap = (zoomLevel: number, place: GoogleMapLatLng): void => {

@@ -127,7 +127,7 @@ const CTDetail: React.FC<{
   }, [props.customerDetail]);
 
   const saveHandler = () => {
-    if (getAllParkingValue(allParkingIntervals) > 100) {
+    if (getAllParkingValue(allParkingIntervals) !== 100) {
       return setShowAlert(true);
     }
     setShowAlert(false);
@@ -242,7 +242,7 @@ const CTDetail: React.FC<{
       {showAlert && (
         <Grid item xs={8}>
           <Alert severity="warning" className="item-space">
-            All parking intervals percentige is over 100%.
+            The sum of  the all parking intervals is not 100%.
           </Alert>
         </Grid>
       )}

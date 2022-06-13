@@ -196,17 +196,17 @@ class CustomerDetail {
 
 function getBestLatitude (settings: Settings):number {
   let i = 0;
-  for (let item of settings.depots){
+  for (let item of settings.distributionAreas){
     i = i + item.marker.latitude;
   }
-  return i/settings.depots.length; 
+  return i/settings.distributionAreas.length; 
 }
 function getBestLongitude (settings: Settings):number {
   let i = 0;
-  for (let item of settings.depots){
+  for (let item of settings.distributionAreas){
     i = i+ item.marker.longitude;
   }
-  return i/settings.depots.length; 
+  return i/settings.distributionAreas.length; 
 }
 
 var depotUnitId = new Date().getTime();

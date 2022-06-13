@@ -1,4 +1,4 @@
-import { Button, Fab, Grid, TextField } from "@mui/material";
+import { Button, Fab, Grid, TextField, Alert, Snackbar } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import Gmap from "./Gmap";
@@ -11,6 +11,7 @@ import Settings, {
 import SingleSlider from "./SingleSlider";
 
 let draggable: boolean = false;
+let savedAreaName: string = "";
 
 const CustomerDistribution: React.FC<{
   settings: Settings;
@@ -24,6 +25,18 @@ const CustomerDistribution: React.FC<{
   const [distributionMarkers, setDistributionMarkers] = useState<MapMarker[]>(
     []
   );
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsSaved(false);
+  };
 
   const initDistributionMarkers = () => {
     const mkrs = [];
@@ -96,6 +109,8 @@ const CustomerDistribution: React.FC<{
     props.settings.distributionAreas = allDistributionAreas;
     props.updatedSettings(props.settings);
     setSelectedArea(undefined);
+    savedAreaName = selectedArea!.name;
+    setIsSaved(true);
   };
 
   const removeDistributionHandler = (id: string) => {
@@ -172,16 +187,28 @@ const CustomerDistribution: React.FC<{
             />
           )}
         </Grid>
+        {!selectedArea && (
+          <Snackbar
+            open={isSaved}
+            autoHideDuration={3000}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            onClose={handleClose}
+          >
+            <Alert severity="success" sx={{ width: "100%" }}>
+              {savedAreaName} was saved.
+            </Alert>
+          </Snackbar>
+        )}
         {selectedArea && (
           <Grid className="box" item xs={6}>
-            <h4>Parametry oblasti</h4>
+            <h4>Area Parametres</h4>
             <Grid container direction="column" spacing={2}>
               <Grid item xs={1}>
                 <Grid container direction="row" spacing={2}>
                   <Grid item xs={3}>
                     <TextField
                       id="symbolic-name"
-                      label="Symbolicky nazev"
+                      label="Title"
                       variant="outlined"
                       value={selectedArea!.name}
                       size="small"
