@@ -1,4 +1,4 @@
-import { Grid, ButtonGroup, Fab } from "@mui/material";
+import { Grid, ButtonGroup, Fab, Snackbar, Alert } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   Settings,
@@ -12,31 +12,49 @@ import CustomerComponent from "./CustomerComponent";
 import AddIcon from "@mui/icons-material/Add";
 import { findCustomerById } from "../utils/supportFunctions";
 
+let savedCustomerName: string = '';
+
 const CustomerTypes: React.FC<{
   settings: Settings;
   updatedSettings: (updatedSettingsValues: Settings) => void;
 }> = (props) => {
-  const [customers, setCustomers] = useState<Customer[]>(props.settings.customers);
+  const [customers, setCustomers] = useState<Customer[]>(
+    props.settings.customers
+  );
   const [newNameCustomer, setNewNameCustomer] = useState<string>("");
 
   const [selectedCustomerDetail, setSelectedCustomerDetail] =
-      useState<CustomerDetail>();
+    useState<CustomerDetail>();
 
-  const [customerDetails, setCustomerDetails] = useState<CustomerDetail[]>(props.settings.customerDetails);
+  const [customerDetails, setCustomerDetails] = useState<CustomerDetail[]>(
+    props.settings.customerDetails
+  );
 
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsSaved(false);
+  };
 
   const initTypes = () => {
     setCustomerDetails(props.settings.customerDetails);
     setCustomers(props.settings.customers);
-  }
+  };
 
   useEffect(initTypes, []);
 
   const activeCustomerIdHandler = (customerDetailId: string) => {
-    setSelectedCustomerDetail(()=>{
+    setSelectedCustomerDetail(() => {
       for (let detail of customerDetails!) {
         if (detail.customerId === customerDetailId) {
-          return detail
+          return detail;
         }
       }
     });
@@ -44,16 +62,16 @@ const CustomerTypes: React.FC<{
 
   const createCustomerDetail = (cdID: string) => {
     const newCustomerDetail = new CustomerDetail(
-        cdID,
-        "New Customer",
-        10,
-        20,
-        15,
-        25,
-        50,
-        25,
-        50,
-        [new ParkingInterval(cdID, 8, 12, 100)]
+      cdID,
+      "New Customer",
+      10,
+      20,
+      15,
+      25,
+      50,
+      25,
+      50,
+      [new ParkingInterval(cdID, 8, 12, 100)]
     );
     setCustomerDetails((prevDetails) => prevDetails!.concat(newCustomerDetail));
   };
@@ -66,22 +84,26 @@ const CustomerTypes: React.FC<{
 
   const removeCustomerHandler = (id: string) => {
     const custName = findCustomerById(props.settings, id)?.name;
-    if (window.confirm('Do you really want to remove customer "' + custName + '"?')) {
+    if (
+      window.confirm(
+        'Do you really want to remove customer "' + custName + '"?'
+      )
+    ) {
       const newCustomerList: Customer[] = customers!.filter(
-          (customer) => customer.id !== id
+        (customer) => customer.id !== id
       );
       setCustomers(newCustomerList);
       const newCustomerDetailList: CustomerDetail[] = customerDetails!.filter(
-          (detail) => detail.customerId !== id
+        (detail) => detail.customerId !== id
       );
       setCustomerDetails(newCustomerDetailList);
       const newDistributionAreas: DistributionArea[] =
-          props.settings.distributionAreas;
+        props.settings.distributionAreas;
       for (let i = 0; i < props.settings.distributionAreas.length; i++) {
         const newDistributions = props.settings.distributionAreas[
-            i
-            ].distributions.filter(
-            (distribution) => id !== distribution.customerId
+          i
+        ].distributions.filter(
+          (distribution) => id !== distribution.customerId
         );
         newDistributionAreas[i].distributions = newDistributions;
       }
@@ -101,7 +123,7 @@ const CustomerTypes: React.FC<{
     for (let detail of customerDetails!) {
       if (detail.customerId === selectedCustomerDetail?.customerId)
         return setSelectedCustomerDetail(
-            customerDetails![customerDetails!.indexOf(detail)]
+          customerDetails![customerDetails!.indexOf(detail)]
         );
     }
   }, [selectedCustomerDetail]);
@@ -111,69 +133,84 @@ const CustomerTypes: React.FC<{
       if (detail.customerId === id) {
         setSelectedCustomerDetail(undefined);
         props.settings.customerDetails.splice(
-            customerDetails!.indexOf(detail),
-            1,
-            updatedDetail
+          customerDetails!.indexOf(detail),
+          1,
+          updatedDetail
         );
         props.updatedSettings(props.settings);
       }
     }
+    setIsSaved(true);
+    savedCustomerName = updatedDetail.segmentName;
   };
   const updateCustomerNameHandler = (id: string, newName: string) => {
     setNewNameCustomer(newName);
     for (let customer of customers!) {
       if (customer.id.toString() === id)
         return (props.settings.customers[customers!.indexOf(customer)].name =
-            newName);
+          newName);
     }
   };
 
   return (
-      <React.Fragment>
-        <Grid className="grid" container direction="row" spacing={2}>
-          <Grid className="box" item xs={4}>
-            <Grid
-                container
-                direction="column"
-                spacing={2}
-                className="topPaddingBig"
-            >
-              <Grid item xs={5}>
-                <ButtonGroup
-                    orientation="vertical"
-                    variant="text"
-                    fullWidth={true}
-                >
-                  {customers && customers.map((customer) => (
-                      <CustomerComponent
-                          key={customer.id}
-                          customerId={customer.id}
-                          name={customer.name}
-                          removeCustomer={removeCustomerHandler}
-                          activeCustomerId={activeCustomerIdHandler}
-                      />
+    <React.Fragment>
+      <Grid className="grid" container direction="row" spacing={2}>
+        <Grid className="box" item xs={4}>
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            className="topPaddingBig"
+          >
+            <Grid item xs={5}>
+              <ButtonGroup
+                orientation="vertical"
+                variant="text"
+                fullWidth={true}
+              >
+                {customers &&
+                  customers.map((customer) => (
+                    <CustomerComponent
+                      key={customer.id}
+                      customerId={customer.id}
+                      name={customer.name}
+                      removeCustomer={removeCustomerHandler}
+                      activeCustomerId={activeCustomerIdHandler}
+                    />
                   ))}
-                </ButtonGroup>
-              </Grid>
-              <Grid item xs={1}>
-                <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
-                  <AddIcon />
-                </Fab>
-              </Grid>
+              </ButtonGroup>
+            </Grid>
+            <Grid item xs={1}>
+              <Fab aria-label="Add" size="small" onClick={addCustomerHandler}>
+                <AddIcon />
+              </Fab>
             </Grid>
           </Grid>
-          <Grid className="box" item xs={8}>
-            {selectedCustomerDetail && (
-                <CTDetail
-                    customerId={selectedCustomerDetail.customerId}
-                    customerDetail={selectedCustomerDetail!}
-                    updatedCustomerDetail={updateDetail}
-                    updateCustomerName={updateCustomerNameHandler}
-                />
-            )}
-          </Grid>
         </Grid>
-      </React.Fragment>
+        <Grid className="box" item xs={8}>
+          {!selectedCustomerDetail && (
+            <Snackbar
+              open={isSaved}
+              autoHideDuration={3000}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              onClose={handleClose}
+            >
+              <Alert severity="success" sx={{ width: "100%" }}>
+                {savedCustomerName} was saved.
+              </Alert>
+            </Snackbar>
+          )}
+          {selectedCustomerDetail && (
+            <CTDetail
+              customerId={selectedCustomerDetail.customerId}
+              customerDetail={selectedCustomerDetail!}
+              updatedCustomerDetail={updateDetail}
+              updateCustomerName={updateCustomerNameHandler}
+            />
+          )}
+        </Grid>
+      </Grid>
+    </React.Fragment>
   );
 };
 

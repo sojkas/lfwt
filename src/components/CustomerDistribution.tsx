@@ -191,7 +191,7 @@ const CustomerDistribution: React.FC<{
           <Snackbar
             open={isSaved}
             autoHideDuration={3000}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
             onClose={handleClose}
           >
             <Alert severity="success" sx={{ width: "100%" }}>
