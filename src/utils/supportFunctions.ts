@@ -1,4 +1,4 @@
-import Settings, {Customer, CustomerDetail, ParkingInterval} from "../models/settings";
+import Settings, {Customer, ParkingInterval} from "../models/settings";
 
 
 function toSafeInt(value: string): number {
@@ -16,11 +16,6 @@ const findCustomerById = (settings: Settings, id: string) => {
 const findCustomerIdByName = (customers: Customer[], name: string) => {
   for (let customer of customers) {
     if (customer.name === name) return customer.id;
-  }
-};
-const findCustomerDetailById = (settings: Settings, id: string) => {
-  for (let detail of settings.customerDetails) {
-    if (detail.customerId === id) return detail;
   }
 };
 
@@ -54,7 +49,7 @@ const countIntervalLength = (interval: ParkingInterval) => {
   }
 };
 
-const countCustomerParkingDuration = (customer: CustomerDetail) => {
+const countCustomerParkingDuration = (customer: Customer) => {
   let res = 0;
   for (const p of customer.parking) {
     res = res + countIntervalLength(p);
@@ -76,7 +71,6 @@ function addToLongitude(longitude: number, dx: number) {
 export {
   findCustomerById,
   findCustomerIdByName,
-  findCustomerDetailById,
   findDistributionAreaById,
   findIntervalByHour,
   addToLatitude,

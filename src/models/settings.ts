@@ -19,7 +19,6 @@ class Settings {
 
   /* CUSTOMER TYPES */
   customers: Customer[];
-  customerDetails: CustomerDetail[];
 
   /* CUSTOMER DISTRIBUTION */
   distributionAreas: DistributionArea[];
@@ -38,41 +37,19 @@ class Settings {
       new Shift("Night shift", 18, 1, 12),
     ];
     this.customers = [
-      new Customer("Outskirts car adicts"),
-      new Customer("Rohlik"),
+      new Customer("Outskirts car adicts", 8, 17, 17, 26, 60, 20, 40, [
+        new ParkingInterval("todo", 0, 20, 55),
+        new ParkingInterval("todo", 21, 23, 45),
+      ]),
+      new Customer("Rohlik", 6, 13, 12, 30, 45, 27, 55, [
+        new ParkingInterval("todo", 0, 11, 55),
+        new ParkingInterval("todo", 12, 23, 45),
+      ]),
     ];
-    this.customerDetails = [
-      new CustomerDetail(
-        this.customers[0].id,
-        "Outskirts car adicts",
-        8,
-        17,
-        17,
-        26,
-        60,
-        20,
-        40,
-        [
-          new ParkingInterval(this.customers[0].id, 0, 20, 55),
-          new ParkingInterval(this.customers[0].id, 21, 23, 45),
-        ]
-      ),
-      new CustomerDetail(
-        this.customers[1].id,
-        "Rohlik",
-        6,
-        13,
-        12,
-        30,
-        45,
-        27,
-        55,
-        [
-          new ParkingInterval(this.customers[1].id, 0, 11, 55),
-          new ParkingInterval(this.customers[1].id, 12, 23, 45),
-        ]
-      ),
-    ];
+    this.customers[0].parking[0].customerID = this.customers[0].id;
+    this.customers[0].parking[1].customerID = this.customers[0].id;
+    this.customers[1].parking[0].customerID = this.customers[1].id;
+    this.customers[1].parking[1].customerID = this.customers[1].id;
     this.distributionAreas = [
       new DistributionArea("Test A", new MapMarker(50.06983, 14.43713, 1), [
         new DistributionItem(
@@ -149,15 +126,6 @@ var customerId = new Date().getTime();
 class Customer {
   id: string;
   name: string;
-  constructor(name: string) {
-    this.id = "CUSTOMER" + customerId++;
-    this.name = name;
-  }
-}
-
-class CustomerDetail {
-  customerId: string;
-  segmentName: string;
   minChargesPerMonth: number;
   maxChargesPerMonth: number;
 
@@ -170,8 +138,7 @@ class CustomerDetail {
   parking: ParkingInterval[];
 
   constructor(
-    id: string,
-    segmentName: string,
+    name: string,
     minChargesPerMonth: number,
     maxChargesPerMonth: number,
     minkWhPerMonth: number,
@@ -181,8 +148,8 @@ class CustomerDetail {
     maxSameDayOrdersValue: number,
     parking: ParkingInterval[]
   ) {
-    this.customerId = id;
-    this.segmentName = segmentName;
+    this.id = "CUSTOMER" + customerId++;
+    this.name = name;
     this.minChargesPerMonth = minChargesPerMonth;
     this.maxChargesPerMonth = maxChargesPerMonth;
     this.minkWhPerMonth = minkWhPerMonth;
@@ -194,19 +161,19 @@ class CustomerDetail {
   }
 }
 
-function getBestLatitude (settings: Settings):number {
+function getBestLatitude(settings: Settings): number {
   let i = 0;
-  for (let item of settings.distributionAreas){
+  for (let item of settings.distributionAreas) {
     i = i + item.marker.latitude;
   }
-  return i/settings.distributionAreas.length; 
+  return i / settings.distributionAreas.length;
 }
-function getBestLongitude (settings: Settings):number {
+function getBestLongitude(settings: Settings): number {
   let i = 0;
-  for (let item of settings.distributionAreas){
-    i = i+ item.marker.longitude;
+  for (let item of settings.distributionAreas) {
+    i = i + item.marker.longitude;
   }
-  return i/settings.distributionAreas.length; 
+  return i / settings.distributionAreas.length;
 }
 
 var depotUnitId = new Date().getTime();
@@ -305,7 +272,6 @@ export {
   Settings,
   ParkingInterval,
   DistributionItem,
-  CustomerDetail,
   Customer,
   DepotUnit,
   Nimbee,
@@ -315,5 +281,5 @@ export {
   DistributionArea,
   getBestLatitude,
   getBestLongitude,
-    settingsName
+  settingsName,
 };

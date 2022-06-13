@@ -4,145 +4,129 @@ import { Add } from "@mui/icons-material";
 import RangeSlider from "./RangeSlider";
 import SingleSlider from "./SingleSlider";
 import ParkingIntervalItem from "./ParkingIntervalItem";
-import { CustomerDetail, ParkingInterval } from "../models/settings";
+import { Customer, ParkingInterval } from "../models/settings";
+
+let allParkingValue: number = 0;
+let showAlert: boolean = false;
 
 const CTDetail: React.FC<{
-  customerId: string;
-  customerDetail: CustomerDetail;
-  updatedCustomerDetail: (
-    customerId: string,
-    updatedDetail: CustomerDetail
-  ) => void;
-  updateCustomerName: (customerId: string, updatedName: string) => void;
+  custormer: Customer;
+  updatedCustomer: (customer: Customer) => void;
 }> = (props) => {
-  const [allParkingIntervals, setAllParkingIntervals] = useState<
-    CustomerDetail["parking"]
-  >(props.customerDetail.parking);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>(
+    props.custormer
+  );
 
-  const getAllParkingValue = (allParkingIntervals: ParkingInterval[]) => {
+  const getAllParkingValue = (customer: Customer) => {
     let parkingValue: number = 0;
-    for (let parkingInterval of allParkingIntervals) {
+    for (let parkingInterval of customer.parking) {
       parkingValue = parkingValue + parkingInterval.percent;
     }
     return parkingValue;
   };
-  const [allParkingValue, setAllParkingValue] = useState<number>(
-    getAllParkingValue(allParkingIntervals)
-  );
 
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-
-  const [segmentName, setSegmentName] = useState<string>(
-    props.customerDetail.segmentName
-  );
-  const [minChargesPerMonth, setMinChargesPerMonth] = useState<number>(
-    props.customerDetail.minChargesPerMonth
-  );
-  const [maxChargesPerMonth, setMaxChargesPerMonth] = useState<number>(
-    props.customerDetail.maxChargesPerMonth
-  );
-  const [minKwh, setMinKwh] = useState<number>(
-    props.customerDetail.minkWhPerMonth
-  );
-  const [maxKwh, setMaxKwh] = useState<number>(
-    props.customerDetail.minkWhPerMonth
-  );
-
-  const [subscriberRatio, setSubscriberRatio] = useState<number>(
-    props.customerDetail.subscriberRatio
-  );
-  const [setSameDayOrders, setSetSameDayOrders] = useState<number>(
-    props.customerDetail.setSameDayOrdersValue
-  );
-  const [maxSameDayOrders, setMaxSameDayOrders] = useState<number>(
-    props.customerDetail.setSameDayOrdersValue
-  );
+  allParkingValue = getAllParkingValue(selectedCustomer);
 
   const addParkingHandler = () => {
     const parkingIntervalValueRemaining: number = 100 - allParkingValue;
     const newParkingInterval = new ParkingInterval(
-      props.customerId,
+      props.custormer.id,
       12,
       12,
       parkingIntervalValueRemaining
     );
-    setAllParkingIntervals((prevIntervals) => {
-      return prevIntervals.concat(newParkingInterval);
+    setSelectedCustomer((prevCustomer) => {
+      const newParkingIntervalArray: ParkingInterval[] = [
+        ...selectedCustomer.parking,
+        newParkingInterval,
+      ];
+      return { ...prevCustomer, parking: newParkingIntervalArray };
     });
   };
 
   const textFieldHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    setSegmentName(event.target.value);
+    setSelectedCustomer((prevCustomer) => {
+      const newName = event.target.value;
+      return { ...prevCustomer, name: newName };
+    });
   };
 
   const chargesHandler = (newValue: number[]) => {
-    setMinChargesPerMonth(newValue[0]);
-    setMaxChargesPerMonth(newValue[1]);
+    setSelectedCustomer((prevCustomeer) => {
+      const newMin = newValue[0];
+      const newMax = newValue[1];
+      return {
+        ...prevCustomeer,
+        minChargesPerMonth: newMin,
+        maxChargesPerMonth: newMax,
+      };
+    });
   };
   const kwhHandler = (newValue: number[]) => {
-    setMinKwh(newValue[0]);
-    setMaxKwh(newValue[1]);
+    setSelectedCustomer((prevCustomeer) => {
+      const newMin = newValue[0];
+      const newMax = newValue[1];
+      return {
+        ...prevCustomeer,
+        minkWhPerMonth: newMin,
+        maxkWhPerMonth: newMax,
+      };
+    });
   };
   const subscriberRatioHandler = (newValue: number) => {
-    setSubscriberRatio(newValue);
-    setMaxSameDayOrders(100 - newValue);
-    setSetSameDayOrders(Math.round((100 - newValue) / 2));
+    setSelectedCustomer((prevCustomeer) => {
+      const newRatio = newValue;
+      const newSDOMax = 100 - newValue;
+      const newSDOValue = Math.round((100 - newValue) / 2);
+      return {
+        ...prevCustomeer,
+        subscriberRatio: newRatio,
+        maxSameDayOrdersValue: newSDOMax,
+        setSameDayOrdersValue: newSDOValue,
+      };
+    });
   };
   const sameDayOrderHandler = (newValue: number) => {
-    setSetSameDayOrders(newValue);
+    setSelectedCustomer((prevCustomer)=>{
+      const newSDOValue = newValue;
+      return { ...prevCustomer, setSameDayOrdersValue: newSDOValue }
+    })
   };
 
   const parkingIntervalHandler = (updatedParkingInterval: ParkingInterval) => {
-    for (let parkingOne of allParkingIntervals) {
+    let newParkingIntervalArray: ParkingInterval [] = selectedCustomer.parking;
+    for (let parkingOne of selectedCustomer.parking) {      
       if (parkingOne.id === updatedParkingInterval.id) {
-        parkingOne = updatedParkingInterval;
+        newParkingIntervalArray.splice(selectedCustomer.parking.indexOf(parkingOne), 1, updatedParkingInterval);
       }
     }
-    setAllParkingIntervals(allParkingIntervals);
+    setSelectedCustomer((prevCustomer)=>{
+      return { ...prevCustomer, parking: newParkingIntervalArray }
+    });
   };
 
   const removeParkingIntervalItemHandler = (parkingIntervalId: string) => {
-    const newAllParkingInterVals: ParkingInterval[] =
-      allParkingIntervals.filter(
+    setSelectedCustomer((prevCustomer)=>{
+      const newAllParkingInterVals: ParkingInterval[] =
+      selectedCustomer.parking.filter(
         (parkingOne) => parkingOne.id !== parkingIntervalId
       );
-    setAllParkingIntervals(newAllParkingInterVals);
+      return { ...prevCustomer, parking: newAllParkingInterVals }
+    });
   };
 
   useEffect(() => {
-    props.updateCustomerName(props.customerId, segmentName);
-  }, [segmentName]);
-
-  useEffect(() => {
-    setSegmentName(props.customerDetail.segmentName);
-    setMinChargesPerMonth(props.customerDetail.minChargesPerMonth);
-    setMaxChargesPerMonth(props.customerDetail.maxChargesPerMonth);
-    setMinKwh(props.customerDetail.minkWhPerMonth);
-    setMaxKwh(props.customerDetail.maxkWhPerMonth);
-    setSubscriberRatio(props.customerDetail.subscriberRatio);
-    setSetSameDayOrders(props.customerDetail.setSameDayOrdersValue);
-    setMaxSameDayOrders(props.customerDetail.maxSameDayOrdersValue);
-    setAllParkingIntervals(props.customerDetail.parking);
-  }, [props.customerDetail]);
+    props.updatedCustomer(selectedCustomer);
+  }, [selectedCustomer]);
 
   const saveHandler = () => {
-    if (getAllParkingValue(allParkingIntervals) !== 100) {
-      return setShowAlert(true);
+    const allParkingIntervalsValue = getAllParkingValue(selectedCustomer);
+    if (allParkingIntervalsValue !== 100) {
+      return showAlert = true;
     }
-    setShowAlert(false);
-    setAllParkingValue(getAllParkingValue(allParkingIntervals));
-    props.customerDetail.segmentName = segmentName;
-    props.customerDetail.parking = allParkingIntervals;
-    props.customerDetail.minChargesPerMonth = minChargesPerMonth;
-    props.customerDetail.maxChargesPerMonth = maxChargesPerMonth;
-    props.customerDetail.minkWhPerMonth = minKwh;
-    props.customerDetail.maxkWhPerMonth = maxKwh;
-    props.customerDetail.subscriberRatio = subscriberRatio;
-    props.customerDetail.setSameDayOrdersValue = setSameDayOrders;
-    props.customerDetail.maxSameDayOrdersValue = maxSameDayOrders;
-
-    return props.updatedCustomerDetail(props.customerId, props.customerDetail);
+    showAlert = false;
+    return props.updatedCustomer(selectedCustomer);
   };
 
   return (
@@ -155,7 +139,7 @@ const CTDetail: React.FC<{
             id="segment-name"
             label="Segment name"
             variant="outlined"
-            value={segmentName}
+            value={selectedCustomer.name}
             size="small"
             onChange={textFieldHandler}
           />
@@ -171,8 +155,8 @@ const CTDetail: React.FC<{
             label="Charges per month"
             minValue={1}
             maxValue={60}
-            minSetValue={minChargesPerMonth}
-            maxSetValue={maxChargesPerMonth}
+            minSetValue={selectedCustomer.minChargesPerMonth}
+            maxSetValue={selectedCustomer.maxChargesPerMonth}
             sliderUnit="charges"
             rangeSliderChange={chargesHandler}
             step={1}
@@ -188,8 +172,8 @@ const CTDetail: React.FC<{
             label="kWh per charge"
             minValue={5}
             maxValue={60}
-            minSetValue={minKwh}
-            maxSetValue={maxKwh}
+            minSetValue={selectedCustomer.minkWhPerMonth}
+            maxSetValue={selectedCustomer.maxkWhPerMonth}
             sliderUnit="kWh"
             rangeSliderChange={kwhHandler}
             step={1}
@@ -205,7 +189,7 @@ const CTDetail: React.FC<{
             label="Subscriber ratio"
             minValue={0}
             maxValue={100}
-            setValue={subscriberRatio}
+            setValue={selectedCustomer.subscriberRatio}
             sliderUnit="%"
             singleSliderChange={subscriberRatioHandler}
             step={1}
@@ -220,8 +204,8 @@ const CTDetail: React.FC<{
           <SingleSlider
             label="Same day orders"
             minValue={0}
-            maxValue={maxSameDayOrders}
-            setValue={setSameDayOrders}
+            maxValue={selectedCustomer.maxSameDayOrdersValue}
+            setValue={selectedCustomer.setSameDayOrdersValue}
             sliderUnit="%"
             singleSliderChange={sameDayOrderHandler}
             step={1}
@@ -230,7 +214,7 @@ const CTDetail: React.FC<{
       </Grid>
       <p className="topPadding"></p>
       <Grid container direction="row" spacing={2}>
-        {allParkingIntervals.map((parkingOne) => (
+        {selectedCustomer.parking.map((parkingOne) => (
           <ParkingIntervalItem
             key={parkingOne.id}
             parkingIntervalItemValues={parkingOne}
@@ -242,7 +226,7 @@ const CTDetail: React.FC<{
       {showAlert && (
         <Grid item xs={8}>
           <Alert severity="warning" className="item-space">
-            The sum of  the all parking intervals is not 100%.
+            The sum of the all parking intervals is not 100%.
           </Alert>
         </Grid>
       )}

@@ -2,7 +2,6 @@ import { Grid, ButtonGroup, Fab, Snackbar, Alert } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   Settings,
-  CustomerDetail,
   Customer,
   ParkingInterval,
   DistributionArea,
@@ -12,23 +11,14 @@ import CustomerComponent from "./CustomerComponent";
 import AddIcon from "@mui/icons-material/Add";
 import { findCustomerById } from "../utils/supportFunctions";
 
-let savedCustomerName: string = '';
+let savedCustomerName: string = "";
 
 const CustomerTypes: React.FC<{
   settings: Settings;
   updatedSettings: (updatedSettingsValues: Settings) => void;
 }> = (props) => {
-  const [customers, setCustomers] = useState<Customer[]>(
-    props.settings.customers
-  );
-  const [newNameCustomer, setNewNameCustomer] = useState<string>("");
-
   const [selectedCustomerDetail, setSelectedCustomerDetail] =
-    useState<CustomerDetail>();
-
-  const [customerDetails, setCustomerDetails] = useState<CustomerDetail[]>(
-    props.settings.customerDetails
-  );
+    useState<Customer>();
 
   const [isSaved, setIsSaved] = useState<boolean>(false);
 
@@ -43,26 +33,23 @@ const CustomerTypes: React.FC<{
     setIsSaved(false);
   };
 
-  const initTypes = () => {
-    setCustomerDetails(props.settings.customerDetails);
-    setCustomers(props.settings.customers);
-  };
-
-  useEffect(initTypes, []);
-
   const activeCustomerIdHandler = (customerDetailId: string) => {
     setSelectedCustomerDetail(() => {
-      for (let detail of customerDetails!) {
-        if (detail.customerId === customerDetailId) {
+      for (let detail of props.settings.customers!) {
+        if (detail.id === customerDetailId) {
           return detail;
         }
       }
     });
   };
 
-  const createCustomerDetail = (cdID: string) => {
-    const newCustomerDetail = new CustomerDetail(
-      cdID,
+  const createParkingIntervalForCustomer = (cdID: string) => {
+    const newParkingIntervals: ParkingInterval[] = [new ParkingInterval(cdID, 8, 12, 100)];
+    return newParkingIntervals;
+  };
+
+  const addCustomerHandler = () => {
+    let newCustomer: Customer = new Customer(
       "New Customer",
       10,
       20,
@@ -71,15 +58,11 @@ const CustomerTypes: React.FC<{
       50,
       25,
       50,
-      [new ParkingInterval(cdID, 8, 12, 100)]
+      []
     );
-    setCustomerDetails((prevDetails) => prevDetails!.concat(newCustomerDetail));
-  };
-
-  const addCustomerHandler = () => {
-    const newCustomer: Customer = new Customer("New Customer");
-    setCustomers((prevCustomers) => prevCustomers!.concat(newCustomer));
-    createCustomerDetail(newCustomer.id);
+    newCustomer = { ...newCustomer, parking: createParkingIntervalForCustomer(newCustomer.id) }
+    const newCustomerList: Customer[] = [ ...props.settings.customers, newCustomer ];
+    props.updatedSettings({ ...props.settings, customers: newCustomerList });    
   };
 
   const removeCustomerHandler = (id: string) => {
@@ -89,14 +72,9 @@ const CustomerTypes: React.FC<{
         'Do you really want to remove customer "' + custName + '"?'
       )
     ) {
-      const newCustomerList: Customer[] = customers!.filter(
+      const newCustomerList: Customer[] = props.settings.customers!.filter(
         (customer) => customer.id !== id
       );
-      setCustomers(newCustomerList);
-      const newCustomerDetailList: CustomerDetail[] = customerDetails!.filter(
-        (detail) => detail.customerId !== id
-      );
-      setCustomerDetails(newCustomerDetailList);
       const newDistributionAreas: DistributionArea[] =
         props.settings.distributionAreas;
       for (let i = 0; i < props.settings.distributionAreas.length; i++) {
@@ -108,49 +86,21 @@ const CustomerTypes: React.FC<{
         newDistributionAreas[i].distributions = newDistributions;
       }
       setSelectedCustomerDetail(undefined);
-      props.settings.distributionAreas = newDistributionAreas;
-      props.updatedSettings(props.settings);
+      props.updatedSettings({ ...props.settings, distributionAreas: newDistributionAreas, customers: newCustomerList});
     }
   };
 
-  useEffect(() => {
-    props.settings.customers = customers!;
-    props.settings.customerDetails = customerDetails!;
-    props.updatedSettings(props.settings);
-  }, [customers, newNameCustomer, customerDetails]);
-
-  useEffect(() => {
-    for (let detail of customerDetails!) {
-      if (detail.customerId === selectedCustomerDetail?.customerId)
-        return setSelectedCustomerDetail(
-          customerDetails![customerDetails!.indexOf(detail)]
-        );
-    }
-  }, [selectedCustomerDetail]);
-
-  const updateDetail = (id: string, updatedDetail: CustomerDetail) => {
-    for (let detail of customerDetails!) {
-      if (detail.customerId === id) {
+  const updateDetail = (updatedDetail: Customer) => {
+    for (let customer of props.settings.customers) {
+      if (customer.id === updatedDetail.id) {
         setSelectedCustomerDetail(undefined);
-        props.settings.customerDetails.splice(
-          customerDetails!.indexOf(detail),
-          1,
-          updatedDetail
-        );
-        props.updatedSettings(props.settings);
+        const newCustomersList: Customer[] = props.settings.customers.splice(props.settings.customers.indexOf(customer), 1, updatedDetail);        
+        props.updatedSettings({ ...props.settings, customers: newCustomersList });
       }
     }
     setIsSaved(true);
-    savedCustomerName = updatedDetail.segmentName;
   };
-  const updateCustomerNameHandler = (id: string, newName: string) => {
-    setNewNameCustomer(newName);
-    for (let customer of customers!) {
-      if (customer.id.toString() === id)
-        return (props.settings.customers[customers!.indexOf(customer)].name =
-          newName);
-    }
-  };
+  
 
   return (
     <React.Fragment>
@@ -168,8 +118,8 @@ const CustomerTypes: React.FC<{
                 variant="text"
                 fullWidth={true}
               >
-                {customers &&
-                  customers.map((customer) => (
+                {props.settings.customers &&
+                  props.settings.customers.map((customer) => (
                     <CustomerComponent
                       key={customer.id}
                       customerId={customer.id}
@@ -202,10 +152,8 @@ const CustomerTypes: React.FC<{
           )}
           {selectedCustomerDetail && (
             <CTDetail
-              customerId={selectedCustomerDetail.customerId}
-              customerDetail={selectedCustomerDetail!}
-              updatedCustomerDetail={updateDetail}
-              updateCustomerName={updateCustomerNameHandler}
+              custormer={selectedCustomerDetail}
+              updatedCustomer={updateDetail}
             />
           )}
         </Grid>

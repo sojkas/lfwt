@@ -5,7 +5,6 @@ import {
   addToLongitude,
   countIntervalLength,
   findCustomerById,
-  findCustomerDetailById,
   findIntervalByHour,
 } from "./supportFunctions";
 
@@ -29,15 +28,13 @@ const generateOrders = (
         /* console.log("cannot find customer with id " + customerId + " -> " + customer + " / " + JSON.stringify(oblast)); */
         continue;
       }
-      const customerDetail = findCustomerDetailById(settings, customerId);
-
       // const customernum = props.settings.customers.indexOf(customer!) + 1;
       const customernum = oblast.distributions[j].distributionValue;
-      var interval = findIntervalByHour(customerDetail!.parking, hour);
+      var interval = findIntervalByHour(customer!.parking, hour);
       /* console.log("interval -> " + JSON.stringify(interval) + " [] " + JSON.stringify(customerDetail!.parking) + " hour " + hour); */
       if (interval) {
-        const minCharge = customerDetail!.minChargesPerMonth;
-        const maxCharge = customerDetail!.maxChargesPerMonth;
+        const minCharge = customer!.minChargesPerMonth;
+        const maxCharge = customer!.maxChargesPerMonth;
         var charge = minCharge + (maxCharge - maxCharge) * Math.random();
         const intervalLength = countIntervalLength(interval!)
         var orderNums =
@@ -64,7 +61,7 @@ const generateOrders = (
             oblast.id,
             addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
             addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
-            customerDetail!.minkWhPerMonth + (customerDetail!.maxkWhPerMonth - customerDetail!.minkWhPerMonth) *
+            customer!.minkWhPerMonth + (customer!.maxkWhPerMonth - customer!.minkWhPerMonth) *
                 Math.random(),
             customer!.id,
             virtualDate
