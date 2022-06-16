@@ -64,7 +64,7 @@ const generateOrders = (
             customer!.minkWhPerMonth + (customer!.maxkWhPerMonth - customer!.minkWhPerMonth) *
                 Math.random(),
             customer!.id,
-            virtualDate
+            new Date(virtualDate.toUTCString())
           );
         }
       }

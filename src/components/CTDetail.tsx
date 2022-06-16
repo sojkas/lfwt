@@ -138,7 +138,7 @@ const CTDetail: React.FC<{
             id="segment-name"
             label="Segment name"
             variant="outlined"
-            value={selectedCustomer!.name}
+            value={selectedCustomer.name}
             size="small"
             onChange={textFieldHandler}
           />
@@ -154,8 +154,8 @@ const CTDetail: React.FC<{
             label="Charges per month"
             minValue={1}
             maxValue={60}
-            minSetValue={selectedCustomer!.minChargesPerMonth}
-            maxSetValue={selectedCustomer!.maxChargesPerMonth}
+            minSetValue={selectedCustomer.minChargesPerMonth}
+            maxSetValue={selectedCustomer.maxChargesPerMonth}
             sliderUnit="charges"
             rangeSliderChange={chargesHandler}
             step={1}
@@ -171,8 +171,8 @@ const CTDetail: React.FC<{
             label="kWh per charge"
             minValue={5}
             maxValue={60}
-            minSetValue={selectedCustomer!.minkWhPerMonth}
-            maxSetValue={selectedCustomer!.maxkWhPerMonth}
+            minSetValue={selectedCustomer.minkWhPerMonth}
+            maxSetValue={selectedCustomer.maxkWhPerMonth}
             sliderUnit="kWh"
             rangeSliderChange={kwhHandler}
             step={1}
@@ -188,7 +188,7 @@ const CTDetail: React.FC<{
             label="Subscriber ratio"
             minValue={0}
             maxValue={100}
-            setValue={selectedCustomer!.subscriberRatio}
+            setValue={selectedCustomer.subscriberRatio}
             sliderUnit="%"
             singleSliderChange={subscriberRatioHandler}
             step={1}
@@ -203,8 +203,8 @@ const CTDetail: React.FC<{
           <SingleSlider
             label="Same day orders"
             minValue={0}
-            maxValue={selectedCustomer!.maxSameDayOrdersValue}
-            setValue={selectedCustomer!.setSameDayOrdersValue}
+            maxValue={selectedCustomer.maxSameDayOrdersValue}
+            setValue={selectedCustomer.setSameDayOrdersValue}
             sliderUnit="%"
             singleSliderChange={sameDayOrderHandler}
             step={1}
@@ -213,7 +213,7 @@ const CTDetail: React.FC<{
       </Grid>
       <p className="topPadding"></p>
       <Grid container direction="row" spacing={2}>
-        {selectedCustomer!.parking.map((parkingOne) => (
+        {selectedCustomer.parking.map((parkingOne) => (
           <ParkingIntervalItem
             key={parkingOne.id}
             parkingIntervalItemValues={parkingOne}
