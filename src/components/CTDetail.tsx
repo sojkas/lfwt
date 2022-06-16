@@ -7,15 +7,18 @@ import ParkingIntervalItem from "./ParkingIntervalItem";
 import { Customer, ParkingInterval } from "../models/settings";
 
 let allParkingValue: number = 0;
-let showAlert: boolean = false;
 
 const CTDetail: React.FC<{
   custormer: Customer;
   updatedCustomer: (customer: Customer) => void;
 }> = (props) => {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer>(
-    props.custormer
-  );
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>(props.custormer);
+
+ 
+  const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(()=>{setSelectedCustomer(props.custormer)}, [props.custormer]);
+
 
   const getAllParkingValue = (customer: Customer) => {
     let parkingValue: number = 0;
@@ -25,7 +28,7 @@ const CTDetail: React.FC<{
     return parkingValue;
   };
 
-  allParkingValue = getAllParkingValue(selectedCustomer);
+  allParkingValue = getAllParkingValue(props.custormer);
 
   const addParkingHandler = () => {
     const parkingIntervalValueRemaining: number = 100 - allParkingValue;
@@ -116,16 +119,12 @@ const CTDetail: React.FC<{
     });
   };
 
-  useEffect(() => {
-    props.updatedCustomer(selectedCustomer);
-  }, [selectedCustomer]);
-
   const saveHandler = () => {
     const allParkingIntervalsValue = getAllParkingValue(selectedCustomer);
     if (allParkingIntervalsValue !== 100) {
-      return showAlert = true;
+      return setShowAlert(true);
     }
-    showAlert = false;
+    setShowAlert(false);
     return props.updatedCustomer(selectedCustomer);
   };
 
@@ -139,7 +138,7 @@ const CTDetail: React.FC<{
             id="segment-name"
             label="Segment name"
             variant="outlined"
-            value={selectedCustomer.name}
+            value={selectedCustomer!.name}
             size="small"
             onChange={textFieldHandler}
           />
@@ -155,8 +154,8 @@ const CTDetail: React.FC<{
             label="Charges per month"
             minValue={1}
             maxValue={60}
-            minSetValue={selectedCustomer.minChargesPerMonth}
-            maxSetValue={selectedCustomer.maxChargesPerMonth}
+            minSetValue={selectedCustomer!.minChargesPerMonth}
+            maxSetValue={selectedCustomer!.maxChargesPerMonth}
             sliderUnit="charges"
             rangeSliderChange={chargesHandler}
             step={1}
@@ -172,8 +171,8 @@ const CTDetail: React.FC<{
             label="kWh per charge"
             minValue={5}
             maxValue={60}
-            minSetValue={selectedCustomer.minkWhPerMonth}
-            maxSetValue={selectedCustomer.maxkWhPerMonth}
+            minSetValue={selectedCustomer!.minkWhPerMonth}
+            maxSetValue={selectedCustomer!.maxkWhPerMonth}
             sliderUnit="kWh"
             rangeSliderChange={kwhHandler}
             step={1}
@@ -189,7 +188,7 @@ const CTDetail: React.FC<{
             label="Subscriber ratio"
             minValue={0}
             maxValue={100}
-            setValue={selectedCustomer.subscriberRatio}
+            setValue={selectedCustomer!.subscriberRatio}
             sliderUnit="%"
             singleSliderChange={subscriberRatioHandler}
             step={1}
@@ -204,8 +203,8 @@ const CTDetail: React.FC<{
           <SingleSlider
             label="Same day orders"
             minValue={0}
-            maxValue={selectedCustomer.maxSameDayOrdersValue}
-            setValue={selectedCustomer.setSameDayOrdersValue}
+            maxValue={selectedCustomer!.maxSameDayOrdersValue}
+            setValue={selectedCustomer!.setSameDayOrdersValue}
             sliderUnit="%"
             singleSliderChange={sameDayOrderHandler}
             step={1}
@@ -214,7 +213,7 @@ const CTDetail: React.FC<{
       </Grid>
       <p className="topPadding"></p>
       <Grid container direction="row" spacing={2}>
-        {selectedCustomer.parking.map((parkingOne) => (
+        {selectedCustomer!.parking.map((parkingOne) => (
           <ParkingIntervalItem
             key={parkingOne.id}
             parkingIntervalItemValues={parkingOne}

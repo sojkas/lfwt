@@ -41,8 +41,8 @@ const Resources: React.FC<{
     });
   };
 
-  const updateUnitHandler = (changedUnit: DepotUnit) => {
-    console.log("Updating  " + changedUnit);
+  const updateUnitHandler = (changedUnit: DepotUnit) => {/* 
+    console.log("Updating  " + changedUnit); */
     for (let depotUnit of props.settings.depots) {
       if (depotUnit.id === changedUnit.id) {
         return setSelectedUnit((prevUnit) => {
@@ -61,7 +61,7 @@ const Resources: React.FC<{
   };
 
   const addUnitHandler = () => {
-    console.log("Creating new unit from button")
+    /* console.log("Creating new unit from button") */
     const newDepot = new DepotUnit("new Depot", new MapMarker(50, 14, 0), 4);
     const settings = {
       ...props.settings,
@@ -72,7 +72,7 @@ const Resources: React.FC<{
   };
 
   const setPositionHandler = (newPositon: google.maps.LatLng) => {
-    console.log("Handling incoming position")
+    /* console.log("Handling incoming position") */
     setSelectedUnit((prevUnit) => {
       if (prevUnit) {
         console.log("Updating unit")
@@ -85,7 +85,7 @@ const Resources: React.FC<{
         updateUnitHandler(newUnit);
         return newUnit;
       } else {
-        console.log("Creating new unit from position")
+        /* console.log("Creating new unit from position") */
         const newUnit = new DepotUnit("New Unit", new MapMarker(newPositon.lat(), newPositon.lng(), 0), 1);
         const settings = {
           ...props.settings,
@@ -98,7 +98,7 @@ const Resources: React.FC<{
   };
 
   const selectedMarkerHandler = (selectedMarker: MapMarker) => {
-    console.log("Selected marker: "+selectedMarker);
+    /* console.log("Selected marker: "+selectedMarker); */
     for (let i = 0; i < props.settings.depots.length; i++) {
       if (props.settings.depots[i].marker.id === selectedMarker.id) {
         setSelectedUnit(props.settings.depots[i]);
@@ -117,7 +117,7 @@ const Resources: React.FC<{
   }
 
   const updateNimbeeHandler = (id: string, updatedNimbee: Nimbee) => {
-    console.log("Updating nimbee: "+props.settings.nimbees.length);
+   /*  console.log("Updating nimbee: "+props.settings.nimbees.length); */
     for (let existingNimbee of props.settings.nimbees) {
       if (existingNimbee.id === updatedNimbee.id) {
         const newNimbees = [...props.settings.nimbees];
@@ -132,13 +132,13 @@ const Resources: React.FC<{
 
   const addNimbeeHandler = () => {
     const newNimbee: Nimbee = new Nimbee("v 1", 20, 4);
-    console.log("Adding new nimbee");
+    /* console.log("Adding new nimbee"); */
     const newSettings = { ...props.settings, nimbees: [...props.settings.nimbees, newNimbee] }
     props.updatedSettings(newSettings);
   };
 
   const removeNimbeeHandler = (id: string) => {
-    console.log("Removing nimbee");
+    /* console.log("Removing nimbee"); */
     const newNimbeesList = props.settings.nimbees.filter((nimbee) => nimbee.id !== id);
     props.updatedSettings({ ...props.settings, nimbees: newNimbeesList });
   };
@@ -156,13 +156,13 @@ const Resources: React.FC<{
   };
 
   const addTransporterHandler = () => {
-    console.log("Adding transporter");
+    /* console.log("Adding transporter"); */
     const newTransporter: Transporter = new Transporter(3, 10, 5);
     props.updatedSettings({ ...props.settings, transporters: [...props.settings.transporters, newTransporter]});
   };
 
   const removeTransporterHandler = (id: string) => {
-    console.log("Removing transporter");
+    /* console.log("Removing transporter"); */
     const newTransportersList = props.settings.transporters.filter(
         (transporter) => transporter.id !== id
     );

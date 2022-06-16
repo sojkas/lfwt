@@ -15,7 +15,7 @@ function App() {
   const [menuItem, setMenuItem] = useState<number>(0);
 
   const updateSettingsHandler = (updatedSettings: Settings) => {
-    console.log("Saving settings -> " + JSON.stringify(updatedSettings.nimbees));
+    /* console.log("Saving settings -> " + JSON.stringify(updatedSettings.customers)); */
     window.localStorage.setItem(settingsName, JSON.stringify(updatedSettings));
     setSettings(updatedSettings);
   };

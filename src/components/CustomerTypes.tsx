@@ -1,5 +1,5 @@
 import { Grid, ButtonGroup, Fab, Snackbar, Alert } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Settings,
   Customer,
@@ -17,7 +17,7 @@ const CustomerTypes: React.FC<{
   settings: Settings;
   updatedSettings: (updatedSettingsValues: Settings) => void;
 }> = (props) => {
-  const [selectedCustomerDetail, setSelectedCustomerDetail] =
+  const [selectedCustomer, setSelectedCustomer] =
     useState<Customer>();
 
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -34,12 +34,13 @@ const CustomerTypes: React.FC<{
   };
 
   const activeCustomerIdHandler = (customerDetailId: string) => {
-    setSelectedCustomerDetail(() => {
-      for (let detail of props.settings.customers!) {
-        if (detail.id === customerDetailId) {
-          return detail;
+    setSelectedCustomer(() => {
+      for (let customer of props.settings.customers) {
+        if (customer.id === customerDetailId) {
+          return customer;
         }
       }
+      return undefined;
     });
   };
 
@@ -85,7 +86,7 @@ const CustomerTypes: React.FC<{
         );
         newDistributionAreas[i].distributions = newDistributions;
       }
-      setSelectedCustomerDetail(undefined);
+      setSelectedCustomer(undefined);
       props.updatedSettings({ ...props.settings, distributionAreas: newDistributionAreas, customers: newCustomerList});
     }
   };
@@ -93,8 +94,9 @@ const CustomerTypes: React.FC<{
   const updateDetail = (updatedDetail: Customer) => {
     for (let customer of props.settings.customers) {
       if (customer.id === updatedDetail.id) {
-        setSelectedCustomerDetail(undefined);
-        const newCustomersList: Customer[] = props.settings.customers.splice(props.settings.customers.indexOf(customer), 1, updatedDetail);        
+        setSelectedCustomer(undefined);
+        const newCustomersList: Customer[] = props.settings.customers;
+        newCustomersList.splice(props.settings.customers.indexOf(customer), 1, updatedDetail);        
         props.updatedSettings({ ...props.settings, customers: newCustomersList });
       }
     }
@@ -138,7 +140,7 @@ const CustomerTypes: React.FC<{
           </Grid>
         </Grid>
         <Grid className="box" item xs={8}>
-          {!selectedCustomerDetail && (
+          {!selectedCustomer && (
             <Snackbar
               open={isSaved}
               autoHideDuration={3000}
@@ -150,9 +152,9 @@ const CustomerTypes: React.FC<{
               </Alert>
             </Snackbar>
           )}
-          {selectedCustomerDetail && (
+          {selectedCustomer && (
             <CTDetail
-              custormer={selectedCustomerDetail}
+              custormer={selectedCustomer}
               updatedCustomer={updateDetail}
             />
           )}
