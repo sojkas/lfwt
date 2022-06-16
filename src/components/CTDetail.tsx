@@ -22,13 +22,13 @@ const CTDetail: React.FC<{
 
   const getAllParkingValue = (customer: Customer) => {
     let parkingValue: number = 0;
-    for (let parkingInterval of customer.parking) {
+    for (let parkingInterval of selectedCustomer.parking) {
       parkingValue = parkingValue + parkingInterval.percent;
     }
     return parkingValue;
   };
 
-  allParkingValue = getAllParkingValue(props.custormer);
+  allParkingValue = getAllParkingValue(selectedCustomer);
 
   const addParkingHandler = () => {
     const parkingIntervalValueRemaining: number = 100 - allParkingValue;
