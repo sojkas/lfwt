@@ -15,7 +15,7 @@ const generateOrders = (
   simRatio: number,
   virtualDate: Date
 ) => {
-  const hour = virtualDate.getHours();
+  const hour = virtualDate.getUTCHours();
   /* console.log("Generating orders for "+hour+" hour"); */
   var orders = [];
   for (var i = 0; i < settings.distributionAreas.length; i++) {
@@ -35,7 +35,7 @@ const generateOrders = (
       if (interval) {
         const minCharge = customer!.minChargesPerMonth;
         const maxCharge = customer!.maxChargesPerMonth;
-        var charge = minCharge + (maxCharge - maxCharge) * Math.random();
+        var charge = minCharge + (maxCharge - minCharge) * Math.random();
         const intervalLength = countIntervalLength(interval!)
         var orderNums =
           ((charge * customernum) / (intervalLength * 30)) *
@@ -64,7 +64,7 @@ const generateOrders = (
             customer!.minkWhPerMonth + (customer!.maxkWhPerMonth - customer!.minkWhPerMonth) *
                 Math.random(),
             customer!.id,
-            new Date(virtualDate.toUTCString())
+            virtualDate
           );
         }
       }

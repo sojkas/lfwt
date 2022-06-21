@@ -19,11 +19,10 @@ const Simulation: React.FC<{
   );
 
   const clockRunning = () => {
-    return virtualClock.toLocaleString("cs-CZ");
+    return virtualClock.toUTCString();
   };
 
   const addMinutes = (date: Date, minutes: number) => {
-    date = new Date(date);
     return new Date(date.getTime() + minutes * 60000);
   };
 
@@ -147,7 +146,7 @@ const Simulation: React.FC<{
                         </TableCell>
                         <TableCell align="center">{order.kw.toFixed(1)}</TableCell>
                         <TableCell align="center">
-                          {order.orderDate.toLocaleString("cs-CZ")}
+                          {order.orderDate.toUTCString()}
                         </TableCell>
                       </TableRow>
                   ))}
