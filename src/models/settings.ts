@@ -1,4 +1,4 @@
-const settingsName = "nimbeeSimulatorV1.1";
+const settingsName = "nimbeeSimulatorV1.2";
 
 class Settings {
   /* GENERAL */
