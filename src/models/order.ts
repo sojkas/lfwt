@@ -3,27 +3,27 @@ var orderId = new Date().getTime()
 class Order {
   id: string
   distributionAreaId: string
-  latitude: number
-  longitude: number
-  kw: number
+  lat: number
+  lng: number
+  energyToCharge: number
   customerId: string
-  orderDate: Date
+  createDateTime: Date
   
   constructor(
     distributionAreaId: string,
-    latitude: number,
-    longitude: number,
-    kw: number,
+    lat: number,
+    lng: number,
+    energyToCharge: number,
     customerId: string,
-    orderDate: Date 
+    createDateTime: Date 
   ) {
     this.id="ORDER"+(orderId++)
     this.distributionAreaId=distributionAreaId
-    this.latitude=latitude
-    this.longitude=longitude
-    this.kw=kw
+    this.lat=lat
+    this.lng=lng
+    this.energyToCharge=energyToCharge
     this.customerId=customerId
-    this.orderDate = orderDate
+    this.createDateTime = createDateTime
   }
 }
 

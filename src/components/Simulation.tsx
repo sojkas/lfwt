@@ -142,11 +142,11 @@ const Simulation: React.FC<{
                           {findDistributionAreaById(props.settings, order.distributionAreaId)?.name}
                         </TableCell>
                         <TableCell align="center">
-                          {order.latitude.toFixed(4)} / {order.longitude.toFixed(4)}
+                          {order.lat.toFixed(4)} / {order.lng.toFixed(4)}
                         </TableCell>
-                        <TableCell align="center">{order.kw.toFixed(1)}</TableCell>
+                        <TableCell align="center">{order.energyToCharge.toFixed(1)}</TableCell>
                         <TableCell align="center">
-                          {order.orderDate.toUTCString()}
+                          {order.createDateTime.toUTCString()}
                         </TableCell>
                       </TableRow>
                   ))}

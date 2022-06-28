@@ -11,7 +11,7 @@ const renderDataset = (simulation: SimulationValues) => {
         id: 'simulationData'
       },
       data: {
-        rows: simulation.orders.map(value => [value.id, value.distributionAreaId, value.latitude, value.longitude, value.kw, value.customerId, value.orderDate]),
+        rows: simulation.orders.map(value => [value.id, value.distributionAreaId, value.lat, value.lng, value.energyToCharge, value.customerId, value.createDateTime]),
         fields: [
           {"name": "id", "type": "string", "format": "", "analyzerType": "STRING"},
           {"name": "distributionAreaId", "type": "string", "format": "", "analyzerType": "STRING"},
@@ -28,7 +28,7 @@ const renderDataset = (simulation: SimulationValues) => {
 
 
 function renderAllData(orders: Order[]) {
-  return JSON.stringify(orders.map(value => [value.id, value.distributionAreaId, value.latitude, value.longitude, value.kw, value.customerId, value.orderDate]));
+  return JSON.stringify(orders.map(value => [value.id, value.distributionAreaId, value.lat, value.lng, value.energyToCharge, value.customerId, value.createDateTime]));
 }
 
 const renderKeplerHtml = (orders: Order[])  => {

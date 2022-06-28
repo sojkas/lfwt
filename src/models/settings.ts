@@ -209,13 +209,13 @@ var transporterId = new Date().getTime();
 class Transporter {
   id: string;
   transporterSlots: number;
-  transporterCapacity: number;
+  maxCapacity: number;
   transporterPieces: number;
 
-  constructor(slots: number, capacity: number, pieces: number) {
+  constructor(slots: number, maxCapacity: number, pieces: number) {
     this.id = "TRANSPORTER" + transporterId++;
     this.transporterSlots = slots;
-    this.transporterCapacity = capacity;
+    this.maxCapacity = maxCapacity;
     this.transporterPieces = pieces;
   }
 }
