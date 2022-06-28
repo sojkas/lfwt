@@ -1,6 +1,6 @@
 var orderId = new Date().getTime()
 
-class Order {
+class ChargingRequest {
   id: string
   distributionAreaId: string
   lat: number
@@ -17,7 +17,7 @@ class Order {
     customerId: string,
     createDateTime: Date 
   ) {
-    this.id="ORDER"+(orderId++)
+    this.id="CHR"+(orderId++)
     this.distributionAreaId=distributionAreaId
     this.lat=lat
     this.lng=lng
@@ -29,19 +29,19 @@ class Order {
 
 
 class SimulationValues {
-  orders: Order[];
+  chargingRequests: ChargingRequest[];
   isStopped: boolean;
   clockTime: Date;
 
-  constructor (orders: Order[], isStopped: boolean) {
-    this.orders = orders;
+  constructor (chargingRequests: ChargingRequest[], isStopped: boolean) {
+    this.chargingRequests = chargingRequests;
     this.isStopped = isStopped;
     this.clockTime = new Date(Date.now());
   }
  }
 
-export default Order;
+export default ChargingRequest;
 export {
-  Order,
+  ChargingRequest,
   SimulationValues,
 }

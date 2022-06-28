@@ -39,7 +39,7 @@ const Simulation: React.FC<{
     if (!isStopped) {
       const newOrders = generateOrders(props.settings, 1 / 4, virtualClock);
       props.updatedSimulationValues({
-        orders: [...props.simulationValues.orders, ...newOrders],
+        chargingRequests: [...props.simulationValues.chargingRequests, ...newOrders],
         isStopped: isStopped,
         clockTime: virtualClock,
       });
@@ -54,7 +54,7 @@ const Simulation: React.FC<{
   const stopHandler = () => {
     isStopped = true;
     props.updatedSimulationValues({
-      orders: props.simulationValues.orders,
+      chargingRequests: props.simulationValues.chargingRequests,
       isStopped: isStopped,
       clockTime: virtualClock,
     });
@@ -65,7 +65,7 @@ const Simulation: React.FC<{
     const d = new Date(Date.now());
     setVirtualClock(d);
     props.updatedSimulationValues({
-      orders: [],
+      chargingRequests: [],
       isStopped: true,
       clockTime: d
     });
@@ -74,7 +74,7 @@ const Simulation: React.FC<{
   const downloadHandler = () => {
     var dataStr =
         "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(props.simulationValues.orders));
+        encodeURIComponent(JSON.stringify(props.simulationValues.chargingRequests));
     var dlAnchorElem = document.createElement("a");
     document.body.append(dlAnchorElem);
     dlAnchorElem.setAttribute("href", dataStr);
@@ -86,7 +86,7 @@ const Simulation: React.FC<{
   const keplerHandler = () => {
     var dataStr =
         "data:text/html;charset=utf-8," +
-        encodeURIComponent(renderKeplerHtml(props.simulationValues.orders));
+        encodeURIComponent(renderKeplerHtml(props.simulationValues.chargingRequests));
     var dlAnchorElem = document.createElement("a");
     document.body.append(dlAnchorElem);
     dlAnchorElem.setAttribute("href", dataStr);
@@ -107,7 +107,7 @@ const Simulation: React.FC<{
           <Button variant="outlined" onClick={deleteHandler}>
             Delete
           </Button>
-          <p className="item-space">{clockRunning()} ({props.simulationValues.orders.length} orders)</p>
+          <p className="item-space">{clockRunning()} ({props.simulationValues.chargingRequests.length} orders)</p>
           <Button variant="outlined" onClick={downloadHandler}>
             Download simulation
           </Button>
@@ -128,31 +128,31 @@ const Simulation: React.FC<{
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.simulationValues.orders.length > 0 &&
-                  props.simulationValues.orders.slice(0,100).map((order) => (
+              {props.simulationValues.chargingRequests.length > 0 &&
+                  props.simulationValues.chargingRequests.slice(0,100).map((chargingRequest) => (
                       <TableRow
-                          key={order.id}
+                          key={chargingRequest.id}
                           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                       >
-                        <TableCell align="center">{order.id}</TableCell>
+                        <TableCell align="center">{chargingRequest.id}</TableCell>
                         <TableCell align="center">
-                          {findCustomerById(props.settings, order.customerId)?.name}
+                          {findCustomerById(props.settings, chargingRequest.customerId)?.name}
                         </TableCell>
                         <TableCell align="center">
-                          {findDistributionAreaById(props.settings, order.distributionAreaId)?.name}
+                          {findDistributionAreaById(props.settings, chargingRequest.distributionAreaId)?.name}
                         </TableCell>
                         <TableCell align="center">
-                          {order.lat.toFixed(4)} / {order.lng.toFixed(4)}
+                          {chargingRequest.lat.toFixed(4)} / {chargingRequest.lng.toFixed(4)}
                         </TableCell>
-                        <TableCell align="center">{order.energyToCharge.toFixed(1)}</TableCell>
+                        <TableCell align="center">{chargingRequest.energyToCharge.toFixed(1)}</TableCell>
                         <TableCell align="center">
-                          {order.createDateTime.toUTCString()}
+                          {chargingRequest.createDateTime.toUTCString()}
                         </TableCell>
                       </TableRow>
                   ))}
             </TableBody>
           </TableContainer>
-          {props.simulationValues.orders.length > 100 &&
+          {props.simulationValues.chargingRequests.length > 100 &&
               <p>Listing is limited to the first 100 orders.</p>
           }
         </div>

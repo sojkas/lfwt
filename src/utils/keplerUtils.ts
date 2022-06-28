@@ -1,4 +1,4 @@
-import {Order, SimulationValues} from "../models/order";
+import {ChargingRequest, SimulationValues} from "../models/order";
 
 
 const mapboxApiAccessToken="pk.eyJ1IjoibWlyb3phcCIsImEiOiJjbDEzcGpwYXQwMWZpM2xudmRmbDEzN2diIn0.2Y04D3Ir4kN2GPirpCLftQ"
@@ -11,7 +11,7 @@ const renderDataset = (simulation: SimulationValues) => {
         id: 'simulationData'
       },
       data: {
-        rows: simulation.orders.map(value => [value.id, value.distributionAreaId, value.lat, value.lng, value.energyToCharge, value.customerId, value.createDateTime]),
+        rows: simulation.chargingRequests.map(value => [value.id, value.distributionAreaId, value.lat, value.lng, value.energyToCharge, value.customerId, value.createDateTime]),
         fields: [
           {"name": "id", "type": "string", "format": "", "analyzerType": "STRING"},
           {"name": "distributionAreaId", "type": "string", "format": "", "analyzerType": "STRING"},
@@ -27,11 +27,11 @@ const renderDataset = (simulation: SimulationValues) => {
 }
 
 
-function renderAllData(orders: Order[]) {
-  return JSON.stringify(orders.map(value => [value.id, value.distributionAreaId, value.lat, value.lng, value.energyToCharge, value.customerId, value.createDateTime]));
+function renderAllData(chargingRequests: ChargingRequest[]) {
+  return JSON.stringify(chargingRequests.map(value => [value.id, value.distributionAreaId, value.lat, value.lng, value.energyToCharge, value.customerId, value.createDateTime]));
 }
 
-const renderKeplerHtml = (orders: Order[])  => {
+const renderKeplerHtml = (chargingRequests: ChargingRequest[])  => {
   return `<!DOCTYPE html>
     <html>
       <head>
@@ -241,7 +241,7 @@ const renderKeplerHtml = (orders: Order[])  => {
            */
           (function customize(keplerGl, store) {
             const datasets = [{"version":"v1","data":{"id":"simulationData","label":"Simulation","color":[143,47,191],
-            "allData": `+renderAllData(orders)+`,
+            "allData": `+renderAllData(chargingRequests)+`,
             "fields":[{"name":"id","type":"string","format":"","analyzerType":"STRING"},{"name":"distributionAreaId","type":"string","format":"","analyzerType":"STRING"},{"name":"latitude","type":"real","format":"","analyzerType":"FLOAT"},{"name":"longitude","type":"real","format":"","analyzerType":"FLOAT"},{"name":"kw","type":"real","format":"","analyzerType":"FLOAT"},{"name":"customerId","type":"string","format":"","analyzerType":"STRING"},{"name":"orderDate","type":"timestamp","format":"YYYY-M-DTHH:mm:ss.SSSS","analyzerType":"DATETIME"}]}}];
             const config = {"version":"v1","config":{"visState":{"filters":[{"dataId":["simulationData"],"id":"l5dp6ieg4","name":["orderDate"],"type":"timeRange","enlarged":true,"plotType":"histogram","animationWindow":"free","yAxis":null,"speed":1}],"layers":[{"id":"1krl13","type":"hexagon","config":{"dataId":"simulationData","label":"Point","color":[255,203,153],"highlightColor":[252,242,26,255],"columns":{"lat":"latitude","lng":"longitude"},"isVisible":true,"visConfig":{"opacity":0.8,"worldUnitSize":"0.250","resolution":8,"colorRange":{"name":"Global Warming","type":"sequential","category":"Uber","colors":["#5A1846","#900C3F","#C70039","#E3611C","#F1920E","#FFC300"]},"coverage":1,"sizeRange":[0,500],"percentile":[0,100],"elevationPercentile":[0,100],"elevationScale":5,"enableElevationZoomFactor":true,"colorAggregation":"average","sizeAggregation":"sum","enable3d":true},"hidden":false,"textLabel":[{"field":null,"color":[255,255,255],"size":18,"offset":[0,0],"anchor":"start","alignment":"center"}]},"visualChannels":{"colorField":{"name":"kw","type":"real"},"colorScale":"quantile","sizeField":{"name":"kw","type":"real"},"sizeScale":"linear"}}],"interactionConfig":{"tooltip":{"fieldsToShow":{"simulationData":[{"name":"id","format":null},{"name":"distributionAreaId","format":null},{"name":"kw","format":null},{"name":"customerId","format":null},{"name":"orderDate","format":null}]},"compareMode":false,"compareType":"absolute","enabled":true},"brush":{"size":0.5,"enabled":false},"geocoder":{"enabled":false},"coordinate":{"enabled":false}},"layerBlending":"normal","splitMaps":[],"animationConfig":{"currentTime":null,"speed":1}},"mapState":{"bearing":24,"dragRotate":true,"pitch":50,"zoom":11.519345239926352,"isSplit":false},"mapStyle":{"styleType":"dark","topLayerGroups":{},"visibleLayerGroups":{"label":true,"road":true,"border":false,"building":true,"water":true,"land":true,"3d building":false},"threeDBuildingColor":[9.665468314072013,17.18305478057247,31.1442867897876],"mapStyles":{}}}};
 
