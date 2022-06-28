@@ -74,7 +74,7 @@ const TransportersItem: React.FC<{
             id="transporter-capacity"
             label="Capacity"
             variant="outlined"
-            value={transporter.transporterCapacity}
+            value={transporter.maxCapacity}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             size="small"
             onChange={transporterCapacityHandler}
