@@ -36,7 +36,7 @@ const generateOrders = (
         const minCharge = customer!.minChargesPerMonth;
         const maxCharge = customer!.maxChargesPerMonth;
         var charge = minCharge + (maxCharge - minCharge) * Math.random();
-        const intervalLength = countIntervalLength(interval!)
+        const intervalLength = countIntervalLength(interval!);
         var orderNums =
           ((charge * customernum) / (intervalLength * 30)) *
           (interval.percent / 100) *
@@ -61,7 +61,11 @@ const generateOrders = (
             oblast.id,
             addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
             addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
-            customer!.minkWhPerMonth + (customer!.maxkWhPerMonth - customer!.minkWhPerMonth) *
+            customer!.minkWhPerMonth +
+              (customer!.maxkWhPerMonth - customer!.minkWhPerMonth) *
+                Math.random(),
+            customer!.minStartingCapacity +
+              (customer!.maxStartingCapacity - customer!.minStartingCapacity) *
                 Math.random(),
             customer!.id,
             virtualDate

@@ -123,7 +123,8 @@ const Simulation: React.FC<{
                 <TableCell align="center">Customer Type</TableCell>
                 <TableCell align="center">Place</TableCell>
                 <TableCell align="center">Latitude / Longitude</TableCell>
-                <TableCell align="center">kWh Value</TableCell>
+                <TableCell align="center">Capacity kWh Value</TableCell>
+                <TableCell align="center">Request kWh Value</TableCell>
                 <TableCell align="center">Time</TableCell>
               </TableRow>
             </TableHead>
@@ -144,6 +145,7 @@ const Simulation: React.FC<{
                         <TableCell align="center">
                           {chargingRequest.lat.toFixed(4)} / {chargingRequest.lng.toFixed(4)}
                         </TableCell>
+                        <TableCell align="center">{chargingRequest.startingCapacity.toFixed(1)}</TableCell>
                         <TableCell align="center">{chargingRequest.energyToCharge.toFixed(1)}</TableCell>
                         <TableCell align="center">
                           {chargingRequest.createDateTime.toUTCString()}

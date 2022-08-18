@@ -1,3 +1,5 @@
+import { DataThresholdingSharp } from "@mui/icons-material";
+
 const settingsName = "nimbeeSimulatorV1.2";
 
 class Settings {
@@ -37,11 +39,21 @@ class Settings {
       new Shift("Night shift", 18, 1, 12),
     ];
     this.customers = [
-      new Customer("Outskirts car adicts", 8, 17, 17, 26, 60, 20, 40, [
+      new Customer("Audi e-tron 50 / Sportback 50 (quattro)",
+      new CarModel(285, 
+        "e-tron 50 / Sportback 50 (quattro)",
+        "Audi",
+        64.7), 
+        8, 17, 17, 26, 15, 25, 60, 20, 40, [
         new ParkingInterval("todo", 0, 20, 55),
         new ParkingInterval("todo", 21, 23, 45),
       ]),
-      new Customer("Rohlik", 6, 13, 12, 30, 45, 27, 55, [
+      new Customer("BMW i3 60 Ah",
+      new CarModel(10,
+        "i3 60 Ah",
+        "BMW",
+        18),
+       6, 13, 12, 30, 7, 10, 45, 27, 55, [
         new ParkingInterval("todo", 0, 11, 55),
         new ParkingInterval("todo", 12, 23, 45),
       ]),
@@ -122,15 +134,36 @@ class DistributionItem {
     this.isChecked = isChecked;
   }
 }
+class CarModel {
+  pkCarsModels: number;
+  model: string;
+  manufacturer: string;
+  batteryCapacityUseable: number;
+  constructor(
+    pkCarsModels: number,
+    model: string,
+    manufacturer: string,
+    batteryCapacityUseable: number
+  ){
+    this.pkCarsModels = pkCarsModels;
+    this.model = model;
+    this.manufacturer = manufacturer;
+    this.batteryCapacityUseable = batteryCapacityUseable;
+  }
+}
+
 var customerId = new Date().getTime();
 class Customer {
   id: string;
   name: string;
+  carsModel: CarModel;
   minChargesPerMonth: number;
   maxChargesPerMonth: number;
 
   minkWhPerMonth: number;
   maxkWhPerMonth: number;
+  minStartingCapacity: number;
+  maxStartingCapacity: number;
   subscriberRatio: number;
   setSameDayOrdersValue: number;
   maxSameDayOrdersValue: number;
@@ -139,10 +172,13 @@ class Customer {
 
   constructor(
     name: string,
+    carsModel: CarModel,
     minChargesPerMonth: number,
     maxChargesPerMonth: number,
     minkWhPerMonth: number,
     maxkWhPerMonth: number,
+    minStartingCapacity: number,
+    maxStartingCapacity: number,
     subscriberRatio: number,
     setSameDayOrdersValue: number,
     maxSameDayOrdersValue: number,
@@ -150,10 +186,13 @@ class Customer {
   ) {
     this.id = "CUSTOMER" + customerId++;
     this.name = name;
+    this.carsModel = carsModel;
     this.minChargesPerMonth = minChargesPerMonth;
     this.maxChargesPerMonth = maxChargesPerMonth;
     this.minkWhPerMonth = minkWhPerMonth;
     this.maxkWhPerMonth = maxkWhPerMonth;
+    this.minStartingCapacity = minStartingCapacity;
+    this.maxStartingCapacity = maxStartingCapacity;
     this.subscriberRatio = subscriberRatio;
     this.setSameDayOrdersValue = setSameDayOrdersValue;
     this.maxSameDayOrdersValue = maxSameDayOrdersValue;
@@ -279,6 +318,7 @@ export {
   Shift,
   MapMarker,
   DistributionArea,
+  CarModel,
   getBestLatitude,
   getBestLongitude,
   settingsName,

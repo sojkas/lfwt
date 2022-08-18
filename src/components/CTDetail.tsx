@@ -1,24 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Alert, Fab } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Button,
+  Alert,
+  Fab,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+  SelectChangeEvent,
+  Autocomplete,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import RangeSlider from "./RangeSlider";
 import SingleSlider from "./SingleSlider";
 import ParkingIntervalItem from "./ParkingIntervalItem";
-import { Customer, ParkingInterval } from "../models/settings";
+import { CarModel, Customer, ParkingInterval } from "../models/settings";
 
 let allParkingValue: number = 0;
 
 const CTDetail: React.FC<{
   custormer: Customer;
   updatedCustomer: (customer: Customer) => void;
+  carsModels: CarModel[];
 }> = (props) => {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer>(props.custormer);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>(
+    props.custormer
+  );
 
- 
   const [showAlert, setShowAlert] = useState(false);
 
-  useEffect(()=>{setSelectedCustomer(props.custormer)}, [props.custormer]);
-
+  useEffect(() => {
+    setSelectedCustomer(props.custormer);
+  }, [props.custormer]);
 
   const getAllParkingValue = (customer: Customer) => {
     let parkingValue: number = 0;
@@ -77,6 +92,18 @@ const CTDetail: React.FC<{
       };
     });
   };
+  const startingCapacityHandler = (newValue: number[]) => {
+    setSelectedCustomer((prevCustomer) => {
+      const newMin = newValue[0];
+      const newMax = newValue[1];
+      return {
+        ...prevCustomer,
+        minStartingCapacity: newMin,
+        maxStartingCapacity: newMax,
+      };
+    });
+  };
+
   const subscriberRatioHandler = (newValue: number) => {
     setSelectedCustomer((prevCustomeer) => {
       const newRatio = newValue;
@@ -91,31 +118,54 @@ const CTDetail: React.FC<{
     });
   };
   const sameDayOrderHandler = (newValue: number) => {
-    setSelectedCustomer((prevCustomer)=>{
+    setSelectedCustomer((prevCustomer) => {
       const newSDOValue = newValue;
-      return { ...prevCustomer, setSameDayOrdersValue: newSDOValue }
-    })
+      return { ...prevCustomer, setSameDayOrdersValue: newSDOValue };
+    });
   };
 
   const parkingIntervalHandler = (updatedParkingInterval: ParkingInterval) => {
-    let newParkingIntervalArray: ParkingInterval [] = selectedCustomer.parking;
-    for (let parkingOne of selectedCustomer.parking) {      
+    let newParkingIntervalArray: ParkingInterval[] = selectedCustomer.parking;
+    for (let parkingOne of selectedCustomer.parking) {
       if (parkingOne.id === updatedParkingInterval.id) {
-        newParkingIntervalArray.splice(selectedCustomer.parking.indexOf(parkingOne), 1, updatedParkingInterval);
+        newParkingIntervalArray.splice(
+          selectedCustomer.parking.indexOf(parkingOne),
+          1,
+          updatedParkingInterval
+        );
       }
     }
-    setSelectedCustomer((prevCustomer)=>{
-      return { ...prevCustomer, parking: newParkingIntervalArray }
+    setSelectedCustomer((prevCustomer) => {
+      return { ...prevCustomer, parking: newParkingIntervalArray };
+    });
+  };
+
+  const carModelChangeHandler = (event: any, newCarModel: CarModel) => {
+    event.preventDefault();
+    setSelectedCustomer((prevCustomer) => {
+      let newCarsModel = newCarModel;
+
+      return {
+        ...prevCustomer,
+        carsModel: newCarsModel,
+        name: newCarsModel.manufacturer + " " + newCarsModel.model,
+        minStartingCapacity: Math.round(
+          newCarsModel.batteryCapacityUseable / 4
+        ),
+        maxStartingCapacity: Math.round(
+          3 * (newCarsModel.batteryCapacityUseable / 4)
+        ),
+      };
     });
   };
 
   const removeParkingIntervalItemHandler = (parkingIntervalId: string) => {
-    setSelectedCustomer((prevCustomer)=>{
+    setSelectedCustomer((prevCustomer) => {
       const newAllParkingInterVals: ParkingInterval[] =
-      selectedCustomer.parking.filter(
-        (parkingOne) => parkingOne.id !== parkingIntervalId
-      );
-      return { ...prevCustomer, parking: newAllParkingInterVals }
+        selectedCustomer.parking.filter(
+          (parkingOne) => parkingOne.id !== parkingIntervalId
+        );
+      return { ...prevCustomer, parking: newAllParkingInterVals };
     });
   };
 
@@ -128,9 +178,53 @@ const CTDetail: React.FC<{
     return props.updatedCustomer(selectedCustomer);
   };
 
+  const defaultProps = {
+    options: props.carsModels,
+    getOptionLabel: (option: CarModel) =>
+      option.manufacturer + " " + option.model,
+  };
+
+  const carOptions : String[] = props.carsModels.map((car)=> car.manufacturer + " " + car.model);
+
   return (
     <React.Fragment>
       <h4>Add / Edit Customer segment</h4>
+      <Grid container direction="row" spacing={1}>
+        <Grid item xs={6}>
+          <FormControl fullWidth>
+            <Autocomplete
+              {...defaultProps}
+              value={selectedCustomer.carsModel}
+              id="disable-clearable"
+              disableClearable
+              onChange={carModelChangeHandler}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Car model"
+                  variant="standard"
+                />
+              )}
+            />
+            {/* <InputLabel id="carModel-label">Car model</InputLabel>
+            <Select
+              labelId="carModel-label"
+              id="carModel-select"
+              value={selectedCustomer.carsModel.pkCarsModels.toString()}
+              label="CarModel"
+              onChange={carModelChangeHandler}
+              size="small"
+            >
+              {props.carsModels.map((carModel) => (
+                <MenuItem value={carModel.pkCarsModels.toString()}>
+                  {carModel.manufacturer} - {carModel.model}
+                </MenuItem>
+              ))}
+            </Select> */}
+          </FormControl>
+        </Grid>
+      </Grid>
+      <p className="topPadding"></p>
       <Grid container direction="row" spacing={1}>
         <Grid item xs={6}>
           <TextField
@@ -175,6 +269,23 @@ const CTDetail: React.FC<{
             maxSetValue={selectedCustomer.maxkWhPerMonth}
             sliderUnit="kWh"
             rangeSliderChange={kwhHandler}
+            step={1}
+          />
+        </Grid>
+      </Grid>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={2}>
+          <label>Starting capacity</label>
+        </Grid>
+        <Grid item xs={6}>
+          <RangeSlider
+            label="Starting capacity"
+            minValue={0}
+            maxValue={selectedCustomer.carsModel.batteryCapacityUseable}
+            minSetValue={selectedCustomer.minStartingCapacity}
+            maxSetValue={selectedCustomer.maxStartingCapacity}
+            sliderUnit="kWh"
+            rangeSliderChange={startingCapacityHandler}
             step={1}
           />
         </Grid>

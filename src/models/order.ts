@@ -6,6 +6,7 @@ class ChargingRequest {
   lat: number
   lng: number
   energyToCharge: number
+  startingCapacity: number
   customerId: string
   createDateTime: Date
   
@@ -14,6 +15,7 @@ class ChargingRequest {
     lat: number,
     lng: number,
     energyToCharge: number,
+    startingCapacity: number, 
     customerId: string,
     createDateTime: Date 
   ) {
@@ -22,6 +24,7 @@ class ChargingRequest {
     this.lat=lat
     this.lng=lng
     this.energyToCharge=energyToCharge
+    this.startingCapacity=startingCapacity
     this.customerId=customerId
     this.createDateTime = createDateTime
   }

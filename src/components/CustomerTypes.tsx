@@ -5,6 +5,7 @@ import {
   Customer,
   ParkingInterval,
   DistributionArea,
+  CarModel,
 } from "../models/settings";
 import CTDetail from "./CTDetail";
 import CustomerComponent from "./CustomerComponent";
@@ -16,12 +17,12 @@ let savedCustomerName: string = "";
 const CustomerTypes: React.FC<{
   settings: Settings;
   updatedSettings: (updatedSettingsValues: Settings) => void;
+  carsModels: CarModel[];
 }> = (props) => {
-  const [selectedCustomer, setSelectedCustomer] =
-    useState<Customer>();
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
 
   const [isSaved, setIsSaved] = useState<boolean>(false);
-
+  
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -45,25 +46,39 @@ const CustomerTypes: React.FC<{
   };
 
   const createParkingIntervalForCustomer = (cdID: string) => {
-    const newParkingIntervals: ParkingInterval[] = [new ParkingInterval(cdID, 8, 12, 100)];
+    const newParkingIntervals: ParkingInterval[] = [
+      new ParkingInterval(cdID, 8, 12, 100),
+    ];
     return newParkingIntervals;
   };
 
   const addCustomerHandler = () => {
+    const randomCar = Math.floor(Math.random() * (props.carsModels.length + 1));
+    const carModel = props.carsModels[randomCar];
     let newCustomer: Customer = new Customer(
-      "New Customer",
+      carModel.manufacturer + " " + carModel.model,
+      carModel,
       10,
       20,
       15,
       25,
+      Math.round(carModel.batteryCapacityUseable/4),
+      Math.round(3*(carModel.batteryCapacityUseable/4)),
       50,
       25,
       50,
       []
     );
-    newCustomer = { ...newCustomer, parking: createParkingIntervalForCustomer(newCustomer.id) }
-    const newCustomerList: Customer[] = [ ...props.settings.customers, newCustomer ];
-    props.updatedSettings({ ...props.settings, customers: newCustomerList });    
+    newCustomer = {
+      ...newCustomer,
+      parking: createParkingIntervalForCustomer(newCustomer.id),
+    };
+    const newCustomerList: Customer[] = [
+      ...props.settings.customers,
+      newCustomer,
+    ];
+    props.updatedSettings({ ...props.settings, customers: newCustomerList });
+    setSelectedCustomer(newCustomer);
   };
 
   const removeCustomerHandler = (id: string) => {
@@ -87,7 +102,11 @@ const CustomerTypes: React.FC<{
         newDistributionAreas[i].distributions = newDistributions;
       }
       setSelectedCustomer(undefined);
-      props.updatedSettings({ ...props.settings, distributionAreas: newDistributionAreas, customers: newCustomerList});
+      props.updatedSettings({
+        ...props.settings,
+        distributionAreas: newDistributionAreas,
+        customers: newCustomerList,
+      });
     }
   };
 
@@ -96,13 +115,19 @@ const CustomerTypes: React.FC<{
       if (customer.id === updatedDetail.id) {
         setSelectedCustomer(undefined);
         const newCustomersList: Customer[] = props.settings.customers;
-        newCustomersList.splice(props.settings.customers.indexOf(customer), 1, updatedDetail);        
-        props.updatedSettings({ ...props.settings, customers: newCustomersList });
+        newCustomersList.splice(
+          props.settings.customers.indexOf(customer),
+          1,
+          updatedDetail
+        );
+        props.updatedSettings({
+          ...props.settings,
+          customers: newCustomersList,
+        });
       }
     }
     setIsSaved(true);
   };
-  
 
   return (
     <React.Fragment>
@@ -156,6 +181,7 @@ const CustomerTypes: React.FC<{
             <CTDetail
               custormer={selectedCustomer}
               updatedCustomer={updateDetail}
+              carsModels={props.carsModels}
             />
           )}
         </Grid>
