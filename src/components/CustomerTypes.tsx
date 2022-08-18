@@ -53,10 +53,10 @@ const CustomerTypes: React.FC<{
   };
 
   const addCustomerHandler = () => {
-    const randomCar = Math.floor(Math.random() * (props.carsModels.length + 1));
-    const carModel = props.carsModels[randomCar];
+    //const randomCar = Math.floor(Math.random() * (props.carsModels.length + 1));
+    const carModel = props.carsModels[0];
     let newCustomer: Customer = new Customer(
-      carModel.manufacturer + " " + carModel.model,
+      "New segment",
       carModel,
       10,
       20,
