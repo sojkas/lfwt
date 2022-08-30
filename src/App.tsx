@@ -31,6 +31,25 @@ function App() {
     setIsSaved(false);
   };
 
+  /* const snapApiUrl: string = `https://roads.googleapis.com/v1/snapToRoads?path=50.0000,14.000&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+
+  const fetchsnappos = useCallback(async function () {
+    try{
+    const response = await fetch(snapApiUrl);
+    const data = await response.json();
+    console.log(data);
+    }
+    catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    }
+  },[]);
+
+  useEffect(()=>{
+    fetchsnappos();
+  },[fetchsnappos]); */
+
   const carsModelsApiUrl: string =
     "https://nimble.api.algoritma.cz/api/CodeList/CarsModelsBasicList";
 

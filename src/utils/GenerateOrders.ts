@@ -6,14 +6,17 @@ import {
   countIntervalLength,
   findCustomerById,
   findIntervalByHour,
+  getSnapToRoadLatLng,
+  snapToRoad,
 } from "./supportFunctions";
 
 // simRatio = interval simulace 0.1 = 10 x za hodinu
 // hour = aktualni hodina
-const generateOrders = (
+const generateOrders = async (
   settings: Settings,
   simRatio: number,
-  virtualDate: Date
+  virtualDate: Date,
+  snapToRoads: boolean
 ) => {
   const hour = virtualDate.getUTCHours();
   /* console.log("Generating orders for "+hour+" hour"); */
@@ -57,7 +60,8 @@ const generateOrders = (
             rndRadius = rndRadius * rndRadius;
           }
           var radius = rndRadius * oblast.marker.radius;
-          orders[orders.length] = new Order(
+
+          let generatedOrder = new Order(
             oblast.id,
             addToLatitude(oblast.marker.latitude, radius * Math.cos(angle)),
             addToLongitude(oblast.marker.longitude, radius * Math.sin(angle)),
@@ -70,6 +74,10 @@ const generateOrders = (
             customer!.id,
             virtualDate
           );
+          if (snapToRoads) {
+            generatedOrder = await snapToRoad(generatedOrder);
+          }
+          orders[orders.length] = generatedOrder;
         }
       }
     }

@@ -1,12 +1,11 @@
-import Settings, {Customer, ParkingInterval} from "../models/settings";
-
+import Settings, { Customer, ParkingInterval } from "../models/settings";
+import Order from "../models/order";
 
 function toSafeInt(value: string): number {
   const i = parseInt(value);
   if (isNaN(i)) return 0;
   return i;
 }
-
 
 const findCustomerById = (settings: Settings, id: string) => {
   for (let customer of settings.customers) {
@@ -42,7 +41,7 @@ const findIntervalByHour = (parking: ParkingInterval[], hour: number) => {
 const countIntervalLength = (interval: ParkingInterval) => {
   if (interval.from > interval.to) {
     // parkuje pres noc 22-06
-    return 24-interval.from + interval.to;
+    return 24 - interval.from + interval.to;
   } else {
     // parkuje pres den 13-16
     return interval.to - interval.from;
@@ -55,7 +54,7 @@ const countCustomerParkingDuration = (customer: Customer) => {
     res = res + countIntervalLength(p);
   }
   return res;
-}
+};
 
 function addToLatitude(latitude: number, dy: number) {
   return latitude + (dy / 6378) * (180 / Math.PI);
@@ -63,9 +62,40 @@ function addToLatitude(latitude: number, dy: number) {
 
 function addToLongitude(longitude: number, dx: number) {
   return (
-      longitude +
-      ((dx / 6378) * (180 / Math.PI)) / Math.cos((longitude * Math.PI) / 180)
+    longitude +
+    ((dx / 6378) * (180 / Math.PI)) / Math.cos((longitude * Math.PI) / 180)
   );
+}
+
+async function getSnapToRoadLatLng(latitude: number, longitude: number) {
+  const path: string = latitude.toString() + "," + longitude.toString();
+  const gmapUrl = `https://roads.googleapis.com/v1/snapToRoads?path=${path}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+  try {
+    const response = await fetch(gmapUrl);
+
+    if (!response.ok) {
+      const errorStatus = response.status;
+      throw new Error("Something went wrong!");
+    }
+
+    const data = await response.json();
+    console.log("Data z googlu " + JSON.stringify(data));
+
+    return data.snappedPoints[0].location;
+  } catch (error) {
+
+    console.log("error: "+ error);
+    return {latitude: latitude, longitude: longitude}
+  }
+}
+
+async function snapToRoad (order: Order) {
+  console.log("Puvodni lokace lat:"+order.lat+" lng: "+order.lng);
+  const snappedLocation = await getSnapToRoadLatLng(order.lat, order.lng);
+  const snappedOrder = {...order, lat: snappedLocation.latitude, lng: snappedLocation.longitude}
+  console.log("snappnute lat: "+snappedOrder.lat+" lng: "+ snappedOrder.lng);
+  return snappedOrder;
+
 }
 
 export {
@@ -77,5 +107,7 @@ export {
   addToLongitude,
   toSafeInt,
   countCustomerParkingDuration,
-  countIntervalLength
+  countIntervalLength,
+  getSnapToRoadLatLng,
+  snapToRoad,
 };
