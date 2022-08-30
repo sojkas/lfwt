@@ -74,26 +74,26 @@ async function getSnapToRoadLatLng(latitude: number, longitude: number) {
     const response = await fetch(gmapUrl);
 
     if (!response.ok) {
-      const errorStatus = response.status;
+      //const errorStatus = response.status;
       throw new Error("Something went wrong!");
     }
 
     const data = await response.json();
-    console.log("Data z googlu " + JSON.stringify(data));
+    /* console.log("Data z googlu " + JSON.stringify(data)); */
 
     return data.snappedPoints[0].location;
   } catch (error) {
 
-    console.log("error: "+ error);
+    /* console.log("error: "+ error); */
     return {latitude: latitude, longitude: longitude}
   }
 }
 
 async function snapToRoad (order: Order) {
-  console.log("Puvodni lokace lat:"+order.lat+" lng: "+order.lng);
+  /* console.log("Puvodni lokace lat:"+order.lat+" lng: "+order.lng); */
   const snappedLocation = await getSnapToRoadLatLng(order.lat, order.lng);
   const snappedOrder = {...order, lat: snappedLocation.latitude, lng: snappedLocation.longitude}
-  console.log("snappnute lat: "+snappedOrder.lat+" lng: "+ snappedOrder.lng);
+  /* console.log("snappnute lat: "+snappedOrder.lat+" lng: "+ snappedOrder.lng); */
   return snappedOrder;
 
 }
